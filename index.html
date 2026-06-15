@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>REVOLUTION — Hackathon de Hardware · Hack Club Monterrey</title>
-<meta name="description" content="REVOLUTION: 48 horas para construir robots, hacerlos pelear y conocer a tu tribu. Hackathon de hardware en El Horno3, Parque Fundidora, Monterrey. 20 de Noviembre.">
+<meta name="description" content="REVOLUTION: 48 horas para construir robots, hacerlos pelear y aprender hardware de verdad. Hackathon en El Horno3, Parque Fundidora, Monterrey. 20 de Noviembre.">
 
-<!-- Fonts: Fredoka (display chunky), Nunito Sans (body), Caveat (hecho a mano) -->
+<!-- Fonts: Archivo (display industrial), Space Mono (técnico), Inter (cuerpo) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -21,507 +21,403 @@
     theme: {
       extend: {
         colors: {
-          paper:  '#FFF6E9',
-          paper2: '#FCE9CC',
-          cream:  '#FFFDF8',
-          ink:    '#3A2317',
-          rosa:   { DEFAULT:'#E4007C', soft:'#FF55AE' },
-          naranja:{ DEFAULT:'#FF7A1A', soft:'#FFA24D' },
-          amarillo:{ DEFAULT:'#FFC21A', soft:'#FFD867' },
-          nopal:  { DEFAULT:'#2E8B57', dark:'#1C6B43', light:'#6CC58E' },
-          azul:   { DEFAULT:'#159FC9', dark:'#0E7BA0' },
-          rojo:   { DEFAULT:'#D62828', dark:'#A81E1E' },
+          paper:'#EBE2D0', paper2:'#F4EDDF', card:'#FBF6EC',
+          ink:{ DEFAULT:'#23201B', soft:'#5A5347', mut:'#8C8475' },
+          copper:{ DEFAULT:'#C2622F', dark:'#9C4E22' },
+          talavera:{ DEFAULT:'#1C7C9C', dark:'#15637D' },
+          agave:{ DEFAULT:'#3E7D5A', dark:'#2E6044' },
+          marigold:'#E0A019',
         },
         fontFamily: {
-          display: ['Fredoka','system-ui','sans-serif'],
-          body:    ['"Nunito Sans"','system-ui','sans-serif'],
-          hand:    ['Caveat','cursive'],
+          display:['Archivo','system-ui','sans-serif'],
+          mono:['"Space Mono"','monospace'],
+          body:['Inter','system-ui','sans-serif'],
         },
         keyframes: {
-          spinSlow: { to:{ transform:'rotate(360deg)' } },
-          sway:     { '0%,100%':{ transform:'rotate(-3deg)' }, '50%':{ transform:'rotate(3deg)' } },
-          bob:      { '0%,100%':{ transform:'translateY(0)' }, '50%':{ transform:'translateY(-10px)' } },
-          pop:      { '0%':{ transform:'scale(.6)', opacity:0 }, '70%':{ transform:'scale(1.08)' }, '100%':{ transform:'scale(1)', opacity:1 } },
-          wiggle:   { '0%,100%':{ transform:'rotate(-2deg)' }, '50%':{ transform:'rotate(2deg)' } },
-          marquee:  { from:{ transform:'translateX(0)' }, to:{ transform:'translateX(-50%)' } },
-          drift:    { '0%,100%':{ transform:'translateX(0)' }, '50%':{ transform:'translateX(20px)' } },
+          spinSlow:{ to:{ transform:'rotate(360deg)' } },
+          marquee:{ from:{ transform:'translateX(0)' }, to:{ transform:'translateX(-50%)' } },
+          flow:{ to:{ 'stroke-dashoffset':'-200' } },
+          floaty:{ '0%,100%':{ transform:'translateY(0)' }, '50%':{ transform:'translateY(-10px)' } },
+          blip:{ '0%,100%':{ opacity:'.35', transform:'scale(1)' }, '50%':{ opacity:'1', transform:'scale(1.25)' } },
         },
         animation: {
-          'spin-slow':'spinSlow 26s linear infinite',
-          sway:'sway 4s ease-in-out infinite',
-          bob:'bob 4s ease-in-out infinite',
-          pop:'pop .6s cubic-bezier(.2,1.3,.4,1) both',
-          wiggle:'wiggle 2.5s ease-in-out infinite',
+          'spin-slow':'spinSlow 24s linear infinite',
           marquee:'marquee 26s linear infinite',
-          drift:'drift 14s ease-in-out infinite',
+          flow:'flow 3s linear infinite',
+          floaty:'floaty 5s ease-in-out infinite',
+          blip:'blip 2.4s ease-in-out infinite',
         },
       },
     },
   };
 </script>
 <style>
-  body{ background:#FFF6E9; color:#3A2317; }
-  /* textura papel amate (puntitos suaves) */
-  .paper-tex{
-    background-image: radial-gradient(rgba(58,35,23,0.045) 1px, transparent 1.4px);
-    background-size: 18px 18px;
+  body{ background:#EBE2D0; color:#23201B; }
+  /* retícula blueprint */
+  .blueprint{
+    background-image:
+      linear-gradient(rgba(35,32,27,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(35,32,27,.05) 1px, transparent 1px);
+    background-size: 34px 34px;
   }
-  /* sol radiante */
-  .sunburst{
-    background: repeating-conic-gradient(from 0deg, rgba(255,194,26,.55) 0 7deg, rgba(255,122,26,.0) 7deg 14deg);
-    -webkit-mask: radial-gradient(circle, #000 0 62%, transparent 63%);
-            mask: radial-gradient(circle, #000 0 62%, transparent 63%);
-  }
-  /* título nopal */
-  .nopal-text{
-    color:#2E8B57;
-    -webkit-text-stroke: 3px #1C6B43;
-    paint-order: stroke fill;
-    text-shadow: 6px 7px 0 rgba(28,107,67,.25);
-  }
-  /* tarjetas estilo lotería */
-  .loteria{ box-shadow: 8px 8px 0 rgba(58,35,23,.85); transition: transform .25s ease, box-shadow .25s ease; }
-  .loteria:hover{ transform: translate(-3px,-3px) rotate(-1deg); box-shadow: 12px 12px 0 rgba(58,35,23,.85); }
+  .label{ font-family:'Space Mono',monospace; letter-spacing:.18em; text-transform:uppercase; }
+  .display{ font-family:'Archivo',sans-serif; font-weight:900; letter-spacing:-.02em; line-height:.95; }
+  /* botones tipo placa */
+  .btn{ font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    border:2px solid #23201B; transition:transform .18s ease, box-shadow .18s ease, background .18s; }
+  .btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 #23201B; }
+  /* paneles tipo módulo PCB */
+  .panel{ background:#FBF6EC; border:2px solid #23201B; box-shadow:5px 5px 0 rgba(35,32,27,.16);
+    transition:transform .22s ease, box-shadow .22s ease; position:relative; }
+  .panel:hover{ transform:translate(-3px,-3px); box-shadow:9px 9px 0 rgba(35,32,27,.22); }
+  /* tornillos en esquinas */
+  .bolts::before, .bolts::after{ content:''; position:absolute; width:7px; height:7px; border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #b9ad97, #6f6855); top:9px; }
+  .bolts::before{ left:9px; } .bolts::after{ right:9px; }
+  /* etiqueta de acento arriba */
+  .tag-top::before{ content:''; position:absolute; top:-2px; left:22px; width:48px; height:5px; background:var(--acc,#C2622F); }
   /* reveal */
-  .reveal{ opacity:0; transform: translateY(26px) rotate(-1deg); transition: opacity .7s ease, transform .7s cubic-bezier(.2,1,.3,1); }
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
   .reveal.in{ opacity:1; transform:none; }
+  .trace{ stroke-dasharray:10 12; animation:flow 3s linear infinite; }
   .marquee-track{ width:max-content; }
-  ::selection{ background:#E4007C; color:#fff; }
-  ::-webkit-scrollbar{ width:12px; } ::-webkit-scrollbar-track{ background:#FCE9CC; }
-  ::-webkit-scrollbar-thumb{ background:#2E8B57; border-radius:6px; border:3px solid #FCE9CC; }
-  /* camisas empalmadas (encimadas) */
-  .shirt-pile{ transition: transform .35s cubic-bezier(.2,1,.3,1); }
-  .shirt-pile img{ filter: drop-shadow(7px 9px 0 rgba(58,35,23,.28)); }
-
-  /* serape divider */
-  .serape{ height:16px; border-top:3px solid #3A2317; border-bottom:3px solid #3A2317;
-    background:repeating-linear-gradient(90deg,#E4007C 0 16px,#FF7A1A 16px 32px,#FFC21A 32px 48px,#2E8B57 48px 64px,#159FC9 64px 80px,#D62828 80px 96px); }
-  /* pennant sway escalonado */
-  .pennant{ transform-origin: top center; animation: sway 4s ease-in-out infinite; }
-
-  /* ── WORDMARK letras-ilustración ── */
-  .wordmark{
-    font-family:'Fredoka',sans-serif; font-weight:700;
-    font-size: clamp(3.4rem, 13vw, 8.5rem); line-height:.95;
-    display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-end; gap:.03em;
-  }
-  .wordmark .ltr{
-    display:inline-block;
-    -webkit-text-stroke:3px #3A2317; paint-order: stroke fill;
-    text-shadow:4px 5px 0 rgba(58,35,23,.20);
-  }
-  .wordmark svg{ height:1.18em; width:auto; display:block; }
-  .wordmark .o-sun{ height:1em; }
-
-  /* ── subrayado chueco hecho a mano ── */
-  .uw{ position:relative; white-space:nowrap; }
-  .uw::after{
-    content:''; position:absolute; left:-.08em; right:-.08em; bottom:-.22em; height:.2em;
-    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='16' viewBox='0 0 120 16'%3E%3Cpath d='M2 9 C20 2 36 14 56 8 S96 2 118 9' fill='none' stroke='%23E4007C' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x;
-    background-size:auto 100%;
-  }
-  .uw.green::after{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='16' viewBox='0 0 120 16'%3E%3Cpath d='M2 9 C20 2 36 14 56 8 S96 2 118 9' fill='none' stroke='%232E8B57' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"); }
-  .uw.blue::after{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='16' viewBox='0 0 120 16'%3E%3Cpath d='M2 9 C20 2 36 14 56 8 S96 2 118 9' fill='none' stroke='%23159FC9' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"); }
-
-  /* ── stickers pegados ── */
-  .sticker{ border:3px solid #3A2317; border-radius:14px; box-shadow:4px 4px 0 rgba(58,35,23,.85); font-family:'Fredoka',sans-serif; font-weight:700; }
-
-  /* twinkle de estrellitas */
-  @keyframes twinkle{ 0%,100%{ transform:scale(1); opacity:.5 } 50%{ transform:scale(1.35); opacity:1 } }
-  .twinkle{ animation:twinkle 2.6s ease-in-out infinite; }
-
+  /* camisas empalmadas */
+  .shirt-pile{ transition:transform .35s cubic-bezier(.2,.9,.3,1); }
+  .shirt-pile img{ filter: drop-shadow(5px 7px 0 rgba(35,32,27,.25)); }
+  ::selection{ background:#C2622F; color:#FBF6EC; }
+  ::-webkit-scrollbar{ width:12px; } ::-webkit-scrollbar-track{ background:#EBE2D0; }
+  ::-webkit-scrollbar-thumb{ background:#23201B; } ::-webkit-scrollbar-thumb:hover{ background:#C2622F; }
   @media (prefers-reduced-motion: reduce){ *{ animation:none !important; } }
 </style>
 </head>
 
-<body class="font-body paper-tex antialiased overflow-x-hidden">
-
-<!-- ════ PAPEL PICADO (bunting) ════ -->
-<div id="bunting" class="fixed top-0 inset-x-0 z-40 flex justify-center gap-1 px-2 pointer-events-none"></div>
+<body class="font-body antialiased overflow-x-hidden">
 
 <!-- ════ NAV ════ -->
-<nav class="fixed top-6 inset-x-0 z-50">
-  <div class="max-w-6xl mx-auto px-4">
-    <div class="flex items-center justify-between bg-cream/90 backdrop-blur border-[3px] border-ink rounded-full pl-5 pr-2 py-2 shadow-[5px_5px_0_rgba(58,35,23,.85)]">
-      <a href="#home" class="font-display font-bold text-xl text-rojo flex items-center gap-2">
-        <span class="inline-grid place-items-center w-8 h-8 rounded-full bg-amarillo border-2 border-ink"><i class="bi bi-gear-fill text-ink animate-spin-slow"></i></span>
-        REVOLUTION
-      </a>
-      <div class="hidden md:flex items-center gap-1 font-display font-medium">
-        <a href="#que-es" class="px-4 py-2 rounded-full hover:bg-amarillo/40 transition">Qué es</a>
-        <a href="#proyectos" class="px-4 py-2 rounded-full hover:bg-amarillo/40 transition">Proyectos</a>
-        <a href="#timeline" class="px-4 py-2 rounded-full hover:bg-amarillo/40 transition">Programa</a>
-        <a href="#merch" class="px-4 py-2 rounded-full hover:bg-amarillo/40 transition">Merch</a>
-        <a href="#sponsors" class="px-4 py-2 rounded-full hover:bg-amarillo/40 transition">Sponsors</a>
-        <a href="#registro" class="ml-1 px-5 py-2 bg-rosa text-white rounded-full border-2 border-ink hover:bg-rosa-soft transition shadow-[3px_3px_0_rgba(58,35,23,.85)]">Regístrate</a>
-      </div>
-      <button id="navToggle" class="md:hidden w-10 h-10 grid place-items-center text-2xl text-ink"><i class="bi bi-list"></i></button>
+<nav class="fixed top-0 inset-x-0 z-50 bg-paper/90 backdrop-blur border-b-2 border-ink">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
+    <a href="#home" class="display text-xl flex items-center gap-2">
+      <i class="bi bi-gear-fill text-copper animate-spin-slow"></i> REVOLUTION
+    </a>
+    <div class="hidden md:flex items-center gap-6 label text-xs text-ink-soft">
+      <a href="#que-es" class="hover:text-copper transition">Qué_es</a>
+      <a href="#proyectos" class="hover:text-copper transition">Build</a>
+      <a href="#timeline" class="hover:text-copper transition">Programa</a>
+      <a href="#merch" class="hover:text-copper transition">Merch</a>
+      <a href="#sponsors" class="hover:text-copper transition">Aliados</a>
+      <a href="#registro" class="btn bg-copper text-card px-5 py-2">Regístrate</a>
     </div>
-    <div id="mobileMenu" class="hidden md:hidden mt-2 bg-cream border-[3px] border-ink rounded-3xl p-3 font-display shadow-[5px_5px_0_rgba(58,35,23,.85)]">
-      <a href="#que-es" class="block px-4 py-2 rounded-xl hover:bg-amarillo/40">Qué es</a>
-      <a href="#proyectos" class="block px-4 py-2 rounded-xl hover:bg-amarillo/40">Proyectos</a>
-      <a href="#timeline" class="block px-4 py-2 rounded-xl hover:bg-amarillo/40">Programa</a>
-      <a href="#merch" class="block px-4 py-2 rounded-xl hover:bg-amarillo/40">Merch</a>
-      <a href="#sponsors" class="block px-4 py-2 rounded-xl hover:bg-amarillo/40">Sponsors</a>
-      <a href="#registro" class="block mt-1 px-4 py-2 text-center bg-rosa text-white rounded-xl border-2 border-ink">Regístrate</a>
-    </div>
+    <button id="navToggle" class="md:hidden text-2xl"><i class="bi bi-list"></i></button>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden border-t-2 border-ink bg-paper px-6 py-4 label text-sm text-ink-soft space-y-3">
+    <a href="#que-es" class="block">Qué_es</a>
+    <a href="#proyectos" class="block">Build</a>
+    <a href="#timeline" class="block">Programa</a>
+    <a href="#merch" class="block">Merch</a>
+    <a href="#sponsors" class="block">Aliados</a>
+    <a href="#registro" class="block text-copper">Regístrate →</a>
   </div>
 </nav>
 
 <!-- ════ HERO ════ -->
-<header id="home" class="relative min-h-screen flex flex-col items-center justify-center text-center px-5 pt-44 pb-24 overflow-hidden">
-  <!-- sol -->
-  <div class="sunburst absolute -z-0 w-[140vw] sm:w-[900px] aspect-square top-[10%] left-1/2 -translate-x-1/2 animate-spin-slow opacity-70"></div>
-  <div class="absolute inset-0 -z-0" style="background:radial-gradient(ellipse at 50% 32%, transparent 28%, #FFF6E9 75%)"></div>
+<header id="home" class="relative min-h-screen flex flex-col items-center justify-center text-center px-5 pt-28 pb-20 overflow-hidden blueprint">
+  <div class="absolute inset-0" style="background:radial-gradient(ellipse at 50% 38%, transparent 30%, #EBE2D0 82%)"></div>
+  <!-- engrane gigante de fondo -->
+  <i class="bi bi-gear-fill absolute text-ink/[0.04] text-[55vw] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin-slow"></i>
 
-  <!-- papel picado colgando de borde a borde (swag) -->
-  <div id="heroBunting" class="absolute top-20 inset-x-0 w-full flex justify-between items-start pointer-events-none z-10"></div>
+  <!-- trazos de circuito en esquinas -->
+  <svg class="absolute top-24 left-0 w-56 hidden md:block" viewBox="0 0 200 120" fill="none">
+    <path class="trace" d="M0 20 H80 V70 H140" stroke="#1C7C9C" stroke-width="3"/>
+    <path class="trace" d="M0 60 H40 V100 H120" stroke="#3E7D5A" stroke-width="3" style="animation-delay:.6s"/>
+    <circle cx="140" cy="70" r="5" fill="#C2622F" class="animate-blip"/><circle cx="120" cy="100" r="5" fill="#E0A019" class="animate-blip"/>
+  </svg>
+  <svg class="absolute bottom-24 right-0 w-56 hidden md:block" viewBox="0 0 200 120" fill="none">
+    <path class="trace" d="M200 30 H120 V80 H60" stroke="#C2622F" stroke-width="3" style="animation-delay:.3s"/>
+    <path class="trace" d="M200 70 H150 V20 H90" stroke="#1C7C9C" stroke-width="3" style="animation-delay:.9s"/>
+    <circle cx="60" cy="80" r="5" fill="#3E7D5A" class="animate-blip"/><circle cx="90" cy="20" r="5" fill="#E0A019" class="animate-blip"/>
+  </svg>
 
-  <!-- doodles / flores flotando -->
-  <svg class="absolute top-40 left-[6%] w-14 animate-drift hidden sm:block" viewBox="0 0 100 100"><g fill="#FF55AE" stroke="#3A2317" stroke-width="3"><circle cx="50" cy="50" r="14"/><g fill="#FFC21A"><circle cx="50" cy="26" r="9"/><circle cx="50" cy="74" r="9"/><circle cx="26" cy="50" r="9"/><circle cx="74" cy="50" r="9"/></g></g></svg>
-  <i class="bi bi-star-fill absolute top-52 right-[10%] text-2xl text-amarillo twinkle hidden sm:block"></i>
-  <i class="bi bi-star-fill absolute bottom-40 left-[14%] text-xl text-rosa twinkle hidden sm:block" style="animation-delay:.8s"></i>
+  <div class="relative z-10 max-w-5xl">
+    <p class="label text-copper text-xs sm:text-sm mb-6">[ Hackathon de Hardware · 48H · Hack Club ]</p>
 
-  <!-- stickers pegados -->
-  <div class="sticker absolute top-40 right-[6%] bg-amarillo px-4 py-2 text-ink rotate-12 animate-wiggle hidden md:block">¡100% GRATIS!</div>
-  <div class="sticker absolute bottom-36 right-[12%] bg-azul px-4 py-2 text-white -rotate-6 animate-wiggle hidden md:block" style="animation-delay:.5s">48 HRS 🔥</div>
-  <div class="sticker absolute bottom-44 left-[5%] bg-rosa px-4 py-2 text-white rotate-6 animate-wiggle hidden md:block" style="animation-delay:.9s">Hecho en MTY</div>
+    <!-- WORDMARK con engrane -->
+    <h1 class="display text-ink text-[18vw] sm:text-[15vw] md:text-[11rem] flex items-center justify-center flex-wrap">
+      <span>REV</span>
+      <svg class="h-[0.82em] w-auto animate-spin-slow mx-[.01em]" viewBox="0 0 100 100" aria-hidden="true">
+        <path fill="#C2622F" stroke="#23201B" stroke-width="4" d="M50 4l7 12 14-3 2 14 13 6-7 12 7 12-13 6-2 14-14-3-7 12-7-12-14 3-2-14-13-6 7-12-7-12 13-6 2-14 14 3z"/>
+        <circle cx="50" cy="50" r="20" fill="#FBF6EC" stroke="#23201B" stroke-width="4"/>
+        <circle cx="50" cy="50" r="6" fill="#23201B"/>
+      </svg>
+      <span>LUTION</span>
+    </h1>
 
-  <div class="relative z-20 max-w-5xl">
-    <p class="font-hand text-3xl sm:text-4xl text-rosa -rotate-2">¡Bienvenido a la revolución!</p>
+    <!-- trazo PCB bajo el título -->
+    <svg class="mx-auto mt-1 w-[80%] max-w-2xl h-5" viewBox="0 0 600 24" preserveAspectRatio="none" fill="none">
+      <path class="trace" d="M4 12 H180 M220 12 H400 M440 12 H596" stroke="#C2622F" stroke-width="4"/>
+      <circle cx="200" cy="12" r="7" fill="#1C7C9C"/><circle cx="420" cy="12" r="7" fill="#3E7D5A"/>
+      <rect x="0" y="6" width="12" height="12" fill="#E0A019"/><rect x="588" y="6" width="12" height="12" fill="#E0A019"/>
+    </svg>
 
-    <!-- REVOLUTION: letras hechas de México -->
-    <div class="wordmark mt-3 animate-pop" aria-label="Revolution">
-      <span class="ltr" style="color:#2E8B57;transform:rotate(-4deg)">R</span>
-      <span class="ltr" style="color:#E4007C;transform:rotate(3deg)">E</span>
-      <span class="ltr" style="color:#FF7A1A;transform:rotate(-2deg)">V</span>
-      <!-- O = sol de lotería -->
-      <svg class="o-sun animate-spin-slow" viewBox="0 0 100 100" aria-hidden="true"><g stroke="#3A2317" stroke-width="4"><g fill="#FF7A1A"><path d="M50 2l6 16-12 0z"/><path d="M50 98l6-16-12 0z" transform="rotate(180 50 50)"/><path d="M50 2l6 16-12 0z" transform="rotate(45 50 50)"/><path d="M50 2l6 16-12 0z" transform="rotate(90 50 50)"/><path d="M50 2l6 16-12 0z" transform="rotate(135 50 50)"/><path d="M50 2l6 16-12 0z" transform="rotate(225 50 50)"/><path d="M50 2l6 16-12 0z" transform="rotate(270 50 50)"/><path d="M50 2l6 16-12 0z" transform="rotate(315 50 50)"/></g><circle cx="50" cy="50" r="26" fill="#FFC21A"/></g><g fill="#3A2317"><circle cx="42" cy="47" r="3"/><circle cx="58" cy="47" r="3"/><path d="M40 58 Q50 66 60 58" fill="none" stroke="#3A2317" stroke-width="3" stroke-linecap="round"/></g></svg>
-      <span class="ltr" style="color:#159FC9;transform:rotate(4deg)">L</span>
-      <span class="ltr" style="color:#D62828;transform:rotate(-3deg)">U</span>
-      <span class="ltr" style="color:#1C6B43;transform:rotate(2deg)">T</span>
-      <!-- I = cactus saguaro -->
-      <svg viewBox="0 0 60 120" aria-hidden="true"><g fill="#2E8B57" stroke="#1C6B43" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"><path d="M24 118 V44 a6 6 0 0 1 12 0 V118 Z"/><path d="M14 78 V60 a8 8 0 0 1 16 0"/><path d="M46 70 V52 a8 8 0 0 0-16 0"/></g><g stroke="#1C6B43" stroke-width="3" stroke-linecap="round"><path d="M30 52 v50 M22 64 h16 M22 84 h16"/></g><circle cx="30" cy="34" r="9" fill="#E4007C" stroke="#A81E1E" stroke-width="4"/><circle cx="30" cy="34" r="3" fill="#FFC21A"/></svg>
-      <span class="ltr" style="color:#E4007C;transform:rotate(-2deg)">O</span>
-      <span class="ltr" style="color:#FF7A1A;transform:rotate(3deg)">N</span>
-    </div>
-
-    <p class="mt-8 text-lg sm:text-2xl text-ink/80 font-semibold max-w-2xl mx-auto">
-      Construye un robot. Hazlo girar. <span class="text-rojo uw">Que pelee.</span><br>
-      48 horas de hardware, comunidad y puro caos bonito.
+    <p class="font-display font-bold text-xl sm:text-3xl text-ink mt-6 max-w-2xl mx-auto">
+      Construye un robot. Hazlo girar. <span class="text-copper">Que pelee.</span>
     </p>
+    <p class="text-ink-soft mt-3 max-w-xl mx-auto">48 horas de hardware real, soldadura, motores y comunidad. Sin experiencia previa.</p>
 
-    <div class="relative mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="#registro" class="group font-display font-semibold text-lg px-8 py-4 bg-rosa text-white rounded-full border-[3px] border-ink shadow-[5px_5px_0_rgba(58,35,23,.85)] hover:-translate-y-1 transition flex items-center gap-2">
+    <div class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="#registro" class="group btn bg-copper text-card text-base px-8 py-4 flex items-center gap-2">
         Regístrate gratis <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
       </a>
-      <a href="#proyectos" class="font-display font-semibold text-lg px-8 py-4 bg-amarillo text-ink rounded-full border-[3px] border-ink shadow-[5px_5px_0_rgba(58,35,23,.85)] hover:-translate-y-1 transition">
-        Ver los proyectos
-      </a>
-      <!-- flecha a mano apuntando al CTA -->
-      <div class="absolute -left-4 sm:-left-28 -top-16 sm:top-1 hidden sm:flex flex-col items-center rotate-[-12deg]">
-        <span class="font-hand text-2xl text-nopal-dark whitespace-nowrap">¡regístrate aquí!</span>
-        <svg width="70" height="50" viewBox="0 0 70 50"><path d="M6 6 C30 4 40 30 60 38" fill="none" stroke="#2E8B57" stroke-width="3" stroke-linecap="round"/><path d="M60 38 l-12 -2 M60 38 l-5 -11" fill="none" stroke="#2E8B57" stroke-width="3" stroke-linecap="round"/></svg>
-      </div>
+      <a href="#proyectos" class="btn bg-card text-ink text-base px-8 py-4">Ver proyectos</a>
     </div>
 
-    <div class="mt-9 inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-display text-ink/70">
-      <span><i class="bi bi-geo-alt-fill text-rojo"></i> El Horno3 · Fundidora</span>
-      <span class="text-naranja">✦</span>
-      <span><i class="bi bi-calendar-event-fill text-azul"></i> 20 de Noviembre</span>
-      <span class="text-naranja">✦</span>
-      <span><i class="bi bi-cash-coin text-nopal"></i> 100% gratis</span>
+    <!-- specs -->
+    <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 max-w-2xl mx-auto border-2 border-ink bg-card divide-x-2 divide-y-2 sm:divide-y-0 divide-ink">
+      <div class="py-5"><div class="display text-4xl text-copper">48</div><div class="label text-[10px] text-ink-mut mt-1">Horas</div></div>
+      <div class="py-5"><div class="display text-4xl text-talavera">100</div><div class="label text-[10px] text-ink-mut mt-1">Makers</div></div>
+      <div class="py-5"><div class="display text-4xl text-agave">$0</div><div class="label text-[10px] text-ink-mut mt-1">Costo</div></div>
+      <div class="py-5"><div class="display text-4xl text-marigold">∞</div><div class="label text-[10px] text-ink-mut mt-1">Proyectos</div></div>
     </div>
+
+    <p class="mt-8 label text-xs text-ink-mut flex items-center justify-center gap-x-4 gap-y-1 flex-wrap">
+      <span><i class="bi bi-geo-alt-fill text-copper"></i> El Horno3 · Fundidora</span>
+      <span class="text-talavera">+</span>
+      <span><i class="bi bi-calendar-event-fill text-copper"></i> 20 Nov · MTY</span>
+    </p>
   </div>
 
-  <!-- nopales en el suelo -->
-  <svg class="absolute -bottom-2 left-[3%] w-24 sm:w-32 animate-bob" style="animation-delay:.3s" viewBox="0 0 120 160"><g fill="#2E8B57" stroke="#1C6B43" stroke-width="5" stroke-linejoin="round"><rect x="48" y="60" width="26" height="100" rx="13"/><ellipse cx="34" cy="70" rx="20" ry="26"/><ellipse cx="88" cy="58" rx="18" ry="24"/></g><g fill="#1C6B43"><circle cx="34" cy="64" r="2"/><circle cx="34" cy="78" r="2"/><circle cx="88" cy="54" r="2"/><circle cx="61" cy="90" r="2"/><circle cx="61" cy="120" r="2"/></g><circle cx="34" cy="48" r="7" fill="#E4007C" stroke="#A81E1E" stroke-width="3"/></svg>
-  <svg class="absolute -bottom-2 right-[4%] w-20 sm:w-28 animate-bob" viewBox="0 0 120 160"><g fill="#6CC58E" stroke="#1C6B43" stroke-width="5" stroke-linejoin="round"><rect x="50" y="70" width="22" height="90" rx="11"/><ellipse cx="38" cy="86" rx="17" ry="22"/><ellipse cx="84" cy="74" rx="16" ry="20"/></g><circle cx="84" cy="68" r="6" fill="#FFC21A" stroke="#A81E1E" stroke-width="3"/></svg>
-
-  <a href="#que-es" class="absolute bottom-6 z-10 w-11 h-11 grid place-items-center rounded-full bg-cream border-[3px] border-ink text-xl animate-bob"><i class="bi bi-chevron-down"></i></a>
+  <a href="#que-es" class="absolute bottom-6 z-10 text-copper text-2xl animate-floaty"><i class="bi bi-chevron-down"></i></a>
 </header>
 
 <!-- ════ MARQUEE ════ -->
-<div class="bg-rojo border-y-[3px] border-ink py-3 overflow-hidden -rotate-1 scale-105">
-  <div class="marquee-track flex animate-marquee whitespace-nowrap font-display font-semibold uppercase tracking-wide text-xl text-amarillo">
+<div class="bg-ink py-3 overflow-hidden border-y-2 border-ink">
+  <div class="marquee-track flex animate-marquee whitespace-nowrap display text-2xl text-paper">
     <span class="flex items-center">
-      <span class="px-6">I wanna see a fight</span><i class="bi bi-fire px-2 text-naranja"></i>
-      <span class="px-6">Most aura</span><i class="bi bi-stars px-2 text-amarillo-soft"></i>
-      <span class="px-6">Revolución mexicana</span><i class="bi bi-gear-fill px-2 animate-spin-slow"></i>
-      <span class="px-6">Build · spin · battle</span><i class="bi bi-lightning-charge-fill px-2 text-amarillo-soft"></i>
+      <span class="px-6">I wanna see a fight</span><i class="bi bi-gear-fill px-3 text-base self-center text-copper animate-spin-slow"></i>
+      <span class="px-6">Robot vs Robot</span><i class="bi bi-cpu px-3 text-base self-center text-talavera"></i>
+      <span class="px-6">Build · Spin · Battle</span><i class="bi bi-gear-fill px-3 text-base self-center text-marigold animate-spin-slow"></i>
+      <span class="px-6">Hecho en Monterrey</span><i class="bi bi-cpu px-3 text-base self-center text-agave"></i>
     </span>
     <span class="flex items-center" aria-hidden="true">
-      <span class="px-6">I wanna see a fight</span><i class="bi bi-fire px-2 text-naranja"></i>
-      <span class="px-6">Most aura</span><i class="bi bi-stars px-2 text-amarillo-soft"></i>
-      <span class="px-6">Revolución mexicana</span><i class="bi bi-gear-fill px-2 animate-spin-slow"></i>
-      <span class="px-6">Build · spin · battle</span><i class="bi bi-lightning-charge-fill px-2 text-amarillo-soft"></i>
+      <span class="px-6">I wanna see a fight</span><i class="bi bi-gear-fill px-3 text-base self-center text-copper animate-spin-slow"></i>
+      <span class="px-6">Robot vs Robot</span><i class="bi bi-cpu px-3 text-base self-center text-talavera"></i>
+      <span class="px-6">Build · Spin · Battle</span><i class="bi bi-gear-fill px-3 text-base self-center text-marigold animate-spin-slow"></i>
+      <span class="px-6">Hecho en Monterrey</span><i class="bi bi-cpu px-3 text-base self-center text-agave"></i>
     </span>
   </div>
 </div>
 
 <!-- ════ QUÉ ES ════ -->
-<section id="que-es" class="max-w-6xl mx-auto px-5 py-24">
-  <div class="reveal text-center max-w-2xl mx-auto">
-    <p class="font-hand text-3xl text-rosa">nuestra historia</p>
-    <h2 class="font-display font-bold text-5xl sm:text-6xl mt-1">¿Qué es <span class="text-nopal uw green">Revolution?</span></h2>
+<section id="que-es" class="max-w-6xl mx-auto px-6 py-24">
+  <div class="reveal">
+    <p class="label text-copper text-sm">// 01_qué_es</p>
+    <h2 class="display text-5xl sm:text-7xl mt-3">¿Qué es <span class="text-copper">Revolution?</span></h2>
   </div>
-
-  <div class="grid md:grid-cols-2 gap-8 mt-12 items-stretch">
-    <div class="reveal bg-cream border-[3px] border-ink rounded-3xl p-8 loteria space-y-5 text-lg leading-relaxed">
-      <p>Nació porque queríamos aprender <strong>electrónica, robótica e ingeniería</strong> sin gastar miles de pesos ni esperar a la universidad.</p>
-      <p>Es un hackathon de hardware de <strong>48 horas</strong> donde adolescentes construyen robots reales, los hacen <em class="text-rojo not-italic font-bold">pelear</em>, y demuestran que la edad no limita la capacidad de crear.</p>
-      <p>Motores que giran, chispas que vuelan y una comunidad increíble. <strong>Y es completamente gratis.</strong></p>
+  <div class="grid md:grid-cols-2 gap-8 mt-12">
+    <div class="reveal space-y-5 text-lg text-ink-soft leading-relaxed">
+      <p>Nació porque queríamos dominar <strong class="text-ink">electrónica, robótica e ingeniería</strong> sin gastar miles de pesos ni esperar a la universidad.</p>
+      <p>Es un hackathon de hardware de <strong class="text-ink">48 horas</strong> donde adolescentes construyen robots reales y <em class="text-copper not-italic font-semibold">los hacen pelear.</em> La edad no limita la capacidad de construir.</p>
+      <p>Motores que giran, chispas que vuelan y una comunidad que no se rinde. <strong class="text-ink">Y es completamente gratis.</strong></p>
     </div>
-    <div class="reveal bg-nopal text-white border-[3px] border-ink rounded-3xl p-8 loteria">
-      <h3 class="font-display font-bold text-2xl mb-5 flex items-center gap-2"><i class="bi bi-patch-check-fill text-amarillo"></i> No necesitas experiencia</h3>
-      <ul class="space-y-4 font-semibold">
-        <li class="flex items-start gap-3"><i class="bi bi-cpu-fill text-amarillo mt-1"></i> Hardware y kits incluidos</li>
-        <li class="flex items-start gap-3"><i class="bi bi-people-fill text-amarillo mt-1"></i> Mentoría en todo momento</li>
-        <li class="flex items-start gap-3"><i class="bi bi-cup-hot-fill text-amarillo mt-1"></i> Comida durante el evento</li>
-        <li class="flex items-start gap-3"><i class="bi bi-heart-fill text-amarillo mt-1"></i> Una tribu que te entiende</li>
-        <li class="flex items-start gap-3"><i class="bi bi-emoji-laughing-fill text-amarillo mt-1"></i> 100% gratis, siempre</li>
+    <div class="reveal panel bolts tag-top p-8" style="--acc:#1C7C9C">
+      <h3 class="display text-xl mb-5 flex items-center gap-2"><i class="bi bi-clipboard2-check text-talavera"></i> No necesitas experiencia</h3>
+      <ul class="space-y-4 text-ink-soft font-medium">
+        <li class="flex items-start gap-3"><i class="bi bi-cpu-fill text-copper mt-1"></i> Hardware y kits incluidos</li>
+        <li class="flex items-start gap-3"><i class="bi bi-people-fill text-copper mt-1"></i> Mentoría en todo momento</li>
+        <li class="flex items-start gap-3"><i class="bi bi-cup-hot-fill text-copper mt-1"></i> Comida durante el evento</li>
+        <li class="flex items-start gap-3"><i class="bi bi-fire text-copper mt-1"></i> Una tribu que no se rinde</li>
+        <li class="flex items-start gap-3"><i class="bi bi-cash-coin text-copper mt-1"></i> 100% gratis, siempre</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- ════ PROYECTOS (cartas de lotería) ════ -->
-<section id="proyectos" class="relative bg-paper2 border-y-[3px] border-ink py-24 overflow-hidden">
-  <!-- chile colgando -->
-  <svg class="absolute top-0 right-[10%] w-12 animate-sway hidden sm:block" style="transform-origin:top center" viewBox="0 0 40 90"><path d="M20 2 q4 6 0 12" fill="none" stroke="#2E8B57" stroke-width="4" stroke-linecap="round"/><path d="M20 14 q14 16 6 44 q-8 26 -10 28 q-8-2-6-26 q2-30 10-46 Z" fill="#D62828" stroke="#A81E1E" stroke-width="3"/></svg>
-  <div class="max-w-6xl mx-auto px-5">
-    <div class="reveal text-center max-w-2xl mx-auto">
-      <p class="font-hand text-3xl text-rosa">el reto</p>
-      <h2 class="font-display font-bold text-5xl sm:text-6xl mt-1">Elige tu <span class="text-rojo uw">arma</span></h2>
-      <p class="text-ink/70 mt-4 text-lg">Mínimo 3, máximo 4 por equipo. Todos terminan en el ring.</p>
+<!-- ════ PROYECTOS ════ -->
+<section id="proyectos" class="bg-paper2 border-y-2 border-ink py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="reveal">
+      <p class="label text-copper text-sm">// 02_build</p>
+      <h2 class="display text-5xl sm:text-7xl mt-3">Elige tu <span class="text-copper">arma</span></h2>
+      <p class="text-ink-soft mt-4 max-w-xl">Mínimo 3, máximo 4 por equipo. Todos terminan en el ring.</p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-14">
-      <!-- carta 1 -->
-      <article class="reveal bg-cream border-[3px] border-ink rounded-3xl p-3 loteria rotate-1">
-        <div class="rounded-2xl border-2 border-ink bg-rosa/10 p-6 text-center">
-          <div class="flex justify-between font-display font-bold text-rojo"><span>I</span><span>EL SUMO</span></div>
-          <i class="bi bi-bullseye text-6xl text-rojo my-5 inline-block hover:animate-spin-slow"></i>
-          <h3 class="font-display font-bold text-2xl">Robot Sumo</h3>
-          <p class="text-ink/75 mt-2">Empuja a tu rival fuera del ring. Reto extra: <strong class="text-rosa">brazo inalámbrico con potenciómetro.</strong></p>
-        </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 mt-12">
+      <article class="reveal panel bolts tag-top p-7 pt-10" style="--acc:#C2622F">
+        <div class="flex items-center justify-between label text-xs text-ink-mut"><span>UNIT_01</span><span class="text-copper">Combate</span></div>
+        <i class="bi bi-bullseye text-5xl text-copper my-5 inline-block"></i>
+        <h3 class="display text-2xl">Robot Sumo</h3>
+        <p class="text-ink-soft mt-3">Empuja a tu rival fuera del ring. Reto extra: <strong class="text-ink">brazo inalámbrico con potenciómetro.</strong></p>
       </article>
-      <!-- carta 2 -->
-      <article class="reveal bg-cream border-[3px] border-ink rounded-3xl p-3 loteria -rotate-1 sm:translate-y-4">
-        <div class="rounded-2xl border-2 border-ink bg-nopal/10 p-6 text-center">
-          <div class="flex justify-between font-display font-bold text-nopal-dark"><span>II</span><span>LA ARAÑA</span></div>
-          <i class="bi bi-bug-fill text-6xl text-nopal-dark my-5 inline-block hover:animate-bob"></i>
-          <h3 class="font-display font-bold text-2xl">Quadruped Bot</h3>
-          <p class="text-ink/75 mt-2">Un robot de 4 patas que camina. Reto extra: <strong class="text-nopal-dark">cámara FPV</strong> en primera persona.</p>
-        </div>
+      <article class="reveal panel bolts tag-top p-7 pt-10" style="--acc:#3E7D5A">
+        <div class="flex items-center justify-between label text-xs text-ink-mut"><span>UNIT_02</span><span class="text-agave">Locomoción</span></div>
+        <i class="bi bi-bug-fill text-5xl text-agave my-5 inline-block"></i>
+        <h3 class="display text-2xl">Quadruped Bot</h3>
+        <p class="text-ink-soft mt-3">Robot de 4 patas que camina. Reto extra: <strong class="text-ink">cámara FPV</strong> en primera persona.</p>
       </article>
-      <!-- carta 3 -->
-      <article class="reveal bg-cream border-[3px] border-ink rounded-3xl p-3 loteria rotate-1 sm:col-span-2 lg:col-span-1 sm:max-w-sm sm:mx-auto lg:max-w-none">
-        <div class="rounded-2xl border-2 border-ink bg-azul/10 p-6 text-center">
-          <div class="flex justify-between font-display font-bold text-azul-dark"><span>III</span><span>EL BÓLIDO</span></div>
-          <i class="bi bi-controller text-6xl text-azul-dark my-5 inline-block hover:animate-wiggle"></i>
-          <h3 class="font-display font-bold text-2xl">Carro RC</h3>
-          <p class="text-ink/75 mt-2">Control remoto a toda velocidad. Reto extra: <strong class="text-azul-dark">control por gestos de mano.</strong></p>
-        </div>
+      <article class="reveal panel bolts tag-top p-7 pt-10 sm:col-span-2 lg:col-span-1 sm:max-w-md sm:mx-auto lg:max-w-none" style="--acc:#1C7C9C">
+        <div class="flex items-center justify-between label text-xs text-ink-mut"><span>UNIT_03</span><span class="text-talavera">Velocidad</span></div>
+        <i class="bi bi-controller text-5xl text-talavera my-5 inline-block"></i>
+        <h3 class="display text-2xl">Carro RC</h3>
+        <p class="text-ink-soft mt-3">Control remoto a toda velocidad. Reto extra: <strong class="text-ink">control por gestos de mano.</strong></p>
       </article>
     </div>
 
-    <p class="reveal text-center text-ink/60 mt-12 font-display">
-      <i class="bi bi-box-seam text-rojo"></i> Cada equipo recibe un kit con drones, base de quadruped y materiales según el proyecto.
+    <p class="reveal text-center text-ink-mut mt-12 label text-xs">
+      <i class="bi bi-box-seam text-copper"></i> Cada equipo recibe un kit con drones, base de quadruped y materiales según el proyecto.
     </p>
   </div>
 </section>
 
 <!-- ════ TIMELINE ════ -->
-<section id="timeline" class="max-w-4xl mx-auto px-5 py-24">
-  <div class="reveal text-center">
-    <p class="font-hand text-3xl text-rosa">el programa</p>
-    <h2 class="font-display font-bold text-5xl sm:text-6xl mt-1">48 horas de <span class="text-naranja uw">fiesta</span></h2>
+<section id="timeline" class="max-w-4xl mx-auto px-6 py-24">
+  <div class="reveal">
+    <p class="label text-copper text-sm">// 03_programa</p>
+    <h2 class="display text-5xl sm:text-7xl mt-3">48 horas <span class="text-copper">non-stop</span></h2>
   </div>
 
-  <ol class="mt-14 relative border-l-[3px] border-dashed border-ink/40 ml-4 space-y-9">
+  <ol class="mt-14 relative ml-3 space-y-9">
+    <span class="absolute left-0 top-2 bottom-2 w-[3px] bg-ink"></span>
     <li class="reveal ml-8 relative">
-      <span class="absolute -left-[3.05rem] top-0 w-9 h-9 bg-amarillo border-[3px] border-ink rounded-full grid place-items-center text-ink"><i class="bi bi-flag-fill"></i></span>
-      <p class="font-display font-semibold text-rojo">Viernes 20 · 2:00–4:00 PM</p>
-      <h3 class="font-display font-bold text-2xl">Registro & Ceremonia</h3>
-      <p class="text-ink/75 mt-1">Llegada, kits, gafetes y apertura (30 min). Conoce a tu equipo.</p>
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-copper border-2 border-ink grid place-items-center text-card text-sm"><i class="bi bi-flag-fill"></i></span>
+      <p class="label text-xs text-talavera">Vie 20 · 14:00–16:00</p>
+      <h3 class="display text-2xl mt-1">Registro & Ceremonia</h3>
+      <p class="text-ink-soft mt-1">Llegada, kits, gafetes y apertura (30 min). Conoce a tu equipo.</p>
     </li>
     <li class="reveal ml-8 relative">
-      <span class="absolute -left-[3.05rem] top-0 w-9 h-9 bg-nopal border-[3px] border-ink rounded-full grid place-items-center text-white"><i class="bi bi-tools"></i></span>
-      <p class="font-display font-semibold text-rojo">Día 1 — Noche</p>
-      <h3 class="font-display font-bold text-2xl">Construye</h3>
-      <p class="text-ink/75 mt-1">Talleres guiados, primer prototipo funcional, cena y networking.</p>
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-agave border-2 border-ink grid place-items-center text-card text-sm"><i class="bi bi-tools"></i></span>
+      <p class="label text-xs text-talavera">Día 1 · Noche</p>
+      <h3 class="display text-2xl mt-1">Construye</h3>
+      <p class="text-ink-soft mt-1">Talleres guiados, primer prototipo funcional, cena y networking.</p>
     </li>
     <li class="reveal ml-8 relative">
-      <span class="absolute -left-[3.05rem] top-0 w-9 h-9 bg-azul border-[3px] border-ink rounded-full grid place-items-center text-white"><i class="bi bi-moon-stars-fill"></i></span>
-      <p class="font-display font-semibold text-rojo">Madrugada</p>
-      <h3 class="font-display font-bold text-2xl">Noche de aura</h3>
-      <p class="text-ink/75 mt-1">Karaoke, Just Dance, chocolate Abuelita + pan dulce + historias de horror. Y un Demo Show de madrugada.</p>
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-talavera border-2 border-ink grid place-items-center text-card text-sm"><i class="bi bi-moon-stars-fill"></i></span>
+      <p class="label text-xs text-talavera">Madrugada</p>
+      <h3 class="display text-2xl mt-1">Modo descanso</h3>
+      <p class="text-ink-soft mt-1">Karaoke, Just Dance, chocolate Abuelita + pan dulce + historias de horror. Demo Show de madrugada.</p>
     </li>
     <li class="reveal ml-8 relative">
-      <span class="absolute -left-[3.05rem] top-0 w-9 h-9 bg-rosa border-[3px] border-ink rounded-full grid place-items-center text-white"><i class="bi bi-trophy-fill"></i></span>
-      <p class="font-display font-semibold text-rojo">Día 2 — Cierre</p>
-      <h3 class="font-display font-bold text-2xl">Demo, votación & ¡PELEAS!</h3>
-      <p class="text-ink/75 mt-1">Demos finales, votación peer-to-peer (most aura, most woah, most dance) y lo que todos esperan: <strong class="text-rojo">I wanna see a fight.</strong></p>
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-marigold border-2 border-ink grid place-items-center text-ink text-sm"><i class="bi bi-trophy-fill"></i></span>
+      <p class="label text-xs text-talavera">Día 2 · Cierre</p>
+      <h3 class="display text-2xl mt-1">Demo, votación & batalla</h3>
+      <p class="text-ink-soft mt-1">Demos finales, votación peer-to-peer (most aura, most woah, most dance) y lo que todos esperan: <strong class="text-copper">I wanna see a fight.</strong></p>
     </li>
   </ol>
 </section>
 
 <!-- ════ DINÁMICAS ════ -->
-<section class="bg-paper2 border-y-[3px] border-ink py-24">
-  <div class="max-w-6xl mx-auto px-5">
-    <div class="reveal text-center">
-      <p class="font-hand text-3xl text-rosa">no solo se construye</p>
-      <h2 class="font-display font-bold text-5xl sm:text-6xl mt-1">Dinámicas & <span class="text-rosa uw">aura</span></h2>
+<section class="bg-paper2 border-y-2 border-ink py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="reveal">
+      <p class="label text-copper text-sm">// 04_no_solo_se_construye</p>
+      <h2 class="display text-5xl sm:text-6xl mt-3">Dinámicas & <span class="text-copper">aura</span></h2>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
-      <div class="reveal bg-cream border-[3px] border-ink rounded-3xl p-6 text-center loteria rotate-1"><i class="bi bi-mic-fill text-4xl text-rosa"></i><h3 class="font-display font-bold mt-3">Karaoke</h3><p class="text-sm text-ink/65">Olivia Rodrigo & clásicos</p></div>
-      <div class="reveal bg-cream border-[3px] border-ink rounded-3xl p-6 text-center loteria -rotate-1"><i class="bi bi-music-note-beamed text-4xl text-naranja"></i><h3 class="font-display font-bold mt-3">Just Dance</h3><p class="text-sm text-ink/65">Most dance show-off</p></div>
-      <div class="reveal bg-cream border-[3px] border-ink rounded-3xl p-6 text-center loteria rotate-1"><i class="bi bi-camera-reels-fill text-4xl text-azul"></i><h3 class="font-display font-bold mt-3">Livestream</h3><p class="text-sm text-ink/65">Fotos en vivo del hack</p></div>
-      <div class="reveal bg-cream border-[3px] border-ink rounded-3xl p-6 text-center loteria -rotate-1"><i class="bi bi-shield-shaded text-4xl text-nopal"></i><h3 class="font-display font-bold mt-3">LARPing</h3><p class="text-sm text-ink/65">Be a larper</p></div>
+      <div class="reveal panel bolts tag-top p-6 pt-9 text-center" style="--acc:#C2622F"><i class="bi bi-mic-fill text-3xl text-copper"></i><h3 class="display text-lg mt-3">Karaoke</h3><p class="text-sm text-ink-mut">Olivia Rodrigo & clásicos</p></div>
+      <div class="reveal panel bolts tag-top p-6 pt-9 text-center" style="--acc:#1C7C9C"><i class="bi bi-music-note-beamed text-3xl text-talavera"></i><h3 class="display text-lg mt-3">Just Dance</h3><p class="text-sm text-ink-mut">Most dance show-off</p></div>
+      <div class="reveal panel bolts tag-top p-6 pt-9 text-center" style="--acc:#3E7D5A"><i class="bi bi-camera-reels-fill text-3xl text-agave"></i><h3 class="display text-lg mt-3">Livestream</h3><p class="text-sm text-ink-mut">Fotos en vivo del hack</p></div>
+      <div class="reveal panel bolts tag-top p-6 pt-9 text-center" style="--acc:#E0A019"><i class="bi bi-shield-shaded text-3xl text-marigold"></i><h3 class="display text-lg mt-3">LARPing</h3><p class="text-sm text-ink-mut">Be a larper</p></div>
     </div>
 
-    <div class="reveal mt-10 bg-amarillo border-[3px] border-ink rounded-3xl p-8 loteria flex flex-col sm:flex-row items-center gap-6">
-      <i class="bi bi-shop text-6xl text-ink"></i>
+    <div class="reveal mt-8 panel bolts tag-top p-8 pt-10 flex flex-col sm:flex-row items-center gap-6" style="--acc:#C2622F">
+      <i class="bi bi-shop text-5xl text-copper"></i>
       <div>
-        <h3 class="font-display font-bold text-2xl">Tienda de Puntos Física</h3>
-        <p class="text-ink/80 mt-1 font-semibold">Gana puntos y canjéalos <span class="text-rojo">cuando quieras</span> por comida, helado, pins, stickers, PCBs, reglas-PCB y llaveros.</p>
+        <h3 class="display text-2xl">Tienda de puntos física</h3>
+        <p class="text-ink-soft mt-1">Gana puntos durante el evento y canjéalos <span class="text-copper font-semibold">cuando quieras</span> por comida, helado, pins, stickers, PCBs, reglas-PCB y llaveros.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ════ MERCH ════ -->
-<section id="merch" class="max-w-6xl mx-auto px-5 py-24">
-  <div class="reveal text-center">
-    <p class="font-hand text-3xl text-rosa">llévatelo puesto</p>
-    <h2 class="font-display font-bold text-5xl sm:text-6xl mt-1">Merch de <span class="text-azul uw blue">Revolution</span></h2>
-    <p class="text-ink/70 mt-3 font-display">Dos diseños, una sola camisa. Pásale el cursor 👆</p>
+<section id="merch" class="max-w-6xl mx-auto px-6 py-24">
+  <div class="reveal">
+    <p class="label text-copper text-sm">// 05_merch</p>
+    <h2 class="display text-5xl sm:text-7xl mt-3">Merch de <span class="text-copper">Revolution</span></h2>
+    <p class="text-ink-soft mt-3">Dos diseños, una sola camisa. Pásale el cursor.</p>
   </div>
 
   <div class="grid md:grid-cols-2 gap-10 mt-12 items-center">
-    <!-- camisas empalmadas (encimadas) -->
     <div class="reveal relative h-[420px] sm:h-[500px]">
-      <figure class="shirt-pile absolute left-[4%] top-[14%] w-[62%] z-10 rotate-[-8deg] hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
+      <figure class="shirt-pile absolute left-[4%] top-[14%] w-[62%] z-10 -rotate-6 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
         <img src="assets/media/revolution-tshirt-v1-front-backgroungout.png" alt="Camisa Revolution — diseño lotería Hack Club">
-        <figcaption class="sticker bg-rosa text-white text-sm px-3 py-1 inline-block -rotate-6 mt-1">Lotería</figcaption>
+        <figcaption class="label text-xs text-ink-mut mt-2">Lotería</figcaption>
       </figure>
-      <figure class="shirt-pile absolute right-[4%] top-[-2%] w-[62%] z-20 rotate-[7deg] hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
+      <figure class="shirt-pile absolute right-[4%] top-[-2%] w-[62%] z-20 rotate-6 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
         <img src="assets/media/revolution-tshirt-v1-back-backgroungout.png" alt="Camisa Revolution — script Revolution Hack Club">
-        <figcaption class="sticker bg-azul text-white text-sm px-3 py-1 inline-block rotate-6 mt-1">Script</figcaption>
+        <figcaption class="label text-xs text-ink-mut mt-2 text-right">Script</figcaption>
       </figure>
     </div>
 
     <div class="reveal">
-      <p class="font-display font-bold text-rojo mb-5"><i class="bi bi-stars text-amarillo"></i> Y mucho más en el evento:</p>
+      <p class="label text-xs text-talavera mb-5"><i class="bi bi-cpu text-copper"></i> Y mucho más en el evento</p>
       <div class="grid grid-cols-2 gap-5">
-        <div class="bg-cream border-[3px] border-ink rounded-2xl p-5 loteria rotate-1"><i class="bi bi-person-badge text-3xl text-rosa"></i><h3 class="font-display font-bold mt-2">Camiseta</h3></div>
-        <div class="bg-cream border-[3px] border-ink rounded-2xl p-5 loteria -rotate-1"><i class="bi bi-card-heading text-3xl text-azul"></i><h3 class="font-display font-bold mt-2">Lanyard</h3></div>
-        <div class="bg-cream border-[3px] border-ink rounded-2xl p-5 loteria -rotate-1"><i class="bi bi-sticky-fill text-3xl text-naranja"></i><h3 class="font-display font-bold mt-2">Stickers</h3></div>
-        <div class="bg-cream border-[3px] border-ink rounded-2xl p-5 loteria rotate-1"><i class="bi bi-key-fill text-3xl text-nopal"></i><h3 class="font-display font-bold mt-2">Llaveros</h3></div>
-        <div class="bg-cream border-[3px] border-ink rounded-2xl p-5 loteria rotate-1"><i class="bi bi-cpu text-3xl text-rojo"></i><h3 class="font-display font-bold mt-2">PCB</h3></div>
-        <div class="bg-cream border-[3px] border-ink rounded-2xl p-5 loteria -rotate-1"><i class="bi bi-bag-fill text-3xl text-rosa"></i><h3 class="font-display font-bold mt-2">Tote bag</h3></div>
+        <div class="panel bolts p-5 pt-9"><i class="bi bi-person-badge text-2xl text-copper"></i><h3 class="display text-base mt-2">Camiseta</h3></div>
+        <div class="panel bolts p-5 pt-9"><i class="bi bi-card-heading text-2xl text-talavera"></i><h3 class="display text-base mt-2">Lanyard</h3></div>
+        <div class="panel bolts p-5 pt-9"><i class="bi bi-sticky-fill text-2xl text-agave"></i><h3 class="display text-base mt-2">Stickers</h3></div>
+        <div class="panel bolts p-5 pt-9"><i class="bi bi-key-fill text-2xl text-marigold"></i><h3 class="display text-base mt-2">Llaveros</h3></div>
+        <div class="panel bolts p-5 pt-9"><i class="bi bi-cpu text-2xl text-copper"></i><h3 class="display text-base mt-2">PCB</h3></div>
+        <div class="panel bolts p-5 pt-9"><i class="bi bi-bag-fill text-2xl text-talavera"></i><h3 class="display text-base mt-2">Tote bag</h3></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ════ SPONSORS ════ -->
-<section id="sponsors" class="bg-nopal text-white border-y-[3px] border-ink py-24">
-  <div class="max-w-4xl mx-auto px-5 text-center">
+<section id="sponsors" class="bg-paper2 border-y-2 border-ink py-24">
+  <div class="max-w-4xl mx-auto px-6 text-center">
     <div class="reveal">
-      <p class="font-hand text-3xl text-amarillo">hazlo posible</p>
-      <h2 class="font-display font-bold text-5xl sm:text-6xl mt-1">Sé un <span class="text-amarillo uw">patrocinador</span></h2>
-      <p class="text-white/90 text-lg mt-6 max-w-2xl mx-auto">Revolution es 100% gratis para los hackers gracias a empresas y personas que creen en la próxima generación de ingenieros.</p>
+      <p class="label text-copper text-sm">// 06_aliados</p>
+      <h2 class="display text-5xl sm:text-7xl mt-3">Sé un <span class="text-copper">aliado</span></h2>
+      <p class="text-ink-soft text-lg mt-6 max-w-2xl mx-auto">Revolution es 100% gratis para los makers gracias a empresas y personas que creen en la próxima generación de ingenieros.</p>
     </div>
-    <div class="reveal grid sm:grid-cols-3 gap-6 mt-12 text-left text-ink">
-      <div class="bg-cream border-[3px] border-ink rounded-3xl p-6 loteria"><i class="bi bi-cpu-fill text-4xl text-rosa"></i><h3 class="font-display font-bold text-xl mt-3">Hardware</h3><p class="text-ink/70 mt-1">Dona componentes y kits para los equipos.</p></div>
-      <div class="bg-cream border-[3px] border-ink rounded-3xl p-6 loteria"><i class="bi bi-cup-straw text-4xl text-naranja"></i><h3 class="font-display font-bold text-xl mt-3">Comida & venue</h3><p class="text-ink/70 mt-1">Mantén a 100 hackers con energía 48h.</p></div>
-      <div class="bg-cream border-[3px] border-ink rounded-3xl p-6 loteria"><i class="bi bi-megaphone-fill text-4xl text-azul"></i><h3 class="font-display font-bold text-xl mt-3">Marca</h3><p class="text-ink/70 mt-1">Tu logo en camisas, web y livestream.</p></div>
+    <div class="reveal grid sm:grid-cols-3 gap-6 mt-12 text-left">
+      <div class="panel bolts tag-top p-6 pt-10" style="--acc:#C2622F"><i class="bi bi-cpu-fill text-3xl text-copper"></i><h3 class="display text-xl mt-3">Hardware</h3><p class="text-ink-soft mt-1">Dona componentes y kits para los equipos.</p></div>
+      <div class="panel bolts tag-top p-6 pt-10" style="--acc:#3E7D5A"><i class="bi bi-cup-straw text-3xl text-agave"></i><h3 class="display text-xl mt-3">Comida & venue</h3><p class="text-ink-soft mt-1">Mantén a 100 makers con energía 48h.</p></div>
+      <div class="panel bolts tag-top p-6 pt-10" style="--acc:#1C7C9C"><i class="bi bi-megaphone-fill text-3xl text-talavera"></i><h3 class="display text-xl mt-3">Marca</h3><p class="text-ink-soft mt-1">Tu logo en camisas, web y livestream.</p></div>
     </div>
-    <a href="mailto:jesust9x@gmail.com?subject=Quiero%20patrocinar%20Revolution" class="reveal inline-flex items-center gap-2 mt-12 font-display font-semibold text-lg px-8 py-4 bg-amarillo text-ink rounded-full border-[3px] border-ink shadow-[5px_5px_0_rgba(58,35,23,.5)] hover:-translate-y-1 transition">
-      <i class="bi bi-envelope-fill"></i> Quiero patrocinar
+    <a href="mailto:jesust9x@gmail.com?subject=Quiero%20ser%20aliado%20de%20Revolution" class="reveal btn bg-copper text-card text-base px-8 py-4 mt-12 inline-flex items-center gap-2">
+      <i class="bi bi-envelope-fill"></i> Quiero aliarme
     </a>
   </div>
 </section>
 
 <!-- ════ REGISTRO ════ -->
-<section id="registro" class="relative py-28 px-5 overflow-hidden text-center">
-  <div class="sunburst absolute -z-0 w-[120vw] sm:w-[700px] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin-slow opacity-50"></div>
+<section id="registro" class="relative py-28 px-6 overflow-hidden text-center blueprint">
+  <div class="absolute inset-0" style="background:radial-gradient(ellipse at center, rgba(194,98,47,.12), transparent 70%)"></div>
+  <i class="bi bi-gear-fill absolute text-ink/[0.04] text-[50vw] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin-slow"></i>
   <div class="relative z-10 max-w-3xl mx-auto">
-    <p class="reveal font-hand text-3xl text-rosa">100 lugares · 48 horas · $0</p>
-    <h2 class="reveal font-display font-bold text-5xl sm:text-7xl mt-1">Únete a la <span class="nopal-text">Revolución</span></h2>
-    <p class="reveal text-ink/80 text-lg mt-6 font-semibold">Solo necesitas ganas de construir y pelear. Nosotros ponemos lo demás.</p>
+    <p class="reveal label text-talavera text-sm">100 lugares · 48 horas · $0</p>
+    <h2 class="reveal display text-5xl sm:text-7xl mt-3">Únete a la <span class="text-copper">revolución</span></h2>
+    <p class="reveal text-ink-soft text-lg mt-6">Solo necesitas ganas de construir. Nosotros ponemos el hardware.</p>
     <div class="reveal mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="#" class="group font-display font-bold text-lg px-10 py-4 bg-rosa text-white rounded-full border-[3px] border-ink shadow-[5px_5px_0_rgba(58,35,23,.85)] hover:-translate-y-1 transition flex items-center gap-2">
+      <a href="#" class="group btn bg-copper text-card text-base px-10 py-4 flex items-center gap-2">
         Regístrate gratis <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
       </a>
-      <a href="#" class="font-display font-semibold text-lg px-10 py-4 bg-cream text-ink rounded-full border-[3px] border-ink shadow-[5px_5px_0_rgba(58,35,23,.85)] hover:-translate-y-1 transition">
-        Documento legal (padres)
-      </a>
+      <a href="#" class="btn bg-card text-ink text-base px-10 py-4">Documento legal (padres)</a>
     </div>
-    <p class="reveal font-display text-ink/70 mt-8"><i class="bi bi-geo-alt-fill text-rojo"></i> El Horno3 · Parque Fundidora, Monterrey · 20 Nov</p>
+    <p class="reveal label text-xs text-ink-mut mt-8"><i class="bi bi-geo-alt-fill text-copper"></i> El Horno3 · Parque Fundidora, Monterrey · 20 Nov</p>
   </div>
 </section>
 
-<!-- franja serape -->
-<div class="serape"></div>
-
 <!-- ════ FOOTER ════ -->
-<footer class="bg-ink text-paper py-12 px-5">
+<footer class="bg-ink text-paper py-12 px-6">
   <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-center">
-    <div class="font-display font-bold text-xl text-amarillo flex items-center gap-2">
-      <i class="bi bi-gear-fill animate-spin-slow"></i> REVOLUTION
-    </div>
-    <p class="font-display text-sm text-paper/70">Un evento de <a href="https://hackclub.com" class="text-rosa-soft hover:underline">Hack Club</a> · Hecho por hackers, para hackers · Monterrey 2026</p>
-    <div class="flex gap-3 text-xl">
-      <a href="https://hackclub.com" class="w-10 h-10 grid place-items-center rounded-full bg-paper/10 hover:bg-rosa transition"><i class="bi bi-slack"></i></a>
-      <a href="#" class="w-10 h-10 grid place-items-center rounded-full bg-paper/10 hover:bg-naranja transition"><i class="bi bi-instagram"></i></a>
-      <a href="#" class="w-10 h-10 grid place-items-center rounded-full bg-paper/10 hover:bg-azul transition"><i class="bi bi-github"></i></a>
-      <a href="mailto:jesust9x@gmail.com" class="w-10 h-10 grid place-items-center rounded-full bg-paper/10 hover:bg-nopal transition"><i class="bi bi-envelope-fill"></i></a>
+    <div class="display text-xl flex items-center gap-2"><i class="bi bi-gear-fill text-copper animate-spin-slow"></i> REVOLUTION</div>
+    <p class="label text-[11px] text-paper/60">Un evento de <a href="https://hackclub.com" class="text-copper hover:underline">Hack Club</a> · Hecho por hackers · MTY 2026</p>
+    <div class="flex gap-3 text-xl text-paper/70">
+      <a href="https://hackclub.com" class="hover:text-copper transition"><i class="bi bi-slack"></i></a>
+      <a href="#" class="hover:text-copper transition"><i class="bi bi-instagram"></i></a>
+      <a href="#" class="hover:text-copper transition"><i class="bi bi-github"></i></a>
+      <a href="mailto:jesust9x@gmail.com" class="hover:text-copper transition"><i class="bi bi-envelope-fill"></i></a>
     </div>
   </div>
 </footer>
 
 <script>
-  // Papel picado generado (recto arriba, colgado/curvo en el hero)
-  (function(){
-    const colors = ['#E4007C','#FF7A1A','#FFC21A','#2E8B57','#159FC9','#D62828'];
-    function pennant(c, i){
-      return `<svg class="pennant" style="animation-delay:${(i%6)*0.2}s" width="42" height="52" viewBox="0 0 42 52">
-        <path d="M2 2 H40 V30 L21 50 L2 30 Z" fill="${c}" stroke="#3A2317" stroke-width="2"/>
-        <circle cx="21" cy="18" r="5" fill="#FFF6E9"/>
-        <circle cx="12" cy="12" r="2.5" fill="#FFF6E9"/>
-        <circle cx="30" cy="12" r="2.5" fill="#FFF6E9"/>
-      </svg>`;
-    }
-    function fill(el, droop){
-      if(!el) return;
-      const n = Math.min(28, Math.ceil(window.innerWidth/52));
-      let html = '';
-      for(let i=0;i<n;i++){
-        const t = i/(n-1);
-        // arco: cuelga más en el centro
-        const y = droop ? Math.sin(Math.PI*t) * droop : 0;
-        html += `<span style="display:inline-block;transform:translateY(${y}px)">${pennant(colors[i%colors.length], i)}</span>`;
-      }
-      el.innerHTML = html;
-    }
-    function draw(){
-      fill(document.getElementById('bunting'), 0);       // recto, fijo arriba
-      fill(document.getElementById('heroBunting'), 95);  // colgado de borde a borde
-    }
-    draw();
-    let rt; window.addEventListener('resize', ()=>{ clearTimeout(rt); rt=setTimeout(draw,200); });
-  })();
-
-  // Menú móvil
   const toggle = document.getElementById('navToggle');
   const menu = document.getElementById('mobileMenu');
   toggle.addEventListener('click', () => menu.classList.toggle('hidden'));
   menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.add('hidden')));
 
-  // Reveal al hacer scroll
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
