@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>REVOLUTION — Hackathon de Robótica · Hack Club Monterrey</title>
+<title>REVOLUTION — Hackathon de Hardware · Hack Club Monterrey</title>
 <meta name="description" content="REVOLUTION: 48 horas para construir robots, hacerlos pelear y aprender hardware de verdad. Hackathon en El Horno3, Parque Fundidora, Monterrey. 20 de Noviembre.">
 
 <!-- Fonts: Big Shoulders Display (cartel), Space Mono (técnico), Inter (cuerpo) -->
@@ -76,6 +76,12 @@
       drop-shadow(0 16px 26px rgba(210,119,59,.5)); }
   .gear-o{ height:.82em; width:auto; }
   .cactus-i{ height:1.02em; width:auto; margin:0 .005em; }
+  .mach-n{ height:1.12em; width:auto; margin:0 .02em; }
+  /* logo mini (nav / footer) con degradado del logo */
+  .logo-mini{ font-family:'"Big Shoulders Display"',sans-serif; font-weight:900; letter-spacing:.01em;
+    background:linear-gradient(180deg, #FFEBB4 0%, #FFC24D 30%, #F2843A 65%, #E0556A 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    -webkit-text-stroke:1px #2A150D; }
   /* botones */
   .btn{ font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
     border:2px solid currentColor; transition:transform .18s ease, box-shadow .18s ease, background .18s, color .18s; }
@@ -138,9 +144,9 @@
 <nav class="fixed top-4 inset-x-0 z-50 px-4">
   <div class="w-fit mx-auto flex flex-col items-center">
     <div id="navPill" class="flex items-center gap-1 bg-night/75 backdrop-blur border border-white/15 rounded-full pl-5 pr-2 py-2 shadow-[0_10px_34px_rgba(0,0,0,.45)]">
-      <a href="#home" class="display text-xl flex items-center gap-2 text-bone pr-2">
+      <a href="#home" class="text-xl flex items-center gap-2 pr-2">
         <svg class="w-4 h-5" viewBox="0 0 40 56" aria-hidden="true"><g fill="#39A98C" stroke="#150E29" stroke-width="2"><path d="M20 56V30"/><path d="M20 34c-6-2-12-10-12-22 6 2 12 8 12 22z"/><path d="M20 34c6-2 12-10 12-22-6 2-12 8-12 22z"/><path d="M20 30c-4-4-6-14-2-26 4 6 6 16 2 26z"/></g></svg>
-        REVOLUTION
+        <span class="logo-mini">REVOLUTION</span>
       </a>
       <div class="hidden md:flex items-center gap-1 label text-[11px] text-bone-mut">
         <a href="#que-es" class="px-3 py-1.5 rounded-full hover:text-copper hover:bg-white/5 transition">Qué_es</a>
@@ -219,7 +225,7 @@
 
   <!-- contenido -->
   <div class="relative z-20 max-w-5xl mt-20">
-    <p class="label text-marigold text-xs sm:text-sm mb-4 animate-glow">Hack Club presenta</p>
+    <p class="label text-marigold text-xs sm:text-sm mb-4 animate-glow flex items-center justify-center gap-2"><img src="assets/media/hackclub-logo.png" alt="Hack Club" class="h-5 sm:h-6 w-auto"> presenta</p>
 
     <!-- WORDMARK custom: letras 3D + engrane-O + cactus-I + agaves -->
     <div class="w-full flex justify-center">
@@ -244,7 +250,7 @@
       </svg>
 
       <!-- letras con engrane en la O -->
-      <h1 class="logo-wrap flex items-center justify-center gap-[.01em] text-[18vw] sm:text-[15vw] md:text-[11rem]" aria-label="Revolution">
+      <h1 class="logo-wrap flex items-center justify-center flex-nowrap gap-[.01em] leading-none text-[clamp(2.1rem,12.5vw,11rem)]" aria-label="Revolution">
         <span class="lt">R</span><span class="lt">E</span><span class="lt">V</span>
         <svg class="gear-o animate-spin-slow" viewBox="-30 -30 60 60" aria-hidden="true">
           <defs><linearGradient id="go" x1="0" y1="0" x2="0" y2="1">
@@ -266,7 +272,24 @@
           </g>
           <circle cx="30" cy="36" r="7.5" fill="#FF4D8D" stroke="#143D29" stroke-width="3.5"/><circle cx="30" cy="36" r="3" fill="#FFC24D"/>
         </svg>
-        <span class="lt">O</span><span class="lt">N</span>
+        <span class="lt">O</span>
+        <!-- N = tres machetes -->
+        <svg class="mach-n" viewBox="0 0 96 114" aria-hidden="true">
+          <defs>
+            <linearGradient id="steel" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#C7CBD2"/><stop offset=".5" stop-color="#F2F4F8"/><stop offset="1" stop-color="#9AA0AA"/>
+            </linearGradient>
+            <g id="mach">
+              <path fill="url(#steel)" stroke="#2A150D" stroke-width="3.5" stroke-linejoin="round" d="M7 80 L7 16 Q9 4 15 4 L19 11 L19 80 Z"/>
+              <path fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity=".55" d="M16 16 L16 74"/>
+              <rect x="3" y="78" width="20" height="5" rx="2" fill="#2A150D"/>
+              <rect x="7" y="82" width="12" height="26" rx="3" fill="#7A4F28" stroke="#2A150D" stroke-width="3"/>
+            </g>
+          </defs>
+          <use href="#mach" transform="translate(2 3)"/>
+          <use href="#mach" transform="translate(36 3) rotate(-26 13 56)"/>
+          <use href="#mach" transform="translate(62 3)"/>
+        </svg>
       </h1>
 
       <!-- circuito sutil que recubre el logo -->
@@ -283,13 +306,14 @@
 
     <!-- sub-banner -->
     <div class="mt-4 inline-flex items-center gap-3 label text-[10px] sm:text-xs text-bone/90 border border-white/20 rounded-full px-4 py-1.5 backdrop-blur">
-      <i class="bi bi-star-fill text-marigold text-[8px]"></i><span>Robótica</span><span class="text-copper">◆</span><span>48 horas</span><span class="text-copper">◆</span><span>Monterrey 2026</span><i class="bi bi-star-fill text-marigold text-[8px]"></i>
+      <i class="bi bi-star-fill text-marigold text-[8px]"></i><span>Hardware</span><span class="text-copper">◆</span><span>48 horas</span><span class="text-copper">◆</span><span>Monterrey 2026</span><i class="bi bi-star-fill text-marigold text-[8px]"></i>
     </div>
 
     <p class="font-display font-bold text-2xl sm:text-4xl text-bone mt-6 max-w-2xl mx-auto">
       Construye un robot. Hazlo girar. <span class="text-copper">Que pelee.</span>
     </p>
-    <p class="text-bone-mut mt-3 max-w-xl mx-auto">48 horas de hardware real, motores y comunidad — bajo el cielo de Fundidora. Sin experiencia previa.</p>
+    <p class="text-bone-mut mt-3 max-w-xl mx-auto">48 horas de hardware real, motores y comunidad. Hecho por y para adolescentes en Hack Club — sin experiencia previa.</p>
+    <div class="mt-4 flex justify-center"><img src="assets/media/hackclub-logo.png" alt="Hack Club" class="h-8 sm:h-10 w-auto"></div>
 
     <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
       <a href="#registro" class="group btn btn-fill text-base px-8 py-4 flex items-center gap-2">
@@ -532,13 +556,35 @@
   <div class="relative z-10 max-w-3xl mx-auto">
     <p class="reveal label text-marigold text-sm">100 lugares · 48 horas · $0</p>
     <h2 class="reveal display text-5xl sm:text-7xl mt-3 text-bone">Únete a la <span class="text-copper">revolución</span></h2>
-    <p class="reveal text-bone/85 text-lg mt-6">Solo necesitas ganas de construir. Nosotros ponemos el hardware.</p>
-    <div class="reveal mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="#" class="group btn btn-fill text-base px-10 py-4 flex items-center gap-2">
-        Regístrate gratis <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
-      </a>
-      <a href="#" class="btn btn-ghost text-base px-10 py-4">Documento legal (padres)</a>
+    <p class="reveal text-bone/85 text-lg mt-6">Hay dos formas de subirse a la revolución. Elige la tuya:</p>
+
+    <div class="reveal grid sm:grid-cols-2 gap-6 mt-9 text-left">
+      <!-- Camino 1: Participante -->
+      <div class="panel-light rounded-2xl p-7 flex flex-col">
+        <div class="flex items-center gap-3">
+          <span class="w-12 h-12 rounded-xl bg-copper text-night grid place-items-center text-2xl"><i class="bi bi-cpu-fill"></i></span>
+          <div><p class="label text-[10px] text-copper-dark">Camino 01</p><h3 class="display text-2xl leading-none">Soy participante</h3></div>
+        </div>
+        <p class="text-ink-soft mt-4 flex-1">Tienes <strong>13–18 años</strong> y quieres construir un robot, aprender hardware y competir. Es <strong>100% gratis.</strong></p>
+        <div class="mt-5 flex flex-col gap-3">
+          <a href="#" class="group btn btn-fill text-base px-6 py-3 flex items-center justify-center gap-2">Regístrate gratis <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i></a>
+          <a href="#" class="text-center label text-[11px] text-ink-soft hover:text-copper-dark transition"><i class="bi bi-file-earmark-text"></i> Documento legal (padres)</a>
+        </div>
+      </div>
+      <!-- Camino 2: Aliado / Sponsor -->
+      <div class="panel rounded-2xl p-7 flex flex-col border-2 border-marigold/60">
+        <div class="flex items-center gap-3">
+          <span class="w-12 h-12 rounded-xl bg-marigold text-night grid place-items-center text-2xl"><i class="bi bi-stars"></i></span>
+          <div><p class="label text-[10px] text-marigold">Camino 02</p><h3 class="display text-2xl leading-none text-bone">Soy empresa / aliado</h3></div>
+        </div>
+        <p class="text-bone/75 mt-4 flex-1">Quieres patrocinar con <strong class="text-bone">hardware, comida, venue o marca</strong> y apoyar a la próxima generación de ingenieros mexicanos.</p>
+        <div class="mt-5 flex flex-col gap-3">
+          <a href="#sponsors" class="group btn text-base px-6 py-3 flex items-center justify-center gap-2 bg-marigold text-night border-night" style="box-shadow:4px 4px 0 #150E29">Quiero ser aliado <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i></a>
+          <a href="mailto:jesust9x@gmail.com?subject=Quiero%20ser%20aliado%20de%20Revolution" class="text-center label text-[11px] text-bone-mut hover:text-marigold transition"><i class="bi bi-envelope"></i> Escríbenos directo</a>
+        </div>
+      </div>
     </div>
+
     <p class="reveal label text-xs text-bone-mut mt-8"><i class="bi bi-geo-alt-fill text-copper"></i> El Horno3 · Parque Fundidora, Monterrey · 20 Nov</p>
   </div>
 </section>
@@ -548,15 +594,18 @@
 <!-- ════ FOOTER ════ -->
 <footer class="bg-night py-12 px-6">
   <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-center">
-    <div class="display text-2xl flex items-center gap-2 text-bone">
+    <div class="text-2xl flex items-center gap-2">
       <svg class="w-5 h-6" viewBox="0 0 40 56" aria-hidden="true"><g fill="#39A98C" stroke="#150E29" stroke-width="2"><path d="M20 56V30"/><path d="M20 34c-6-2-12-10-12-22 6 2 12 8 12 22z"/><path d="M20 34c6-2 12-10 12-22-6 2-12 8-12 22z"/><path d="M20 30c-4-4-6-14-2-26 4 6 6 16 2 26z"/></g></svg>
-      REVOLUTION
+      <span class="logo-mini">REVOLUTION</span>
     </div>
-    <p class="label text-[11px] text-bone-mut">Un evento de <a href="https://hackclub.com" class="text-copper hover:underline">Hack Club</a> · Hecho por hackers · MTY 2026</p>
+    <div class="flex flex-col items-center gap-2">
+      <a href="https://hackclub.com"><img src="assets/media/hackclub-logo.png" alt="Hack Club" class="h-8 w-auto"></a>
+      <p class="label text-[11px] text-bone-mut">Hecho por y para adolescentes en Hack Club · MTY 2026</p>
+    </div>
     <div class="flex gap-3 text-xl text-bone-mut">
-      <a href="https://hackclub.com" class="hover:text-copper transition"><i class="bi bi-slack"></i></a>
-      <a href="#" class="hover:text-copper transition"><i class="bi bi-instagram"></i></a>
-      <a href="#" class="hover:text-copper transition"><i class="bi bi-github"></i></a>
+      <a href="https://hackclub.enterprise.slack.com/archives/C0BAE2BU361" class="hover:text-copper transition"><i class="bi bi-slack"></i></a>
+      <a href="https://www.instagram.com/hackclubmty_/" class="hover:text-copper transition"><i class="bi bi-instagram"></i></a>
+      <a href="https://github.com/JDHVa/Revolution-Modo-Guerra" class="hover:text-copper transition"><i class="bi bi-github"></i></a>
       <a href="mailto:jesust9x@gmail.com" class="hover:text-copper transition"><i class="bi bi-envelope-fill"></i></a>
     </div>
   </div>
