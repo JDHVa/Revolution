@@ -64,9 +64,18 @@
       background-size:140% 140%, 100% 100%; animation:skyShift 22s ease-in-out infinite; }
   .label{ font-family:'Space Mono',monospace; letter-spacing:.2em; text-transform:uppercase; }
   .display{ font-family:'"Big Shoulders Display"',sans-serif; font-weight:800; letter-spacing:.01em; line-height:.9; }
-  /* wordmark */
-  .logo-type{ font-family:'"Big Shoulders Display"',sans-serif; font-weight:900; letter-spacing:.005em;
-    color:#F4ECDC; line-height:.82; text-shadow:0 2px 0 #A85A28, 0 14px 40px rgba(210,119,59,.35); }
+  /* wordmark 3D con degradado + aura */
+  .lt{ font-family:'"Big Shoulders Display"',sans-serif; font-weight:900; line-height:.82;
+    background:linear-gradient(180deg, #FFEBB4 0%, #FFC24D 28%, #F2843A 60%, #E0556A 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    -webkit-text-stroke:2.5px #2A150D; }
+  .logo-wrap{ filter:
+      drop-shadow(2px 2px 0 #8a4a22)
+      drop-shadow(4px 4px 0 #6e3a1b)
+      drop-shadow(6px 7px 0 #4f2912)
+      drop-shadow(0 16px 26px rgba(210,119,59,.5)); }
+  .gear-o{ height:.82em; width:auto; }
+  .cactus-i{ height:1.02em; width:auto; margin:0 .005em; }
   /* botones */
   .btn{ font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
     border:2px solid currentColor; transition:transform .18s ease, box-shadow .18s ease, background .18s, color .18s; }
@@ -166,7 +175,7 @@
   <div id="embers" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
 
   <!-- papel picado colgado de borde a borde -->
-  <div id="heroPicado" class="absolute top-8 left-0 w-full flex justify-between items-start z-10 pointer-events-none relative"></div>
+  <div id="heroPicado" class="absolute top-6 left-0 w-full flex justify-between items-start z-10 pointer-events-none"></div>
 
   <!-- luna -->
   <svg class="absolute top-[12%] right-[15%] w-12 sm:w-16 animate-glow z-0" viewBox="0 0 64 64" aria-hidden="true"><path d="M46 34a20 20 0 1 1-13-19 16 16 0 0 0 13 19z" fill="#F4ECDC" opacity=".85"/></svg>
@@ -191,13 +200,14 @@
     </g>
   </svg>
 
-  <!-- sol -->
-  <div data-par="0.15" class="absolute bottom-[18%] left-1/2 -translate-x-1/2 w-[440px] max-w-[80vw] aspect-square rounded-full"
-       style="background:radial-gradient(circle, #F7C36B 0%, #F2A43A 38%, rgba(242,164,58,.0) 70%)"></div>
-  <svg data-par="0.15" class="absolute bottom-[18%] left-1/2 -translate-x-1/2 w-[300px] max-w-[58vw] animate-spin-slow opacity-40" viewBox="0 0 200 200" aria-hidden="true">
-    <circle cx="100" cy="100" r="92" fill="none" stroke="#F7C36B" stroke-width="1.5" stroke-dasharray="3 9"/>
-    <circle cx="100" cy="100" r="74" fill="none" stroke="#F7C36B" stroke-width="1.5" stroke-dasharray="2 12"/>
-  </svg>
+  <!-- sol (a la derecha, fuera del texto) -->
+  <div data-par="0.15" class="absolute bottom-[26%] right-[3%] w-[340px] max-w-[55vw] aspect-square">
+    <div class="absolute inset-0 rounded-full" style="background:radial-gradient(circle, #F7C36B 0%, #F2A43A 38%, rgba(242,164,58,.0) 70%)"></div>
+    <svg class="absolute inset-0 w-full h-full animate-spin-slow opacity-40" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="92" fill="none" stroke="#F7C36B" stroke-width="1.5" stroke-dasharray="3 9"/>
+      <circle cx="100" cy="100" r="74" fill="none" stroke="#F7C36B" stroke-width="1.5" stroke-dasharray="2 12"/>
+    </svg>
+  </div>
 
   <!-- engranes rodando (planta rodadora) -->
   <div class="roller absolute bottom-[4%] left-0 z-20 opacity-40 pointer-events-none">
@@ -208,31 +218,64 @@
   </div>
 
   <!-- contenido -->
-  <div class="relative z-20 max-w-5xl mt-10">
+  <div class="relative z-20 max-w-5xl mt-20">
     <p class="label text-marigold text-xs sm:text-sm mb-4 animate-glow">Hack Club presenta</p>
 
-    <!-- WORDMARK custom: letras + circuito + agave -->
-    <div class="relative inline-block">
-      <h1 class="logo-type text-[20vw] sm:text-[16vw] md:text-[12rem]">REVOLUTION</h1>
-      <!-- trazos de circuito sobre el wordmark -->
-      <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 220" preserveAspectRatio="none" aria-hidden="true">
-        <path class="trace" d="M30 180 H300 V120 H520" fill="none" stroke="#D2773B" stroke-width="3"/>
-        <path class="trace" d="M970 40 H700 V96 H520" fill="none" stroke="#39A98C" stroke-width="3" style="animation-delay:.8s"/>
-        <circle cx="520" cy="120" r="6" fill="#F2A43A" class="animate-glow"/>
-        <circle cx="520" cy="96" r="6" fill="#FF4D8D" class="animate-glow" style="animation-delay:.5s"/>
-        <rect x="296" y="116" width="9" height="9" fill="#39A98C"/><rect x="696" y="36" width="9" height="9" fill="#D2773B"/>
-      </svg>
-      <!-- agave creciendo del wordmark -->
-      <svg class="absolute -bottom-4 -left-6 w-20 sm:w-28" viewBox="0 0 120 120" aria-hidden="true">
+    <!-- WORDMARK custom: letras 3D + engrane-O + cactus-I + agaves -->
+    <div class="w-full flex justify-center">
+     <div class="relative w-fit">
+      <!-- agave izquierda (enmarca) -->
+      <svg class="absolute -bottom-3 -left-7 sm:-left-12 w-12 sm:w-20" viewBox="0 0 120 120" aria-hidden="true">
         <g fill="#27806A" stroke="#150E29" stroke-width="3" stroke-linejoin="round">
           <path d="M60 118 L40 60 L60 80 Z"/><path d="M60 118 L80 60 L60 80 Z"/>
           <path d="M60 118 L24 78 L56 86 Z"/><path d="M60 118 L96 78 L64 86 Z"/>
           <path d="M60 118 L34 100 L58 92 Z"/><path d="M60 118 L86 100 L62 92 Z"/>
         </g>
-        <g fill="#39A98C" stroke="#150E29" stroke-width="3" stroke-linejoin="round">
-          <path d="M60 118 L52 50 L60 70 L68 50 Z"/>
-        </g>
+        <g fill="#39A98C" stroke="#150E29" stroke-width="3" stroke-linejoin="round"><path d="M60 118 L52 50 L60 70 L68 50 Z"/></g>
       </svg>
+      <!-- agave derecha (espejo) -->
+      <svg class="absolute -bottom-3 -right-7 sm:-right-12 w-12 sm:w-20 -scale-x-100" viewBox="0 0 120 120" aria-hidden="true">
+        <g fill="#27806A" stroke="#150E29" stroke-width="3" stroke-linejoin="round">
+          <path d="M60 118 L40 60 L60 80 Z"/><path d="M60 118 L80 60 L60 80 Z"/>
+          <path d="M60 118 L24 78 L56 86 Z"/><path d="M60 118 L96 78 L64 86 Z"/>
+          <path d="M60 118 L34 100 L58 92 Z"/><path d="M60 118 L86 100 L62 92 Z"/>
+        </g>
+        <g fill="#39A98C" stroke="#150E29" stroke-width="3" stroke-linejoin="round"><path d="M60 118 L52 50 L60 70 L68 50 Z"/></g>
+      </svg>
+
+      <!-- letras con engrane en la O -->
+      <h1 class="logo-wrap flex items-center justify-center gap-[.01em] text-[18vw] sm:text-[15vw] md:text-[11rem]" aria-label="Revolution">
+        <span class="lt">R</span><span class="lt">E</span><span class="lt">V</span>
+        <svg class="gear-o animate-spin-slow" viewBox="-30 -30 60 60" aria-hidden="true">
+          <defs><linearGradient id="go" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#FFEBB4"/><stop offset=".3" stop-color="#FFC24D"/><stop offset=".62" stop-color="#F2843A"/><stop offset="1" stop-color="#E0556A"/>
+          </linearGradient></defs>
+          <path fill="url(#go)" stroke="#2A150D" stroke-width="3.5" d="M0-22l5 8 9-2 1 9 8 4-5 8 5 8-8 4-1 9-9-2-5 8-5-8-9 2-1-9-8-4 5-8-5-8 8-4 1-9 9 2z"/>
+          <circle r="9" fill="#2A150D"/><circle r="4" fill="url(#go)"/>
+        </svg>
+        <span class="lt">L</span><span class="lt">U</span><span class="lt">T</span>
+        <!-- I = cactus saguaro -->
+        <svg class="cactus-i" viewBox="0 0 60 132" aria-hidden="true">
+          <defs><linearGradient id="cac" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#6CC58E"/><stop offset=".55" stop-color="#2E8B57"/><stop offset="1" stop-color="#1C6B43"/>
+          </linearGradient></defs>
+          <g fill="url(#cac)" stroke="#143D29" stroke-width="4.5" stroke-linejoin="round">
+            <path d="M13 90 V66 a7 7 0 0 1 14 0 v12 h-14 z"/>
+            <path d="M47 82 V58 a7 7 0 0 0-14 0 v12 h14 z"/>
+            <path d="M22 130 V44 a8 8 0 0 1 16 0 V130 Z"/>
+          </g>
+          <circle cx="30" cy="36" r="7.5" fill="#FF4D8D" stroke="#143D29" stroke-width="3.5"/><circle cx="30" cy="36" r="3" fill="#FFC24D"/>
+        </svg>
+        <span class="lt">O</span><span class="lt">N</span>
+      </h1>
+
+      <!-- circuito sutil que recubre el logo -->
+      <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" viewBox="0 0 1000 220" preserveAspectRatio="none" aria-hidden="true">
+        <path class="trace" d="M30 184 H300 V120 H470" fill="none" stroke="#D2773B" stroke-width="3"/>
+        <path class="trace" d="M970 40 H700 V100 H540" fill="none" stroke="#39A98C" stroke-width="3" style="animation-delay:.8s"/>
+        <rect x="296" y="116" width="9" height="9" fill="#39A98C"/><rect x="696" y="36" width="9" height="9" fill="#D2773B"/>
+      </svg>
+     </div>
     </div>
 
     <!-- greca bajo el wordmark -->
@@ -383,6 +426,12 @@
       <p class="text-bone/70 mt-1">Llegada, kits, gafetes y apertura (30 min). Conoce a tu equipo.</p>
     </li>
     <li class="reveal ml-8 relative">
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-rosa rounded-full grid place-items-center text-night text-sm"><i class="bi bi-shield-shaded"></i></span>
+      <p class="label text-xs text-marigold">Viernes 20 · Antes de arrancar</p>
+      <h3 class="display text-2xl mt-1 text-bone">LARPing · arma tu equipo</h3>
+      <p class="text-bone/70 mt-1">Sesión de LARPing para formar escuadrones: <strong class="text-rosa">exagera tus logros</strong>, presume tu aura y convence a los demás de que te quieren en su equipo. Be a larper.</p>
+    </li>
+    <li class="reveal ml-8 relative">
       <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-agave rounded-full grid place-items-center text-night text-sm"><i class="bi bi-tools"></i></span>
       <p class="label text-xs text-marigold">Día 1 · Noche</p>
       <h3 class="display text-2xl mt-1 text-bone">Construye</h3>
@@ -531,7 +580,7 @@
     }
     const el = document.getElementById('heroPicado');
     if(el){
-      const sag = 80;                          // profundidad de cada semicírculo (arco hondo)
+      const sag = 60;                          // profundidad de cada semicírculo (arco hondo)
       const width = window.innerWidth;         // 100% del ancho
       const swags = Math.max(2, Math.round(width/440));  // semicírculos anchos de lado a lado
       const H = sag*2 + 12;
