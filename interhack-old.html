@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>---</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #E63946;
+    --red-soft: #FF6B6B;
+    --red-dim: rgba(230, 57, 70, 0.15);
+    --red-glow: rgba(230, 57, 70, 0.4);
+    --bg: #080808;
+    --bg-card: #111111;
+    --bg-card2: #161616;
+    --border: rgba(230, 57, 70, 0.2);
+    --border-bright: rgba(230, 57, 70, 0.5);
+    --text: #F0F0F0;
+    --text-muted: #888;
+    --text-dim: #555;
+    --mono: 'Space Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(8,8,8,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    color: var(--red);
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 8px; }
+  .nav-btn {
+    background: none; border: 1px solid transparent;
+    color: var(--text-muted); font-family: var(--body);
+    font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 8px 20px; border-radius: 4px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { color: var(--text); border-color: var(--border); }
+  .nav-btn.active { color: var(--red); border-color: var(--red); background: var(--red-dim); }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── CIRCUIT CANVAS ── */
+  #circuit-canvas {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; overflow: hidden;
+    padding: 120px 24px 80px;
+  }
+  .hero-bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(230,57,70,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(230,57,70,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 0;
+  }
+  .hero-vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, var(--bg) 90%);
+    z-index: 0;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0.8;
+  }
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(5rem, 14vw, 11rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .hero-title span { color: var(--red); }
+
+  .hero-sub {
+    font-family: var(--display);
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+  }
+  .hero-stats {
+    display: flex; gap: 0; margin-bottom: 48px;
+    border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+    width: fit-content; margin-left: auto; margin-right: auto;
+  }
+  .hero-stat {
+    padding: 16px 32px;
+    border-right: 1px solid var(--border);
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-num {
+    font-family: var(--mono);
+    font-size: 1.6rem;
+    color: var(--red);
+    font-weight: 700;
+    display: block;
+  }
+  .hero-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .hero-location {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+  }
+
+  .btn-primary {
+    background: var(--red); color: #fff;
+    font-family: var(--display); font-weight: 700;
+    font-size: 1rem; letter-spacing: 3px; text-transform: uppercase;
+    padding: 18px 56px; border: none; border-radius: 4px;
+    cursor: pointer; transition: all 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::after {
+    content: ''; position: absolute;
+    inset: 0; background: rgba(255,255,255,0.1);
+    transform: translateX(-100%); transition: transform 0.3s;
+  }
+  .btn-primary:hover { background: var(--red-soft); transform: translateY(-2px); box-shadow: 0 8px 30px var(--red-glow); }
+  .btn-primary:hover::after { transform: translateX(0); }
+
+  .btn-outline {
+    background: none; color: var(--red);
+    font-family: var(--display); font-weight: 600;
+    font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 14px 40px; border: 1px solid var(--red); border-radius: 4px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-outline:hover { background: var(--red-dim); transform: translateY(-1px); }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.7;
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .section-divider {
+    width: 48px; height: 2px;
+    background: var(--red); margin-bottom: 48px;
+  }
+
+  /* ── ¿QUÉ ES? ── */
+  .what-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+  }
+  .what-text p {
+    font-size: 1.1rem; line-height: 1.8;
+    color: var(--text-muted); margin-bottom: 16px;
+  }
+  .what-text p strong { color: var(--text); }
+  .what-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 40px;
+    position: relative; overflow: hidden;
+  }
+  .what-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: linear-gradient(90deg, var(--red), transparent);
+  }
+  .what-card-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: 1.1rem; color: var(--red);
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+  .check-list { list-style: none; }
+  .check-list li {
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    color: var(--text-muted); font-size: 1rem;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .check-list li:last-child { border-bottom: none; }
+  .check-list li span.icon { color: var(--red); font-size: 1rem; }
+
+  /* ── EL EVENTO ── */
+  .evento-bg { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .dias-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .dia-card {
+    background: var(--bg);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 40px; position: relative; overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .dia-card:hover { border-color: var(--border-bright); transform: translateY(-4px); }
+  .dia-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: var(--red);
+  }
+  .dia-num {
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--red); letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .dia-title {
+    font-family: var(--display); font-size: 1.8rem;
+    font-weight: 700; margin-bottom: 24px;
+  }
+  .dia-items { list-style: none; }
+  .dia-items li {
+    padding: 8px 0; color: var(--text-muted);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 1rem;
+  }
+  .dia-items li:last-child { border-bottom: none; }
+
+  /* ── PROYECTOS ── */
+  .proyectos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .proyecto-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 32px 24px; text-align: center;
+    transition: all 0.25s; cursor: default;
+    position: relative; overflow: hidden;
+  }
+  .proyecto-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, var(--red-dim));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .proyecto-card:hover { border-color: var(--border-bright); transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+  .proyecto-card:hover::after { opacity: 1; }
+  .proyecto-emoji { font-size: 3rem; margin-bottom: 16px; display: block; }
+  .proyecto-name {
+    font-family: var(--display); font-weight: 700;
+    font-size: 1.1rem; margin-bottom: 8px;
+  }
+  .proyecto-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* ── FAQ ── */
+  .faq-bg { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .faq-list { max-width: 720px; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    padding: 24px 0; cursor: pointer;
+  }
+  .faq-q {
+    font-family: var(--display); font-weight: 600;
+    font-size: 1.05rem; display: flex;
+    justify-content: space-between; align-items: center;
+    gap: 16px; color: var(--text);
+  }
+  .faq-q::after {
+    content: '+'; color: var(--red); font-size: 1.4rem;
+    font-weight: 300; flex-shrink: 0; transition: transform 0.2s;
+  }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s;
+    color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding-top: 16px; }
+
+  /* ── EQUIPO ── */
+  .team-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; }
+  .team-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 28px 20px; text-align: center;
+    transition: all 0.2s;
+  }
+  .team-card:hover { border-color: var(--border-bright); transform: translateY(-4px); }
+  .team-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--red-dim); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 1.6rem;
+  }
+  .team-name { font-family: var(--display); font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+  .team-age { font-family: var(--mono); font-size: 0.65rem; color: var(--red); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .team-role { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; }
+  .team-cv { font-family: var(--mono); font-size: 0.7rem; color: var(--red); text-decoration: none; letter-spacing: 1px; opacity: 0.8; }
+  .team-cv:hover { opacity: 1; text-decoration: underline; }
+
+  /* ── SPONSORS PREVIEW ── */
+  .sponsors-preview { text-align: center; }
+  .logos-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-bottom: 48px;
+  }
+  .logo-placeholder {
+    background: var(--bg-card); border: 1px dashed var(--border);
+    border-radius: 8px; height: 80px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-dim); font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    transition: border-color 0.2s;
+  }
+  .logo-placeholder:hover { border-color: var(--border-bright); color: var(--text-muted); }
+  .sponsors-preview-text {
+    font-size: 1.15rem; color: var(--text-muted); line-height: 1.7;
+    margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border); padding: 40px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    color: var(--text-dim); font-size: 0.8rem; font-family: var(--mono);
+    letter-spacing: 1px;
+  }
+  footer a { color: var(--red); text-decoration: none; }
+
+  /* ═══════════════════════════════════════
+     SPONSOR PAGE
+  ═══════════════════════════════════════ */
+  .sponsor-hero {
+    min-height: 60vh; display: flex;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 160px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+  .sponsor-hero .hero-bg-grid { position: absolute; inset: 0; }
+  .sponsor-hero .hero-vignette { position: absolute; inset: 0; }
+  .sponsor-hero-content { position: relative; z-index: 2; max-width: 720px; }
+  .sponsor-hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1.1; margin-bottom: 24px;
+  }
+  .sponsor-hero-sub { font-size: 1.05rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
+
+  .why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .why-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 36px;
+    position: relative; overflow: hidden; transition: all 0.2s;
+  }
+  .why-card:hover { border-color: var(--border-bright); transform: translateY(-3px); }
+  .why-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: linear-gradient(90deg, var(--red), transparent);
+  }
+  .why-icon { font-size: 2rem; margin-bottom: 16px; display: block; }
+  .why-title { font-family: var(--display); font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; }
+  .why-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+
+  .necesidades-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 48px; }
+  .nec-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 28px 16px; text-align: center; transition: all 0.2s;
+  }
+  .nec-card:hover { border-color: var(--border-bright); transform: translateY(-3px); }
+  .nec-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+  .nec-label { font-family: var(--display); font-weight: 600; font-size: 0.9rem; }
+
+  .impacto-text {
+    max-width: 640px; margin: 0 auto;
+    text-align: center;
+  }
+  .impacto-text p {
+    font-size: 1.15rem; line-height: 1.8;
+    color: var(--text-muted); margin-bottom: 16px;
+  }
+  .impacto-text p strong { color: var(--text); }
+
+  .contacto-box {
+    text-align: center; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 64px 48px; max-width: 640px; margin: 0 auto;
+    position: relative; overflow: hidden;
+  }
+  .contacto-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: linear-gradient(90deg, transparent, var(--red), transparent);
+  }
+  .contacto-email {
+    font-family: var(--mono); font-size: 1.1rem;
+    color: var(--red); margin: 24px 0;
+  }
+
+  /* ═══════════════════════════════════════
+     BOM PAGE
+  ═══════════════════════════════════════ */
+  .bom-hero {
+    min-height: 50vh; display: flex;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 160px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+  .bom-hero .hero-bg-grid { position: absolute; inset: 0; }
+  .bom-hero .hero-vignette { position: absolute; inset: 0; }
+  .bom-hero-content { position: relative; z-index: 2; max-width: 720px; }
+  .bom-hero-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(2.5rem, 6vw, 5rem); letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .bom-hero-sub { font-size: 1rem; color: var(--text-muted); line-height: 1.7; }
+
+  .bom-section-block {
+    border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden; margin-bottom: 32px;
+  }
+  .bom-section-header {
+    background: var(--bg-card); padding: 24px 32px;
+    display: flex; align-items: center; gap: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .bom-section-icon { font-size: 1.5rem; }
+  .bom-section-name {
+    font-family: var(--display); font-weight: 700;
+    font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px;
+  }
+  .bom-table { width: 100%; border-collapse: collapse; }
+  .bom-table th {
+    background: rgba(230,57,70,0.05); padding: 14px 32px;
+    text-align: left; font-family: var(--mono); font-size: 0.65rem;
+    color: var(--red); letter-spacing: 3px; text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .bom-table td {
+    padding: 14px 32px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-muted); font-size: 0.9rem;
+  }
+  .bom-table tr:last-child td { border-bottom: none; }
+  .bom-table tr:hover td { background: rgba(230,57,70,0.03); color: var(--text); }
+  .bom-table td:first-child { color: var(--text); font-weight: 500; }
+  .bom-table td.qty { font-family: var(--mono); color: var(--red); font-size: 0.85rem; }
+
+  .staff-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .staff-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 32px 24px; text-align: center;
+    transition: all 0.2s;
+  }
+  .staff-card:hover { border-color: var(--border-bright); transform: translateY(-4px); }
+  .staff-flag { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+  .staff-name { font-family: var(--display); font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+  .staff-role { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; }
+  .staff-country { font-family: var(--mono); font-size: 0.65rem; color: var(--red); letter-spacing: 2px; text-transform: uppercase; }
+
+  .bom-cta {
+    text-align: center; padding: 80px 48px;
+    background: var(--bg-card); border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .bom-cta-title {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom: 16px;
+  }
+  .bom-cta-sub { color: var(--text-muted); margin-bottom: 32px; font-size: 1rem; }
+
+  /* ── UTILITIES ── */
+  .red { color: var(--red); }
+  .mono { font-family: var(--mono); }
+  .center { text-align: center; }
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-32 { margin-top: 32px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-32 { margin-bottom: 32px; }
+  .mb-48 { margin-bottom: 48px; }
+  .full-bleed { max-width: none; padding: 0; }
+
+  /* Stars */
+  .stars { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+  .star {
+    position: absolute; width: 3px; height: 3px;
+    background: var(--red); border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.5); }
+  }
+
+  /* Scan line hover effect on cards */
+  .scanline-card { position: relative; overflow: hidden; }
+  .scanline-card::after {
+    content: ''; position: absolute;
+    left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red-soft), transparent);
+    top: -100%; transition: top 0.4s ease;
+    pointer-events: none;
+  }
+  .scanline-card:hover::after { top: 100%; }
+
+  @media (max-width: 900px) {
+    nav { padding: 14px 20px; }
+    .nav-logo { font-size: 1.1rem; }
+    .nav-btn { padding: 6px 12px; font-size: 0.75rem; }
+    section { padding: 60px 24px; }
+    .what-grid, .dias-grid, .why-grid { grid-template-columns: 1fr; gap: 24px; }
+    .proyectos-grid { grid-template-columns: repeat(2, 1fr); }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .necesidades-grid { grid-template-columns: repeat(3, 1fr); }
+    .staff-grid { grid-template-columns: repeat(2, 1fr); }
+    .logos-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-stats { flex-direction: column; width: 100%; }
+    .hero-stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .hero-stat:last-child { border-bottom: none; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .bom-table th, .bom-table td { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">INTERHACK</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home')">Inicio</button>
+    <button class="nav-btn" onclick="showPage('sponsors')">Patrocinadores</button>
+    <button class="nav-btn" onclick="showPage('bom')">BOM</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-vignette"></div>
+    <div class="stars" id="stars"></div>
+    <canvas id="circuit-canvas"></canvas>
+
+    <div class="hero-content">
+      <div class="eyebrow">// Hackathon de Hardware para Adolescentes</div>
+      <h1 class="hero-title">INTER<span>HACK</span></h1>
+      <p class="hero-sub">Construye algo real. Aprende algo nuevo. Conoce a tu tribu.</p>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num">100</span>
+          <span class="hero-stat-label">Estudiantes</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">48</span>
+          <span class="hero-stat-label">Horas</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">$0</span>
+          <span class="hero-stat-label">Costo</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">∞</span>
+          <span class="hero-stat-label">Posibilidades</span>
+        </div>
+      </div>
+
+      <p class="hero-location">📍 MONTERREY, NUEVO LEÓN</p>
+      <button class="btn-primary">REGÍSTRATE →</button>
+    </div>
+  </div>
+
+  <!-- ¿QUÉ ES INTERHACK? -->
+  <section>
+    <div class="section-label">// 01 — Nuestra historia</div>
+    <h2 class="section-title">¿Qué es<br><span class="red">InterHack?</span></h2>
+    <div class="section-divider"></div>
+
+    <div class="what-grid">
+      <div class="what-text">
+        <p>InterHack nació porque muchos de nosotros queríamos aprender <strong>electrónica, robótica e ingeniería</strong>, pero no encontrábamos espacios donde experimentar sin gastar miles de pesos.</p>
+        <p>Las oportunidades existían, pero eran para universitarios o para quienes ya tenían dinero. Nosotros queríamos demostrar que la edad no limita la capacidad de construir.</p>
+        <p>Así que decidimos <strong>construirlo nosotros mismos.</strong></p>
+      </div>
+      <div class="what-card scanline-card">
+        <div class="what-card-title">No necesitas experiencia</div>
+        <ul class="check-list">
+          <li><span class="icon">◆</span> Hardware incluido</li>
+          <li><span class="icon">◆</span> Mentoría en todo momento</li>
+          <li><span class="icon">◆</span> Comunidad increíble</li>
+          <li><span class="icon">◆</span> Comida durante el evento</li>
+          <li><span class="icon">◆</span> Completamente gratis</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EL EVENTO -->
+  <div class="evento-bg">
+    <section>
+      <div class="section-label">// 02 — El programa</div>
+      <h2 class="section-title">¿Qué pasa durante<br><span class="red">48 horas?</span></h2>
+      <div class="section-divider"></div>
+      <div class="dias-grid">
+        <div class="dia-card scanline-card">
+          <div class="dia-num">// Día 01</div>
+          <div class="dia-title">Construye</div>
+          <ul class="dia-items">
+            <li>Introducción al hardware</li>
+            <li>Talleres guiados por mentores</li>
+            <li>Primer prototipo funcional</li>
+            <li>Cena y networking</li>
+            <li>Retos nocturnos opcionales</li>
+          </ul>
+        </div>
+        <div class="dia-card scanline-card">
+          <div class="dia-num">// Día 02</div>
+          <div class="dia-title">Hackea</div>
+          <ul class="dia-items">
+            <li>Iteración y mejora del proyecto</li>
+            <li>Mentoría 1 a 1 con expertos</li>
+            <li>Preparación de presentación</li>
+            <li>Demo Day ante jurado</li>
+            <li>Premiación y cierre</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- AGENDA DEL EVENTO -->
+<div style="background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <section>
+    <div class="section-label">// 03 — Programa completo</div>
+    <h2 class="section-title">Más Sobre<br><span class="red">el Evento</span></h2>
+    <div class="section-divider"></div>
+
+    <p style="font-family: var(--mono); font-size: 0.75rem; letter-spacing: 3px; color: var(--red); text-align: center; margin-bottom: 24px; opacity: 0.7;">
+      // DOS DÍAS CONSTRUYENDO EL FUTURO //
+    </p>
+
+    <p style="text-align: center; color: var(--text-muted); font-size: 1rem; line-height: 1.8; max-width: 600px; margin: 0 auto 64px;">
+      Durante dos días los participantes aprenderán,
+      construirán proyectos reales, asistirán a workshops,
+      conocerán a otros makers y presentarán sus ideas
+      frente a la comunidad.
+    </p>
+
+    <!-- DOS COLUMNAS -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+
+      <!-- DÍA 1 -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: relative;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--red);"></div>
+        <div style="padding: 32px 32px 24px;">
+          <div style="font-family: var(--mono); font-size: 0.65rem; letter-spacing: 4px; color: var(--red); text-transform: uppercase; margin-bottom: 6px;">// Día 01</div>
+          <div style="font-family: var(--display); font-weight: 700; font-size: 1.5rem; margin-bottom: 4px;">DÍA 1</div>
+          <div style="font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase;">APRENDER Y CONSTRUIR</div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border);">
+
+          <!-- item -->
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">8:30</div>
+            <div style="padding: 16px 24px;">
+              <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Registro</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Llegada de participantes, entrega de gafetes, kits y bienvenida.</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">9:00</div>
+            <div style="padding: 16px 24px;">
+              <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Opening Ceremony</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Presentación oficial de InterHack.</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(230,57,70,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">10:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">🍳</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 2px;">Desayuno</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Comida para todos los asistentes.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">11:00</div>
+            <div style="padding: 16px 24px;">
+              <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Workshop Hardware</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Introducción a ESP32, sensores y electrónica.</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">12:30</div>
+            <div style="padding: 16px 24px;">
+              <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Workshop Software</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Programación básica, Arduino IDE y herramientas.</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(230,57,70,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">14:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">🍕</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 2px;">Comida</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Descanso y networking.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">15:00</div>
+            <div style="padding: 16px 24px;">
+              <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Formación de Equipos</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Los participantes crean o completan sus equipos.</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(230,57,70,0.08);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">16:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">🚀</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; color: var(--red);">Inicio del Hackathon</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Comienza la construcción de proyectos.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(230,57,70,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">20:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">🍔</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 2px;">Cena</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Pausa para recargar energía.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr;">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">21:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">🌙</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 2px;">Night Build Session</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Mentores disponibles para apoyar.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- DÍA 2 -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: relative;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--red);"></div>
+        <div style="padding: 32px 32px 24px;">
+          <div style="font-family: var(--mono); font-size: 0.65rem; letter-spacing: 4px; color: var(--red); text-transform: uppercase; margin-bottom: 6px;">// Día 02</div>
+          <div style="font-family: var(--display); font-weight: 700; font-size: 1.5rem; margin-bottom: 4px;">DÍA 2</div>
+          <div style="font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase;">FINALIZAR Y PRESENTAR</div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border);">
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(230,57,70,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">8:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">🍳</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 2px;">Desayuno</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Recargar energía para el día final.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">9:00</div>
+            <div style="padding: 16px 24px;">
+              <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Continuación de Proyectos</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Sesión principal de construcción.</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">11:00</div>
+            <div style="padding: 16px 24px;">
+              <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Mentor Checkpoint</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Revisión de avances con mentores.</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(230,57,70,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">13:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">🍕</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 2px;">Comida</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Último descanso antes del cierre.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(230,57,70,0.08);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">14:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">⚡</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; color: var(--red);">Últimas Horas</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Tiempo final para terminar.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">16:00</div>
+            <div style="padding: 16px 24px;">
+              <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Entrega de Proyectos</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Se cierran las entregas.</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">17:00</div>
+            <div style="padding: 16px 24px;">
+              <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Presentaciones</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Los equipos muestran sus creaciones.</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(230,57,70,0.08);">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">18:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">🏆</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; color: var(--red);">Premiación</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Anuncio de ganadores.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 72px 1fr;">
+            <div style="padding: 16px 0 16px 32px; font-family: var(--mono); font-size: 0.75rem; color: var(--red); font-weight: 700; border-right: 1px solid var(--border);">19:00</div>
+            <div style="padding: 16px 24px; display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1rem;">📸</span>
+              <div>
+                <div style="font-family: var(--display); font-weight: 600; font-size: 0.9rem; margin-bottom: 2px;">Clausura</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Foto grupal y despedida.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- fin grid -->
+
+    <!-- BLOQUE ANTI-MIEDO -->
+    <div style="margin-top: 48px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 48px; text-align: center; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--red), transparent);"></div>
+      <div style="font-family: var(--mono); font-size: 0.65rem; letter-spacing: 4px; color: var(--red); text-transform: uppercase; margin-bottom: 20px; opacity: 0.7;">// Una duda muy común</div>
+      <h3 style="font-family: var(--display); font-weight: 700; font-size: clamp(1.3rem, 3vw, 2rem); margin-bottom: 16px;">¿Y si nunca he tocado hardware?</h3>
+      <p style="font-family: var(--display); font-size: 1.4rem; font-weight: 700; color: var(--red); margin-bottom: 24px;">No importa.</p>
+      <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8; max-width: 520px; margin: 0 auto;">
+        InterHack está diseñado para que cualquier persona pueda empezar desde cero.<br><br>
+        Tendremos mentores, workshops y material para ayudarte en cada paso del camino.
+      </p>
+    </div>
+
+  </section>
+</div>
+
+  <!-- PROYECTOS -->
+  <section>
+    <div class="section-label">// 03 — Lo que construirás</div>
+    <h2 class="section-title">¿Qué podrás<br><span class="red">construir?</span></h2>
+    <div class="section-divider"></div>
+    <div class="proyectos-grid">
+      <div class="proyecto-card scanline-card">
+        <span class="proyecto-emoji">🤖</span>
+        <div class="proyecto-name">Robot Zumo</div>
+        <div class="proyecto-desc">Robot de combate autónomo que empuja a sus oponentes fuera del ring.</div>
+      </div>
+      <div class="proyecto-card scanline-card">
+        <span class="proyecto-emoji">🕷</span>
+        <div class="proyecto-name">Spider Robot</div>
+        <div class="proyecto-desc">Robot de seis patas con servos que replica el movimiento arácnido.</div>
+      </div>
+      <div class="proyecto-card scanline-card">
+        <span class="proyecto-emoji">🚁</span>
+        <div class="proyecto-name">Drone</div>
+        <div class="proyecto-desc">Cuadricóptero construido desde cero y programado a mano.</div>
+      </div>
+      <div class="proyecto-card scanline-card">
+        <span class="proyecto-emoji">💡</span>
+        <div class="proyecto-name">Proyecto Libre</div>
+        <div class="proyecto-desc">¿Tienes tu propia idea? Tenemos el hardware y la mentoría para hacerla realidad.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <div class="faq-bg">
+    <section>
+      <div class="section-label">// 04 — Preguntas frecuentes</div>
+      <h2 class="section-title"><span class="red">FAQ</span></h2>
+      <div class="section-divider"></div>
+      <div class="faq-list">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">¿Necesito experiencia previa en electrónica?</div>
+          <div class="faq-a">No necesitas ninguna experiencia previa. InterHack está diseñado para todos los niveles. Nuestros mentores te guiarán desde cero durante todo el evento. Lo único que necesitas es curiosidad y ganas de aprender.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">¿Puedo ir solo o necesito equipo?</div>
+          <div class="faq-a">Puedes ir solo — te ayudamos a conectar con otros participantes y formar equipo al inicio del evento. También puedes llegar con amigos. Los equipos son de 2 a 4 personas.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">¿Es realmente gratis? ¿Cuál es el truco?</div>
+          <div class="faq-a">Sí, es completamente gratis. Eso incluye hardware, comida, mentoría y todo el material. Lo logramos gracias al apoyo de nuestros patrocinadores que creen en la educación STEM para jóvenes.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">¿Y si mis papás tienen dudas sobre el evento?</div>
+          <div class="faq-a">Perfecto, que nos escriban. Tenemos un equipo organizado con identidades verificables, currículums disponibles y toda la información de seguridad del evento. Puedes compartirles la página de nuestro equipo o escribirnos directamente a interhackclub@gmail.com.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">¿Qué edades participan?</div>
+          <div class="faq-a">InterHack es para estudiantes de secundaria y preparatoria, generalmente entre 13 y 18 años. Si tienes dudas sobre tu elegibilidad, escríbenos y lo revisamos contigo.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- EQUIPO -->
+  <section>
+    <div class="section-label">// 05 — Detrás del evento</div>
+    <h2 class="section-title">Conoce al<br><span class="red">Equipo</span></h2>
+    <div class="section-divider"></div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">👩</div>
+        <div class="team-name">Anna</div>
+        <div class="team-age">17 años</div>
+        <div class="team-role">Directora General & Operaciones</div>
+        <a href="#" class="team-cv">Ver CV →</a>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👨</div>
+        <div class="team-name">Alonso</div>
+        <div class="team-age">16 años</div>
+        <div class="team-role">Lead de Hardware & Logística</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👦</div>
+        <div class="team-name">Emilio</div>
+        <div class="team-age">16 años</div>
+        <div class="team-role">Diseño & Comunicaciones</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👨</div>
+        <div class="team-name">Jesús</div>
+        <div class="team-age">17 años</div>
+        <div class="team-role">Patrocinios & Relaciones</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👦</div>
+        <div class="team-name">Alberto</div>
+        <div class="team-age">15 años</div>
+        <div class="team-role">Tecnología & Plataformas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPONSORS CTA -->
+  <div style="background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <section class="sponsors-preview center">
+      <div class="section-label">// 06 — Aliados</div>
+      <h2 class="section-title mb-32">Buscamos<br><span class="red">Patrocinadores</span></h2>
+      <div class="logos-grid mb-48">
+        <div class="logo-placeholder">Tu marca aquí</div>
+        <div class="logo-placeholder">Tu marca aquí</div>
+        <div class="logo-placeholder">Tu marca aquí</div>
+        <div class="logo-placeholder">Tu marca aquí</div>
+      </div>
+      <p class="sponsors-preview-text">
+        Ayúdanos a crear la próxima generación de ingenieros.<br>
+        100 estudiantes. Impacto real. Una generación completa.
+      </p>
+      <button class="btn-outline" onclick="showPage('sponsors')">QUIERO SER PATROCINADOR →</button>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="mono">INTERHACK — MTY, NL</span>
+    <span><a href="mailto:interhackclub@gmail.com">interhackclub@gmail.com</a></span>
+    <span class="mono" style="color: var(--text-dim)">© 2025</span>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     SPONSOR PAGE
+══════════════════════════════════════ -->
+<div id="page-sponsors" class="page">
+
+  <div class="sponsor-hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-vignette"></div>
+    <div class="sponsor-hero-content">
+      <div class="eyebrow">// Patrocinadores</div>
+      <h1 class="sponsor-hero-title">Construyamos la Próxima Generación de <span class="red">Creadores</span></h1>
+      <p class="sponsor-hero-sub">100 estudiantes. 2 días. Hardware real. Impacto real.<br>Apoya el hackathon de hardware para adolescentes más ambicioso de Monterrey.</p>
+      <button class="btn-primary" onclick="showPage('bom')">VER NECESIDADES →</button>
+    </div>
+  </div>
+
+  <!-- NUESTRA HISTORIA -->
+  <section>
+    <div class="section-label">// 01 — Por qué existimos</div>
+    <h2 class="section-title">¿Por Qué<br><span class="red">Existimos?</span></h2>
+    <div class="section-divider"></div>
+    <div class="what-grid">
+      <div class="what-text">
+        <p>La mayoría de los eventos tecnológicos están diseñados para universitarios o para quienes ya cuentan con recursos. Los estudiantes de secundaria y preparatoria quedan fuera.</p>
+        <p>Nosotros somos ese estudiante que no encontraba su espacio. Así que decidimos <strong>construir el espacio que hubiéramos querido tener.</strong></p>
+        <p>InterHack es un hackathon de hardware completamente gratuito para adolescentes en Monterrey. No pedimos experiencia previa. No pedimos dinero. Solo pedimos ganas de construir.</p>
+      </div>
+      <div class="what-card scanline-card">
+        <div class="what-card-title">Lo que ofrecemos</div>
+        <ul class="check-list">
+          <li><span class="icon">◆</span> 100 participantes seleccionados</li>
+          <li><span class="icon">◆</span> Proyectos de hardware reales</li>
+          <li><span class="icon">◆</span> Mentores nacionales e internacionales</li>
+          <li><span class="icon">◆</span> Alcance en redes sociales</li>
+          <li><span class="icon">◆</span> Costo cero para participantes</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EL EQUIPO -->
+  <div style="background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <section>
+      <div class="section-label">// 02 — Quién ejecuta esto</div>
+      <h2 class="section-title">El Equipo<br><span class="red">Organizador</span></h2>
+      <div class="section-divider"></div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar">👩</div>
+          <div class="team-name">Anna</div>
+          <div class="team-age">17 años</div>
+          <div class="team-role">Directora General & Operaciones</div>
+          <a href="#" class="team-cv">Ver CV →</a>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">👨</div>
+          <div class="team-name">Alonso</div>
+          <div class="team-age">16 años</div>
+          <div class="team-role">Lead de Hardware & Logística</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">👦</div>
+          <div class="team-name">Emilio</div>
+          <div class="team-age">16 años</div>
+          <div class="team-role">Diseño & Comunicaciones</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">👨</div>
+          <div class="team-name">Jesús</div>
+          <div class="team-age">17 años</div>
+          <div class="team-role">Patrocinios & Relaciones</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">👦</div>
+          <div class="team-name">Alberto</div>
+          <div class="team-age">15 años</div>
+          <div class="team-role">Tecnología & Plataformas</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ¿POR QUÉ PATROCINAR? -->
+  <section>
+    <div class="section-label">// 03 — Tu retorno</div>
+    <h2 class="section-title">¿Por Qué<br><span class="red">Patrocinar?</span></h2>
+    <div class="section-divider"></div>
+    <div class="why-grid">
+      <div class="why-card scanline-card">
+        <span class="why-icon">🎯</span>
+        <div class="why-title">Talento Temprano</div>
+        <div class="why-desc">Conoce a los futuros ingenieros de México antes que nadie. Crea relaciones genuinas con jóvenes que ya están construyendo cosas reales.</div>
+      </div>
+      <div class="why-card scanline-card">
+        <span class="why-icon">📢</span>
+        <div class="why-title">Visibilidad de Marca</div>
+        <div class="why-desc">Tu logo en la web, banners del evento, redes sociales y materiales impresos. Presencia directa ante 100 participantes y sus familias.</div>
+      </div>
+      <div class="why-card scanline-card">
+        <span class="why-icon">🌎</span>
+        <div class="why-title">Impacto STEM Real</div>
+        <div class="why-desc">Apoya educación en ciencia, tecnología, ingeniería y matemáticas. Demuestra que tu empresa invierte en la siguiente generación de creadores.</div>
+      </div>
+      <div class="why-card scanline-card">
+        <span class="why-icon">🚀</span>
+        <div class="why-title">Comunidad Joven</div>
+        <div class="why-desc">Sé parte de una iniciativa construida por jóvenes, para jóvenes. Auténtica. Sin filtros. Con más energía que cualquier evento corporativo.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ¿QUÉ NECESITAMOS? -->
+  <div style="background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <section class="center">
+      <div class="section-label">// 04 — Nuestras necesidades</div>
+      <h2 class="section-title mb-32">¿Qué<br><span class="red">Necesitamos?</span></h2>
+      <div class="necesidades-grid mb-48">
+        <div class="nec-card">
+          <span class="nec-icon">🍕</span>
+          <div class="nec-label">Alimentación</div>
+        </div>
+        <div class="nec-card">
+          <span class="nec-icon">🔧</span>
+          <div class="nec-label">Hardware</div>
+        </div>
+        <div class="nec-card">
+          <span class="nec-icon">🏢</span>
+          <div class="nec-label">Venue</div>
+        </div>
+        <div class="nec-card">
+          <span class="nec-icon">🎁</span>
+          <div class="nec-label">Premios</div>
+        </div>
+        <div class="nec-card">
+          <span class="nec-icon">✈</span>
+          <div class="nec-label">Staff Internacional</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="showPage('bom')">VER BOM COMPLETO →</button>
+    </section>
+  </div>
+
+  <!-- IMPACTO -->
+  <section>
+    <div class="section-label">// 05 — El por qué</div>
+    <h2 class="section-title center mb-32">¿Por Qué<br><span class="red">Importa?</span></h2>
+    <div class="section-divider" style="margin: 0 auto 48px;"></div>
+    <div class="impacto-text">
+      <p>La mayoría de los eventos tecnológicos están diseñados para universitarios. Los adolescentes son tratados como si aún no estuvieran listos.</p>
+      <p>Nosotros queremos <strong>empezar antes.</strong></p>
+      <p>Queremos demostrar que la edad no limita la capacidad de construir. Que un chico de 15 años puede programar un drone. Que una chica de 14 puede diseñar un robot.</p>
+      <p><strong>Tu patrocinio hace eso posible.</strong></p>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <div style="background: var(--bg-card); border-top: 1px solid var(--border); padding: 80px 48px;">
+    <div class="contacto-box">
+      <div class="section-label center">// 06 — Hablemos</div>
+      <h2 class="section-title center">Construyamos Juntos<br>el <span class="red">Futuro</span></h2>
+      <div class="contacto-email">interhackclub@gmail.com</div>
+      <a href="mailto:interhackclub@gmail.com">
+        <button class="btn-primary">CONTÁCTANOS →</button>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <span class="mono">INTERHACK — MTY, NL</span>
+    <span><a href="mailto:interhackclub@gmail.com">interhackclub@gmail.com</a></span>
+    <span class="mono" style="color: var(--text-dim)">© 2025</span>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     BOM PAGE
+══════════════════════════════════════ -->
+<div id="page-bom" class="page">
+
+  <div class="bom-hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-vignette"></div>
+    <div class="bom-hero-content">
+      <div class="eyebrow">// Bill of Materials</div>
+      <h1 class="bom-hero-title">INTER<span class="red">HACK</span><br>BOM</h1>
+      <p class="bom-hero-sub">Todo lo necesario para construir un hackathon gratuito<br>para más de 100 estudiantes en Monterrey.</p>
+    </div>
+  </div>
+
+  <section style="max-width: 960px;">
+
+    <!-- ALIMENTACIÓN -->
+    <div class="bom-section-block">
+      <div class="bom-section-header">
+        <span class="bom-section-icon">🍕</span>
+        <span class="bom-section-name">Alimentación</span>
+      </div>
+      <table class="bom-table">
+        <thead>
+          <tr>
+            <th>Ítem</th>
+            <th>Descripción</th>
+            <th>Cant.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Desayunos</td><td>Día 1 y Día 2 para 100 participantes + staff</td><td class="qty">×2</td></tr>
+          <tr><td>Comidas</td><td>Almuerzo completo ambos días</td><td class="qty">×2</td></tr>
+          <tr><td>Cenas</td><td>Cena Día 1 y cierre Día 2</td><td class="qty">×2</td></tr>
+          <tr><td>Snacks</td><td>Frutas, barras, galletas durante el evento</td><td class="qty">continuo</td></tr>
+          <tr><td>Agua e Hidratación</td><td>Garrafones y bebidas para 48 horas</td><td class="qty">continuo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- HARDWARE -->
+    <div class="bom-section-block">
+      <div class="bom-section-header">
+        <span class="bom-section-icon">🔧</span>
+        <span class="bom-section-name">Hardware & Componentes</span>
+      </div>
+      <table class="bom-table">
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>Uso</th>
+            <th>Cant.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>ESP32</td><td>Microcontrolador principal de proyectos</td><td class="qty">×50</td></tr>
+          <tr><td>Sensores (varios)</td><td>Ultrasonido, temperatura, IR, acelerómetro</td><td class="qty">×150</td></tr>
+          <tr><td>Protoboards</td><td>Prototipado rápido de circuitos</td><td class="qty">×50</td></tr>
+          <tr><td>Servomotores</td><td>Spider robot y proyectos de movimiento</td><td class="qty">×80</td></tr>
+          <tr><td>Motores DC</td><td>Robot Zumo y vehículos</td><td class="qty">×40</td></tr>
+          <tr><td>Kits Robóticos</td><td>Chasis Zumo, estructuras spider, frames drone</td><td class="qty">×25</td></tr>
+          <tr><td>Herramientas</td><td>Soldadores, pinzas, cortadores, multímetros</td><td class="qty">×10 sets</td></tr>
+          <tr><td>Cables y Conectores</td><td>Jumpers, USB, headers, terminales</td><td class="qty">surtido</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FINANCIAMIENTO OPERATIVO -->
+    <div class="bom-section-block">
+      <div class="bom-section-header">
+        <span class="bom-section-icon">💰</span>
+        <span class="bom-section-name">Financiamiento Operativo</span>
+      </div>
+      <table class="bom-table">
+        <thead>
+          <tr>
+            <th>Ítem</th>
+            <th>Descripción</th>
+            <th>Cant.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Venue</td><td>Espacio con electricidad, internet y mesas para 100 personas</td><td class="qty">×1</td></tr>
+          <tr><td>Internet</td><td>WiFi de alta velocidad durante 48 horas</td><td class="qty">×1</td></tr>
+          <tr><td>Playeras</td><td>Una por participante y staff con logo del evento</td><td class="qty">×120</td></tr>
+          <tr><td>Credenciales</td><td>Lanyard + gafete para todos los asistentes</td><td class="qty">×120</td></tr>
+          <tr><td>Banners y Señalética</td><td>Displays para patrocinadores y decoración del venue</td><td class="qty">×10</td></tr>
+          <tr><td>Seguros</td><td>Seguro de evento y responsabilidad civil</td><td class="qty">×1</td></tr>
+          <tr><td>Material Impreso</td><td>Guías, talleres, mapas del evento</td><td class="qty">surtido</td></tr>
+          <tr><td>Premios</td><td>Trofeos, kits de hardware, reconocimientos por categoría</td><td class="qty">×3 categ.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- STAFF INTERNACIONAL -->
+    <div class="bom-section-block">
+      <div class="bom-section-header">
+        <span class="bom-section-icon">✈</span>
+        <span class="bom-section-name">Staff Internacional</span>
+      </div>
+      <div style="padding: 24px 32px 8px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; border-bottom: 1px solid var(--border);">
+        Queremos traer mentores internacionales para inspirar a los participantes y elevar la calidad de la mentoría. Cada uno tiene experiencia única que no existe localmente.
+      </div>
+      <div style="padding: 32px;">
+        <div class="staff-grid">
+          <div class="staff-card">
+            <span class="staff-flag"> NA </span>
+            <div class="staff-name">Nathan Alspaugh</div>
+            <div class="staff-role">Colombiano, estudiante de el MIT y Futuro Ingeniero Aeroespacial </div>
+            <div class="staff-country">Estados Unidos</div>
+          </div>
+          <div class="staff-card">
+            <span class="staff-flag">🇬🇧</span>
+            <div class="staff-name">Lola</div>
+            <div class="staff-role">Community & Event Design</div>
+            <div class="staff-country">Reino Unido</div>
+          </div>
+          <div class="staff-card">
+            <span class="staff-flag">🇮🇳</span>
+            <div class="staff-name">Meghana</div>
+            <div class="staff-role">Embedded Systems & IoT</div>
+            <div class="staff-country">India</div>
+          </div>
+          <div class="staff-card">
+            <span class="staff-flag">🇨🇦</span>
+            <div class="staff-name">Clay</div>
+            <div class="staff-role">Maker Culture & Mentorship</div>
+            <div class="staff-country">Canadá</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CTA DESCARGA -->
+  <div class="bom-cta">
+    <div class="section-label center">// ¿Listo para apoyar?</div>
+    <h2 class="bom-cta-title">Descarga el BOM Completo</h2>
+    <p class="bom-cta-sub">Cantidades exactas, especificaciones técnicas y costos estimados en formato Excel.</p>
+    <button class="btn-primary" onclick="downloadBOM()">DESCARGAR BOM COMPLETO →</button>
+    <br><br>
+    <button class="btn-outline" onclick="showPage('sponsors')">QUIERO PATROCINAR →</button>
+  </div>
+
+  <footer>
+    <span class="mono">INTERHACK — MTY, NL</span>
+    <span><a href="mailto:interhackclub@gmail.com">interhackclub@gmail.com</a></span>
+    <span class="mono" style="color: var(--text-dim)">© 2025</span>
+  </footer>
+</div>
+
+<script>
+  // ── PAGE NAVIGATION ──
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    const btns = document.querySelectorAll('.nav-btn');
+    const map = { home: 0, sponsors: 1, bom: 2 };
+    btns[map[name]].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── FAQ TOGGLE ──
+  function toggleFaq(el) {
+    const isOpen = el.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) el.classList.add('open');
+  }
+
+  // ── CIRCUIT CANVAS ──
+  const canvas = document.getElementById('circuit-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, lines = [];
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function makeLine() {
+    const x = Math.random() * W;
+    const y = Math.random() * H;
+    const len = 40 + Math.random() * 120;
+    const dir = Math.random() > 0.5 ? 'h' : 'v';
+    return { x, y, len, dir, progress: 0, speed: 0.4 + Math.random() * 0.8, opacity: 0.3 + Math.random() * 0.4 };
+  }
+
+  function drawCircuits() {
+    ctx.clearRect(0, 0, W, H);
+    if (lines.length < 20) lines.push(makeLine());
+    lines = lines.filter(l => l.progress <= 1.2);
+
+    lines.forEach(l => {
+      l.progress += l.speed / 100;
+      const drawn = Math.min(l.progress, 1) * l.len;
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(230, 57, 70, ${l.opacity * (1 - Math.max(0, l.progress - 0.7) / 0.5)})`;
+      ctx.lineWidth = 1;
+      if (l.dir === 'h') {
+        ctx.moveTo(l.x, l.y);
+        ctx.lineTo(l.x + drawn, l.y);
+        ctx.arc(l.x + drawn, l.y, 2, 0, Math.PI * 2);
+      } else {
+        ctx.moveTo(l.x, l.y);
+        ctx.lineTo(l.x, l.y + drawn);
+        ctx.arc(l.x, l.y + drawn, 2, 0, Math.PI * 2);
+      }
+      ctx.stroke();
+    });
+
+    requestAnimationFrame(drawCircuits);
+  }
+
+  // ── STARS ──
+  function makeStars() {
+    const container = document.getElementById('stars');
+    if (!container) return;
+    for (let i = 0; i < 30; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 4 + 's';
+      star.style.animationDuration = (2 + Math.random() * 3) + 's';
+      container.appendChild(star);
+    }
+  }
+
+  // ── DOWNLOAD BOM ──
+  function downloadBOM() {
+    alert('El BOM completo en Excel estará disponible próximamente.\nMientras tanto, contáctanos: interhackclub@gmail.com');
+  }
+
+  // ── INIT ──
+  window.addEventListener('resize', () => { resize(); });
+  window.addEventListener('load', () => {
+    resize();
+    makeStars();
+    drawCircuits();
+  });
+</script>
+</body>
+</html>
