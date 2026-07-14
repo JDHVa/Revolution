@@ -8,316 +8,212 @@
 <link rel="alternate icon" href="assets/media/favicon.svg">
 <meta name="description" content="REVOLUTION: 48 horas para construir robots, hacerlos pelear y aprender hardware de verdad. Hackathon en El Horno3, Parque Fundidora, Monterrey. 20 de Noviembre.">
 
-<!-- Fonts: Big Shoulders Display (cartel), Space Mono (técnico), Inter (cuerpo) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
         colors: {
-          night:'#150E29', night2:'#1E1438', plum:'#2C1B47',
-          sand:'#F4ECDC', cream:'#FBF5E9',
-          ink:{ DEFAULT:'#241B2E', soft:'#574B5E', mut:'#8C8194' },
-          bone:{ DEFAULT:'#F4ECDC', mut:'#B3A7B8' },
-          copper:{ DEFAULT:'#D2773B', dark:'#A85A28' },
-          agave:{ DEFAULT:'#39A98C', dark:'#27806A' },
-          marigold:'#F2A43A',
-          rosa:'#FF4D8D',
+          night:'#0A0A0B', night2:'#111113', night3:'#18181B',
+          bone:{ DEFAULT:'#F5F5F5', mut:'#888' },
+          ink:{ DEFAULT:'#1A1A1A', soft:'#555', mut:'#888' },
+          accent:'#E04A2F',
+          accent2:'#2A9D8F',
         },
         fontFamily: {
-          display:['"Big Shoulders Display"','system-ui','sans-serif'],
+          display:['Inter','system-ui','sans-serif'],
           mono:['"Space Mono"','monospace'],
           body:['Inter','system-ui','sans-serif'],
-        },
-        keyframes: {
-          spinSlow:{ to:{ transform:'rotate(360deg)' } },
-          marquee:{ from:{ transform:'translateX(0)' }, to:{ transform:'translateX(-50%)' } },
-          flow:{ to:{ 'stroke-dashoffset':'-240' } },
-          floaty:{ '0%,100%':{ transform:'translateY(0)' }, '50%':{ transform:'translateY(-12px)' } },
-          twinkle:{ '0%,100%':{ opacity:'.25', transform:'scale(1)' }, '50%':{ opacity:'1', transform:'scale(1.3)' } },
-          glow:{ '0%,100%':{ opacity:'.5' }, '50%':{ opacity:'1' } },
-        },
-        animation: {
-          'spin-slow':'spinSlow 22s linear infinite',
-          marquee:'marquee 28s linear infinite',
-          flow:'flow 3.5s linear infinite',
-          floaty:'floaty 6s ease-in-out infinite',
-          twinkle:'twinkle 3s ease-in-out infinite',
-          glow:'glow 3.5s ease-in-out infinite',
         },
       },
     },
   };
 </script>
 <style>
-  body{ background:#150E29; color:#F4ECDC; }
-  /* cielo del desierto al atardecer (continuo) */
-  .sky{ background:
-      radial-gradient(120% 80% at 50% 92%, rgba(242,164,58,.45) 0%, rgba(210,119,59,.28) 22%, rgba(120,46,68,.18) 42%, transparent 64%),
-      linear-gradient(180deg, #120B24 0%, #1E1438 34%, #3A2150 56%, #6E2E48 74%, #B4543A 92%, #E08A45 100%);
-      background-size:140% 140%, 100% 100%; animation:skyShift 22s ease-in-out infinite; }
-  .label{ font-family:'Space Mono',monospace; letter-spacing:.2em; text-transform:uppercase; }
-  .display{ font-family:'"Big Shoulders Display"',sans-serif; font-weight:800; letter-spacing:.01em; line-height:.9; }
-  /* wordmark 3D con degradado + aura */
-  .lt{ font-family:'"Big Shoulders Display"',sans-serif; font-weight:900; line-height:.82;
-    background:linear-gradient(180deg, #FFEBB4 0%, #FFC24D 28%, #F2843A 60%, #E0556A 100%);
-    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-    -webkit-text-stroke:2.5px #2A150D; }
-  .logo-wrap{ filter:
-      drop-shadow(2px 2px 0 #8a4a22)
-      drop-shadow(4px 4px 0 #6e3a1b)
-      drop-shadow(6px 7px 0 #4f2912)
-      drop-shadow(0 16px 26px rgba(210,119,59,.5)); }
-  .gear-o{ height:.82em; width:auto; }
-  .cactus-i{ height:1.02em; width:auto; margin:0 .005em; }
-  .mach-n{ height:1.12em; width:auto; margin:0 .02em; }
-  /* logo mini (nav / footer) con degradado del logo */
-  .logo-mini{ font-family:'"Big Shoulders Display"',sans-serif; font-weight:900; letter-spacing:.01em;
-    background:linear-gradient(180deg, #FFEBB4 0%, #FFC24D 30%, #F2843A 65%, #E0556A 100%);
-    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-    -webkit-text-stroke:1px #2A150D; }
-  /* botones */
-  .btn{ font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
-    border:2px solid currentColor; transition:transform .18s ease, box-shadow .18s ease, background .18s, color .18s; }
-  .btn-fill{ background:#D2773B; color:#150E29; border-color:#150E29; box-shadow:4px 4px 0 #150E29; }
-  .btn-fill:hover{ transform:translate(-2px,-2px); box-shadow:7px 7px 0 #150E29; background:#F2A43A; }
-  .btn-ghost{ color:#F4ECDC; border-color:#F4ECDC; }
-  .btn-ghost:hover{ transform:translate(-2px,-2px); background:rgba(244,236,220,.1); }
-  /* paneles tipo placa */
-  .panel{ background:rgba(244,236,220,.04); border:1px solid rgba(244,236,220,.14); backdrop-filter:blur(4px);
-    transition:transform .22s ease, border-color .22s, background .22s; position:relative; }
-  .panel:hover{ transform:translateY(-5px); border-color:#D2773B; background:rgba(210,119,59,.08); }
-  .panel-light{ background:#F4ECDC; color:#241B2E; border:none; box-shadow:0 18px 50px -20px rgba(0,0,0,.6); }
-  .acc::before{ content:''; position:absolute; top:0; left:24px; width:46px; height:4px; background:var(--acc,#D2773B); }
-  /* papel picado */
-  @keyframes sway{ 0%,100%{ transform:rotate(-2.5deg) } 50%{ transform:rotate(2.5deg) } }
-  .papelp{ transform-origin:top center; animation:sway 4.5s ease-in-out infinite; }
-  /* engrane rodador (planta rodadora) */
-  @keyframes rollbounce{
-    0%{ transform:translate(2vw,0) } 12%{ transform:translate(22vw,-30px) } 24%{ transform:translate(42vw,0) }
-    36%{ transform:translate(62vw,-30px) } 50%{ transform:translate(84vw,0) } 62%{ transform:translate(62vw,-30px) }
-    74%{ transform:translate(42vw,0) } 86%{ transform:translate(22vw,-30px) } 100%{ transform:translate(2vw,0) } }
-  .roller{ animation:rollbounce 10s ease-in-out infinite; }
-  /* movimiento de fondo */
-  @keyframes skyShift{ 0%,100%{ background-position:50% 92%, 50% 0% } 50%{ background-position:46% 88%, 50% 0% } }
-  @keyframes driftSlow{ 0%,100%{ transform:translateX(0) } 50%{ transform:translateX(-26px) } }
-  @keyframes nebula{ 0%,100%{ transform:translateX(-50%) scale(1); opacity:.55 } 50%{ transform:translateX(-46%) scale(1.12); opacity:.85 } }
-  @keyframes twk{ 0%,100%{ opacity:.2 } 50%{ opacity:1 } }
-  @keyframes emberUp{ 0%{ transform:translateY(0) scale(1); opacity:0 } 12%{ opacity:.9 } 100%{ transform:translateY(-72vh) scale(.3); opacity:0 } }
-  .star{ position:absolute; border-radius:50%; background:#F4ECDC; animation:twk 3s ease-in-out infinite; }
-  .ember{ position:absolute; bottom:-12px; border-radius:50%; animation:emberUp linear infinite; }
-  @keyframes birdFly{ from{ transform:translate(-12vw,0) } to{ transform:translate(112vw,-34px) } }
-  .bird{ animation:birdFly 26s linear infinite; }
-  @keyframes shoot{ 0%{ opacity:0; transform:translate(0,0) rotate(135deg) scaleX(0) } 5%{ opacity:1; transform:translate(-30px,30px) rotate(135deg) scaleX(1) } 13%{ opacity:0; transform:translate(-210px,210px) rotate(135deg) scaleX(1) } 100%{ opacity:0 } }
-  .shoot{ animation:shoot 10s ease-in infinite; }
-  /* nav shrink al hacer scroll */
-  #navPill{ transition:transform .25s ease, padding .25s ease; }
-  #navPill.shrink{ transform:scale(.9); padding-top:.3rem; padding-bottom:.3rem; }
-  /* greca azteca (paso y trenza) */
-  .greca{ height:26px; background-repeat:repeat-x; background-position:center;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='26' viewBox='0 0 48 26'%3E%3Cpath d='M2 23 H10 V15 H18 V7 H30 V15 H38 V23 H46' fill='none' stroke='%23D2773B' stroke-width='3'/%3E%3Cpath d='M18 15 H30' stroke='%2339A98C' stroke-width='3'/%3E%3C/svg%3E"); }
-  /* marco lotería */
-  .loteria::after{ content:''; position:absolute; inset:9px; border:1px solid var(--acc,#D2773B); opacity:.45; border-radius:12px; pointer-events:none; }
-  /* reveal */
-  .reveal{ opacity:0; transform:translateY(30px); transition:opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+  body{ background:#0A0A0B; color:#F5F5F5; }
+  .label{ font-family:'Space Mono',monospace; letter-spacing:.15em; text-transform:uppercase; }
+  .display{ font-weight:800; letter-spacing:-.03em; line-height:.92; }
+  .btn{ font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s, color .18s; }
+  .btn-fill{ background:#E04A2F; color:#fff; box-shadow:0 4px 20px rgba(224,74,47,.25); border-radius:10px; }
+  .btn-fill:hover{ transform:translateY(-2px); box-shadow:0 8px 30px rgba(224,74,47,.35); }
+  .btn-ghost{ color:#F5F5F5; border:1.5px solid rgba(255,255,255,.15); border-radius:10px; }
+  .btn-ghost:hover{ border-color:#E04A2F; background:rgba(224,74,47,.06); }
+
+  .card{
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 16px;
+    position: relative;
+    transition: transform .25s ease, border-color .25s;
+  }
+  .card:hover{ transform:translateY(-4px); border-color:rgba(224,74,47,.3); }
+  .card::before{
+    content:''; position:absolute; inset:-1px; border-radius:17px; padding:1px;
+    background: linear-gradient(135deg, transparent 40%, rgba(224,74,47,.15) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity:0; transition:opacity .3s;
+  }
+  .card:hover::before{ opacity:1; }
+
+  .card-light{
+    background:#F5F5F5; color:#1A1A1A; border:none; border-radius:16px;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,.6);
+  }
+
+  /* Hero glow */
+  .hero-glow{
+    position:absolute; width:600px; height:600px; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    background: radial-gradient(circle, rgba(224,74,47,.12) 0%, transparent 70%);
+    filter: blur(60px); pointer-events:none;
+  }
+  .hero-glow-2{
+    position:absolute; width:400px; height:400px; left:30%; top:60%;
+    transform:translate(-50%,-50%);
+    background: radial-gradient(circle, rgba(42,157,143,.08) 0%, transparent 70%);
+    filter: blur(50px); pointer-events:none;
+  }
+
+  /* Animated title gradient */
+  @keyframes shimmer{
+    0%{ background-position:0% 50%; }
+    50%{ background-position:100% 50%; }
+    100%{ background-position:0% 50%; }
+  }
+  .title-accent{
+    background: linear-gradient(90deg, #E04A2F, #FF6B4A, #E04A2F);
+    background-size: 200% auto;
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    animation: shimmer 4s ease infinite;
+  }
+
+  /* Marquee */
+  @keyframes scroll-left{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-50%); }
+  }
+  .marquee-track{
+    display:flex; gap:3rem; animation: scroll-left 25s linear infinite; width: max-content;
+  }
+  .marquee-strip:hover .marquee-track{ animation-play-state:paused; }
+
+  /* Reveal */
+  .reveal{ opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1); }
   .reveal.in{ opacity:1; transform:none; }
-  .trace{ stroke-dasharray:12 14; animation:flow 3.5s linear infinite; }
-  .marquee-track{ width:max-content; }
-  .shirt-pile{ transition:transform .35s cubic-bezier(.2,.9,.3,1); }
-  .shirt-pile img{ filter: drop-shadow(0 14px 22px rgba(0,0,0,.55)); }
-  ::selection{ background:#D2773B; color:#150E29; }
-  ::-webkit-scrollbar{ width:12px; } ::-webkit-scrollbar-track{ background:#150E29; }
-  ::-webkit-scrollbar-thumb{ background:#3A2150; } ::-webkit-scrollbar-thumb:hover{ background:#D2773B; }
-  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; } }
+
+  /* Circuit decoration */
+  .circuit-line{
+    stroke: rgba(224,74,47,.12);
+    stroke-width: 1.5;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .circuit-dot{
+    fill: rgba(224,74,47,.25);
+  }
+
+  /* Section divider */
+  .section-glow{
+    height:1px;
+    background: linear-gradient(90deg, transparent, rgba(224,74,47,.2) 30%, rgba(42,157,143,.2) 70%, transparent);
+  }
+
+  ::selection{ background:#E04A2F; color:#fff; }
+  ::-webkit-scrollbar{ width:8px; } ::-webkit-scrollbar-track{ background:#0A0A0B; }
+  ::-webkit-scrollbar-thumb{ background:#222; border-radius:4px; } ::-webkit-scrollbar-thumb:hover{ background:#E04A2F; }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
 </style>
 </head>
 
 <body class="font-body antialiased overflow-x-hidden">
 
-<!-- ════ NAV ════ -->
+<!-- NAV -->
 <nav class="fixed top-4 inset-x-0 z-50 px-4">
   <div class="w-fit mx-auto flex flex-col items-center">
-    <div id="navPill" class="flex items-center gap-1 bg-night/75 backdrop-blur border border-white/15 rounded-full pl-5 pr-2 py-2 shadow-[0_10px_34px_rgba(0,0,0,.45)]">
-      <a href="#home" class="text-xl flex items-center gap-2 pr-2">
-        <svg class="w-4 h-5" viewBox="0 0 40 56" aria-hidden="true"><g fill="#39A98C" stroke="#150E29" stroke-width="2"><path d="M20 56V30"/><path d="M20 34c-6-2-12-10-12-22 6 2 12 8 12 22z"/><path d="M20 34c6-2 12-10 12-22-6 2-12 8-12 22z"/><path d="M20 30c-4-4-6-14-2-26 4 6 6 16 2 26z"/></g></svg>
-        <span class="logo-mini">REVOLUTION</span>
-      </a>
+    <div id="navPill" class="flex items-center gap-1 bg-night/70 backdrop-blur-xl border border-white/[.06] rounded-full pl-5 pr-2 py-2 shadow-lg shadow-black/20 transition-all duration-300">
+      <a href="#home" class="text-lg font-extrabold tracking-tight pr-2">REVOLUTION</a>
       <div class="hidden md:flex items-center gap-1 label text-[11px] text-bone-mut">
-        <a href="#que-es" class="px-3 py-1.5 rounded-full hover:text-copper hover:bg-white/5 transition">Qué es</a>
-        <a href="#proyectos" class="px-3 py-1.5 rounded-full hover:text-copper hover:bg-white/5 transition">Build</a>
-        <a href="#timeline" class="px-3 py-1.5 rounded-full hover:text-copper hover:bg-white/5 transition">Programa</a>
-        <a href="#merch" class="px-3 py-1.5 rounded-full hover:text-copper hover:bg-white/5 transition">Merch</a>
-        <a href="#sponsors" class="px-3 py-1.5 rounded-full hover:text-copper hover:bg-white/5 transition">Aliados</a>
-        <a href="#registro" class="ml-1 px-4 py-1.5 rounded-full bg-copper text-night font-mono font-bold hover:bg-marigold transition">Regístrate</a>
+        <a href="#que-es" class="px-3 py-1.5 rounded-full hover:text-accent hover:bg-white/5 transition">Qué es</a>
+        <a href="#proyectos" class="px-3 py-1.5 rounded-full hover:text-accent hover:bg-white/5 transition">Proyectos</a>
+        <a href="#timeline" class="px-3 py-1.5 rounded-full hover:text-accent hover:bg-white/5 transition">Programa</a>
+        <a href="#merch" class="px-3 py-1.5 rounded-full hover:text-accent hover:bg-white/5 transition">Merch</a>
+        <a href="#sponsors" class="px-3 py-1.5 rounded-full hover:text-accent hover:bg-white/5 transition">Aliados</a>
+        <a href="#registro" class="ml-1 px-4 py-1.5 rounded-full bg-accent text-white font-mono font-bold hover:bg-red-600 transition">Regístrate</a>
       </div>
       <button id="navToggle" class="md:hidden text-2xl text-bone px-2"><i class="bi bi-list"></i></button>
     </div>
-    <div id="mobileMenu" class="hidden md:hidden mt-2 w-60 bg-night/95 backdrop-blur border border-white/15 rounded-2xl px-5 py-4 label text-sm text-bone-mut space-y-3 shadow-[0_10px_34px_rgba(0,0,0,.45)]">
-      <a href="#que-es" class="block">Qué es</a>
-      <a href="#proyectos" class="block">Build</a>
-      <a href="#timeline" class="block">Programa</a>
-      <a href="#merch" class="block">Merch</a>
-      <a href="#sponsors" class="block">Aliados</a>
-      <a href="#registro" class="block text-copper">Regístrate →</a>
+    <div id="mobileMenu" class="hidden md:hidden mt-2 w-60 bg-night/95 backdrop-blur-xl border border-white/[.06] rounded-2xl px-5 py-4 label text-sm text-bone-mut space-y-3 shadow-lg">
+      <a href="#que-es" class="block hover:text-accent transition">Qué es</a>
+      <a href="#proyectos" class="block hover:text-accent transition">Proyectos</a>
+      <a href="#timeline" class="block hover:text-accent transition">Programa</a>
+      <a href="#merch" class="block hover:text-accent transition">Merch</a>
+      <a href="#sponsors" class="block hover:text-accent transition">Aliados</a>
+      <a href="#registro" class="block text-accent">Regístrate →</a>
     </div>
   </div>
 </nav>
 
-<!-- ════ HERO — escena del desierto ════ -->
-<header id="home" class="sky relative min-h-screen flex flex-col items-center justify-center text-center px-5 pt-28 pb-0 overflow-hidden">
+<!-- HERO -->
+<header id="home" class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-28 pb-20 overflow-hidden">
+  <!-- Background layers -->
+  <div class="absolute inset-0 bg-gradient-to-b from-night via-night2 to-night"></div>
+  <div class="absolute inset-0 opacity-[.03]" style="background-image:radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size:48px 48px;"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
 
-  <!-- nebulosa (aura) -->
-  <div class="absolute left-1/2 top-[16%] w-[85vw] h-[46vh] pointer-events-none" style="background:radial-gradient(ellipse at center, rgba(255,77,141,.20), rgba(120,46,120,.14) 42%, transparent 72%); filter:blur(28px); animation:nebula 16s ease-in-out infinite"></div>
-  <!-- neblina del horizonte -->
-  <div class="absolute inset-x-0 bottom-[10%] h-48 pointer-events-none" style="background:linear-gradient(to top, rgba(242,164,58,.28), rgba(210,119,59,.10) 45%, transparent); filter:blur(10px)"></div>
-  <!-- campo de estrellas + brasas -->
-  <div id="starfield" class="absolute inset-0 pointer-events-none"></div>
-  <div id="embers" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
-
-  <!-- papel picado colgado de borde a borde -->
-  <div id="heroPicado" class="absolute top-6 left-0 w-full flex justify-between items-start z-10 pointer-events-none"></div>
-
-  <!-- luna -->
-  <svg class="absolute top-[12%] right-[15%] w-12 sm:w-16 animate-glow z-0" viewBox="0 0 64 64" aria-hidden="true"><path d="M46 34a20 20 0 1 1-13-19 16 16 0 0 0 13 19z" fill="#F4ECDC" opacity=".85"/></svg>
-  <!-- aves -->
-  <svg class="bird absolute top-[19%] w-8 opacity-50 z-0" viewBox="0 0 40 16" aria-hidden="true"><path d="M2 12 Q10 2 20 10 Q30 2 38 12" fill="none" stroke="#F4ECDC" stroke-width="2"/></svg>
-  <svg class="bird absolute top-[25%] w-6 opacity-40 z-0" style="animation-duration:32s;animation-delay:-7s" viewBox="0 0 40 16" aria-hidden="true"><path d="M2 12 Q10 4 20 11 Q30 4 38 12" fill="none" stroke="#F4ECDC" stroke-width="2"/></svg>
-  <!-- estrella fugaz -->
-  <div class="shoot absolute top-[9%] left-[58%] w-24 h-[2px] bg-gradient-to-r from-transparent to-bone origin-right z-0"></div>
-
-  <!-- estrellas / constelación-circuito -->
-  <svg class="absolute inset-0 w-full h-full pointer-events-none" style="animation:driftSlow 16s ease-in-out infinite" aria-hidden="true">
-    <g stroke="rgba(244,236,220,.25)" stroke-width="1">
-      <line x1="12%" y1="16%" x2="20%" y2="24%"/><line x1="20%" y1="24%" x2="28%" y2="18%"/>
-      <line x1="78%" y1="14%" x2="86%" y2="22%"/><line x1="70%" y1="26%" x2="78%" y2="14%"/>
-    </g>
-    <g fill="#F4ECDC">
-      <circle cx="12%" cy="16%" r="2" class="animate-twinkle"/><circle cx="20%" cy="24%" r="2.5" class="animate-twinkle" style="animation-delay:.4s"/>
-      <circle cx="28%" cy="18%" r="2" class="animate-twinkle" style="animation-delay:.9s"/><circle cx="78%" cy="14%" r="2.5" class="animate-twinkle" style="animation-delay:.2s"/>
-      <circle cx="86%" cy="22%" r="2" class="animate-twinkle" style="animation-delay:.7s"/><circle cx="70%" cy="26%" r="2" class="animate-twinkle" style="animation-delay:1.1s"/>
-      <circle cx="48%" cy="12%" r="1.6" class="animate-twinkle" style="animation-delay:.5s"/><circle cx="60%" cy="20%" r="1.6" class="animate-twinkle" style="animation-delay:1.3s"/>
-      <circle cx="36%" cy="10%" r="1.6" class="animate-twinkle" style="animation-delay:1.6s"/>
-    </g>
+  <!-- Circuit decoration left -->
+  <svg class="absolute left-8 top-1/4 w-32 h-64 hidden lg:block" viewBox="0 0 120 240">
+    <path class="circuit-line" d="M60 0 L60 40 L20 40 L20 80 L60 80 L60 120"/>
+    <path class="circuit-line" d="M60 120 L90 120 L90 160 L60 160 L60 240"/>
+    <circle class="circuit-dot" cx="60" cy="40" r="3"/>
+    <circle class="circuit-dot" cx="20" cy="80" r="3"/>
+    <circle class="circuit-dot" cx="60" cy="120" r="4"/>
+    <circle class="circuit-dot" cx="90" cy="160" r="3"/>
   </svg>
 
-  <!-- sol (a la derecha, fuera del texto) -->
-  <div data-par="0.15" class="absolute bottom-[26%] right-[3%] w-[340px] max-w-[55vw] aspect-square">
-    <div class="absolute inset-0 rounded-full" style="background:radial-gradient(circle, #F7C36B 0%, #F2A43A 38%, rgba(242,164,58,.0) 70%)"></div>
-    <svg class="absolute inset-0 w-full h-full animate-spin-slow opacity-40" viewBox="0 0 200 200" aria-hidden="true">
-      <circle cx="100" cy="100" r="92" fill="none" stroke="#F7C36B" stroke-width="1.5" stroke-dasharray="3 9"/>
-      <circle cx="100" cy="100" r="74" fill="none" stroke="#F7C36B" stroke-width="1.5" stroke-dasharray="2 12"/>
-    </svg>
-  </div>
+  <!-- Circuit decoration right -->
+  <svg class="absolute right-8 top-1/3 w-32 h-64 hidden lg:block" viewBox="0 0 120 240">
+    <path class="circuit-line" d="M60 0 L60 60 L100 60 L100 100"/>
+    <path class="circuit-line" d="M100 100 L60 100 L60 160 L30 160 L30 200 L60 200 L60 240"/>
+    <circle class="circuit-dot" cx="60" cy="60" r="3"/>
+    <circle class="circuit-dot" cx="100" cy="100" r="4"/>
+    <circle class="circuit-dot" cx="30" cy="200" r="3"/>
+  </svg>
 
-  <!-- engranes rodando (planta rodadora) -->
-  <div class="roller absolute bottom-[4%] left-0 z-20 opacity-40 pointer-events-none">
-    <svg class="w-14 sm:w-20 animate-spin-slow" viewBox="-30 -30 60 60" aria-hidden="true"><path fill="none" stroke="#D2773B" stroke-width="3" d="M0-22l5 8 9-2 1 9 8 4-5 8 5 8-8 4-1 9-9-2-5 8-5-8-9 2-1-9-8-4 5-8-5-8 8-4 1-9 9 2z"/><circle r="8" fill="none" stroke="#D2773B" stroke-width="3"/></svg>
-  </div>
-  <div class="roller absolute bottom-[6%] left-0 z-20 opacity-30 pointer-events-none" style="animation-duration:14s;animation-delay:-5s">
-    <svg class="w-9 sm:w-12 animate-spin-slow" viewBox="-30 -30 60 60" aria-hidden="true"><path fill="none" stroke="#F2A43A" stroke-width="3" d="M0-22l5 8 9-2 1 9 8 4-5 8 5 8-8 4-1 9-9-2-5 8-5-8-9 2-1-9-8-4 5-8-5-8 8-4 1-9 9 2z"/><circle r="8" fill="none" stroke="#F2A43A" stroke-width="3"/></svg>
-  </div>
-
-  <!-- contenido -->
-  <div class="relative z-20 max-w-5xl mt-20">
-    <p class="label text-marigold text-xs sm:text-sm mb-4 animate-glow flex items-center justify-center gap-2"><img src="assets/media/hackclub-logo.png" alt="Hack Club" class="h-5 sm:h-6 w-auto"> presenta</p>
-
-    <!-- WORDMARK custom: letras 3D + engrane-O + cactus-I + agaves -->
-    <div class="w-full flex justify-center">
-     <div class="relative w-fit">
-      <!-- agave izquierda (enmarca) -->
-      <svg class="absolute -bottom-3 -left-7 sm:-left-12 w-12 sm:w-20" viewBox="0 0 120 120" aria-hidden="true">
-        <g fill="#27806A" stroke="#150E29" stroke-width="3" stroke-linejoin="round">
-          <path d="M60 118 L40 60 L60 80 Z"/><path d="M60 118 L80 60 L60 80 Z"/>
-          <path d="M60 118 L24 78 L56 86 Z"/><path d="M60 118 L96 78 L64 86 Z"/>
-          <path d="M60 118 L34 100 L58 92 Z"/><path d="M60 118 L86 100 L62 92 Z"/>
-        </g>
-        <g fill="#39A98C" stroke="#150E29" stroke-width="3" stroke-linejoin="round"><path d="M60 118 L52 50 L60 70 L68 50 Z"/></g>
-      </svg>
-      <!-- agave derecha (espejo) -->
-      <svg class="absolute -bottom-3 -right-7 sm:-right-12 w-12 sm:w-20 -scale-x-100" viewBox="0 0 120 120" aria-hidden="true">
-        <g fill="#27806A" stroke="#150E29" stroke-width="3" stroke-linejoin="round">
-          <path d="M60 118 L40 60 L60 80 Z"/><path d="M60 118 L80 60 L60 80 Z"/>
-          <path d="M60 118 L24 78 L56 86 Z"/><path d="M60 118 L96 78 L64 86 Z"/>
-          <path d="M60 118 L34 100 L58 92 Z"/><path d="M60 118 L86 100 L62 92 Z"/>
-        </g>
-        <g fill="#39A98C" stroke="#150E29" stroke-width="3" stroke-linejoin="round"><path d="M60 118 L52 50 L60 70 L68 50 Z"/></g>
-      </svg>
-
-      <!-- letras con engrane en la O -->
-      <h1 class="logo-wrap flex items-center justify-center flex-nowrap gap-[.01em] leading-none text-[clamp(2.1rem,12.5vw,11rem)]" aria-label="Revolution">
-        <span class="lt">R</span><span class="lt">E</span><span class="lt">V</span>
-        <svg class="gear-o animate-spin-slow" viewBox="-30 -30 60 60" aria-hidden="true">
-          <defs><linearGradient id="go" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#FFEBB4"/><stop offset=".3" stop-color="#FFC24D"/><stop offset=".62" stop-color="#F2843A"/><stop offset="1" stop-color="#E0556A"/>
-          </linearGradient></defs>
-          <path fill="url(#go)" stroke="#2A150D" stroke-width="3.5" d="M0-22l5 8 9-2 1 9 8 4-5 8 5 8-8 4-1 9-9-2-5 8-5-8-9 2-1-9-8-4 5-8-5-8 8-4 1-9 9 2z"/>
-          <circle r="9" fill="#2A150D"/><circle r="4" fill="url(#go)"/>
-        </svg>
-        <span class="lt">L</span><span class="lt">U</span><span class="lt">T</span>
-        <!-- I = cactus saguaro -->
-        <svg class="cactus-i" viewBox="0 0 60 132" aria-hidden="true">
-          <defs><linearGradient id="cac" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#6CC58E"/><stop offset=".55" stop-color="#2E8B57"/><stop offset="1" stop-color="#1C6B43"/>
-          </linearGradient></defs>
-          <g fill="url(#cac)" stroke="#143D29" stroke-width="4.5" stroke-linejoin="round">
-            <path d="M13 90 V66 a7 7 0 0 1 14 0 v12 h-14 z"/>
-            <path d="M47 82 V58 a7 7 0 0 0-14 0 v12 h14 z"/>
-            <path d="M22 130 V44 a8 8 0 0 1 16 0 V130 Z"/>
-          </g>
-          <circle cx="30" cy="36" r="7.5" fill="#FF4D8D" stroke="#143D29" stroke-width="3.5"/><circle cx="30" cy="36" r="3" fill="#FFC24D"/>
-        </svg>
-        <span class="lt">O</span>
-        <!-- N = tres machetes -->
-        <svg class="mach-n" viewBox="0 0 96 114" aria-hidden="true">
-          <defs>
-            <linearGradient id="steel" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#C7CBD2"/><stop offset=".5" stop-color="#F2F4F8"/><stop offset="1" stop-color="#9AA0AA"/>
-            </linearGradient>
-            <g id="mach">
-              <path fill="url(#steel)" stroke="#2A150D" stroke-width="3.5" stroke-linejoin="round" d="M7 80 L7 16 Q9 4 15 4 L19 11 L19 80 Z"/>
-              <path fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity=".55" d="M16 16 L16 74"/>
-              <rect x="3" y="78" width="20" height="5" rx="2" fill="#2A150D"/>
-              <rect x="7" y="82" width="12" height="26" rx="3" fill="#7A4F28" stroke="#2A150D" stroke-width="3"/>
-            </g>
-          </defs>
-          <use href="#mach" transform="translate(2 3)"/>
-          <use href="#mach" transform="translate(36 3) rotate(-26 13 56)"/>
-          <use href="#mach" transform="translate(62 3)"/>
-        </svg>
-      </h1>
-
-      <!-- circuito sutil que recubre el logo -->
-      <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" viewBox="0 0 1000 220" preserveAspectRatio="none" aria-hidden="true">
-        <path class="trace" d="M30 184 H300 V120 H470" fill="none" stroke="#D2773B" stroke-width="3"/>
-        <path class="trace" d="M970 40 H700 V100 H540" fill="none" stroke="#39A98C" stroke-width="3" style="animation-delay:.8s"/>
-        <rect x="296" y="116" width="9" height="9" fill="#39A98C"/><rect x="696" y="36" width="9" height="9" fill="#D2773B"/>
-      </svg>
-     </div>
+  <div class="relative z-10 max-w-4xl">
+    <div class="flex items-center justify-center gap-3 mb-10">
+      <a href="https://hackclub.com"><img src="assets/media/hackclub-logo.png" alt="Hack Club" class="h-6 sm:h-8 w-auto"></a>
+      <span class="label text-xs text-bone-mut">presenta</span>
     </div>
 
-    <!-- greca bajo el wordmark -->
-    <div class="greca w-[80%] max-w-xl mx-auto mt-2 opacity-90"></div>
+    <h1 class="display text-7xl sm:text-[7rem] lg:text-[9rem]">
+      REVOL<span class="title-accent">U</span>TION
+    </h1>
 
-    <!-- sub-banner -->
-    <div class="mt-4 inline-flex items-center gap-3 label text-[10px] sm:text-xs text-bone/90 border border-white/20 rounded-full px-4 py-1.5 backdrop-blur">
-      <i class="bi bi-star-fill text-marigold text-[8px]"></i><span>Hardware</span><span class="text-copper">◆</span><span>48 horas</span><span class="text-copper">◆</span><span>Monterrey 2026</span><i class="bi bi-star-fill text-marigold text-[8px]"></i>
+    <div class="mt-6 inline-flex items-center gap-4 label text-[11px] text-bone-mut">
+      <span>Hardware</span>
+      <span class="w-1 h-1 rounded-full bg-accent inline-block"></span>
+      <span>48 horas</span>
+      <span class="w-1 h-1 rounded-full bg-accent inline-block"></span>
+      <span>Monterrey 2026</span>
     </div>
 
-    <p class="font-display font-bold text-2xl sm:text-4xl text-bone mt-6 max-w-2xl mx-auto">
-      Construye un robot. Hazlo girar. <span class="text-copper">Que pelee.</span>
+    <p class="font-semibold text-2xl sm:text-3xl text-bone mt-10 max-w-2xl mx-auto leading-snug">
+      Construye un robot. Hazlo competir.<br><span class="text-accent">Demuestra lo que puedes hacer.</span>
     </p>
-    <p class="text-bone-mut mt-3 max-w-xl mx-auto">48 horas de hardware real, motores y comunidad. Hecho por y para adolescentes en Hack Club — sin experiencia previa.</p>
-    <div class="mt-4 flex justify-center"><img src="assets/media/hackclub-logo.png" alt="Hack Club" class="h-8 sm:h-10 w-auto"></div>
+    <p class="text-bone-mut mt-4 max-w-xl mx-auto text-lg leading-relaxed">
+      Un hackathon de hardware de 48 horas donde adolescentes construyen robots reales. Sin costo. Sin experiencia previa.
+    </p>
 
-    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+    <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
       <a href="#registro" class="group btn btn-fill text-base px-8 py-4 flex items-center gap-2">
         Regístrate gratis <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
       </a>
@@ -325,369 +221,374 @@
     </div>
   </div>
 
-  <!-- HORIZONTE DEL DESIERTO (capa frontal, full-bleed sin scrollbar) -->
-  <div class="relative z-10 w-[calc(100%+2.5rem)] -mx-5 mt-12 pointer-events-none">
-    <!-- montañas lejanas -->
-    <svg data-par="0.04" class="w-full h-20 sm:h-28 block" viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0 160 V96 L170 44 L330 104 L520 34 L740 112 L960 52 L1170 104 L1320 64 L1440 110 V160 Z" fill="#1B1133"/>
-    </svg>
-    <!-- fila de cactus/agaves -->
-    <div data-par="0.08" class="flex items-end justify-between gap-1 px-0 -mt-10 sm:-mt-16 w-full">
-      <!-- pirámide escalonada -->
-      <svg class="w-24 sm:w-40 self-end" viewBox="0 0 120 80" aria-hidden="true"><path d="M4 78 V62 H22 V46 H40 V30 H80 V46 H98 V62 H116 V78 Z" fill="#1A1138" stroke="rgba(210,119,59,.4)" stroke-width="1.5"/><path d="M40 30 H80" stroke="rgba(242,164,58,.55)" stroke-width="2"/></svg>
-      <!-- saguaro -->
-      <svg class="w-12 sm:w-16 self-end" viewBox="0 0 60 130" aria-hidden="true"><g fill="#130C26" stroke="#27806A" stroke-width="2"><path d="M25 130 V44 a8 8 0 0 1 16 0 V130 Z"/><path d="M13 86 V64 a7 7 0 0 1 14 0"/><path d="M47 76 V54 a7 7 0 0 0-14 0"/></g></svg>
-      <!-- agave -->
-      <svg class="w-16 sm:w-24 self-end" viewBox="0 0 120 110" aria-hidden="true"><g fill="#130C26" stroke="#39A98C" stroke-width="2" stroke-linejoin="round"><path d="M60 108 L34 56 L60 76 Z"/><path d="M60 108 L86 56 L60 76 Z"/><path d="M60 108 L22 78 L56 84 Z"/><path d="M60 108 L98 78 L64 84 Z"/><path d="M60 108 L40 92 L58 86 Z"/><path d="M60 108 L80 92 L62 86 Z"/><path d="M60 108 L54 46 L60 66 L66 46 Z"/></g></svg>
-      <!-- nopal -->
-      <svg class="w-14 sm:w-20 self-end" viewBox="0 0 100 120" aria-hidden="true"><g fill="#130C26" stroke="#27806A" stroke-width="2"><rect x="42" y="46" width="16" height="74" rx="8"/><path d="M44 76c-13 0-21-8-21-21 11 0 21 6 21 18z"/><path d="M56 62c13 0 21-8 21-21-11 0-21 6-21 18z"/></g></svg>
-      <!-- saguaro alto -->
-      <svg class="w-12 sm:w-16 self-end" viewBox="0 0 60 150" aria-hidden="true"><g fill="#130C26" stroke="#27806A" stroke-width="2"><path d="M25 150 V40 a8 8 0 0 1 16 0 V150 Z"/><path d="M11 96 V70 a7 7 0 0 1 14 0"/><path d="M49 84 V58 a7 7 0 0 0-14 0"/></g></svg>
-      <!-- agave chico -->
-      <svg class="w-12 sm:w-16 self-end hidden xs:block" viewBox="0 0 120 110" aria-hidden="true"><g fill="#130C26" stroke="#39A98C" stroke-width="2" stroke-linejoin="round"><path d="M60 108 L36 60 L60 78 Z"/><path d="M60 108 L84 60 L60 78 Z"/><path d="M60 108 L26 82 L56 86 Z"/><path d="M60 108 L94 82 L64 86 Z"/><path d="M60 108 L54 50 L60 70 L66 50 Z"/></g></svg>
-      <!-- pirámide chica -->
-      <svg class="w-16 sm:w-28 self-end hidden sm:block" viewBox="0 0 120 70" aria-hidden="true"><path d="M8 68 V52 H30 V36 H50 V22 H70 V36 H90 V52 H112 V68 Z" fill="#181030" stroke="rgba(57,169,140,.4)" stroke-width="1.5"/><path d="M50 22 H70" stroke="rgba(242,164,58,.5)" stroke-width="2"/></svg>
-      <!-- nopal chico -->
-      <svg class="w-12 sm:w-16 self-end hidden sm:block" viewBox="0 0 100 120" aria-hidden="true"><g fill="#130C26" stroke="#27806A" stroke-width="2"><rect x="42" y="54" width="15" height="66" rx="7"/><path d="M44 80c-12 0-19-7-19-19 10 0 19 5 19 16z"/></g></svg>
-    </div>
-    <!-- suelo -->
-    <svg class="relative w-full -mt-1 block" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 70 V30 Q360 8 720 26 T1440 24 V70 Z" fill="#150E29"/></svg>
-  </div>
-
-  <a href="#que-es" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 text-copper text-2xl animate-floaty"><i class="bi bi-chevron-down"></i></a>
+  <a href="#que-es" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 text-bone-mut text-2xl hover:text-accent transition"><i class="bi bi-chevron-down"></i></a>
 </header>
 
-<!-- ════ MARQUEE ════ -->
-<div class="bg-copper py-3 overflow-hidden">
-  <div class="marquee-track flex animate-marquee whitespace-nowrap display text-2xl text-night">
-    <span class="flex items-center">
-      <span class="px-6">I wanna see a fight</span><span class="px-2 text-night/60">✦</span>
-      <span class="px-6">Robot vs Robot</span><span class="px-2 text-night/60">✦</span>
-      <span class="px-6">Build · Spin · Battle</span><span class="px-2 text-night/60">✦</span>
-      <span class="px-6">Hecho en Monterrey</span><span class="px-2 text-night/60">✦</span>
-    </span>
-    <span class="flex items-center" aria-hidden="true">
-      <span class="px-6">I wanna see a fight</span><span class="px-2 text-night/60">✦</span>
-      <span class="px-6">Robot vs Robot</span><span class="px-2 text-night/60">✦</span>
-      <span class="px-6">Build · Spin · Battle</span><span class="px-2 text-night/60">✦</span>
-      <span class="px-6">Hecho en Monterrey</span><span class="px-2 text-night/60">✦</span>
-    </span>
+<!-- MARQUEE STRIP -->
+<div class="marquee-strip relative py-4 border-y border-white/[.04] bg-night2/80 overflow-hidden select-none">
+  <div class="marquee-track label text-sm text-bone-mut/60">
+    <span>Robótica</span><span class="text-accent">✦</span>
+    <span>Electrónica</span><span class="text-accent2">✦</span>
+    <span>Arduino</span><span class="text-accent">✦</span>
+    <span>Soldadura</span><span class="text-accent2">✦</span>
+    <span>Impresión 3D</span><span class="text-accent">✦</span>
+    <span>Control remoto</span><span class="text-accent2">✦</span>
+    <span>Sensores</span><span class="text-accent">✦</span>
+    <span>Motores</span><span class="text-accent2">✦</span>
+    <span>Circuitos</span><span class="text-accent">✦</span>
+    <span>FPV</span><span class="text-accent2">✦</span>
+    <span>Robot Sumo</span><span class="text-accent">✦</span>
+    <span>Potenciómetros</span><span class="text-accent2">✦</span>
+    <!-- duplicate for seamless loop -->
+    <span>Robótica</span><span class="text-accent">✦</span>
+    <span>Electrónica</span><span class="text-accent2">✦</span>
+    <span>Arduino</span><span class="text-accent">✦</span>
+    <span>Soldadura</span><span class="text-accent2">✦</span>
+    <span>Impresión 3D</span><span class="text-accent">✦</span>
+    <span>Control remoto</span><span class="text-accent2">✦</span>
+    <span>Sensores</span><span class="text-accent">✦</span>
+    <span>Motores</span><span class="text-accent2">✦</span>
+    <span>Circuitos</span><span class="text-accent">✦</span>
+    <span>FPV</span><span class="text-accent2">✦</span>
+    <span>Robot Sumo</span><span class="text-accent">✦</span>
+    <span>Potenciómetros</span><span class="text-accent2">✦</span>
   </div>
 </div>
 
-<div class="greca opacity-80"></div>
-
-<!-- ════ QUÉ ES ════ -->
-<section id="que-es" class="max-w-6xl mx-auto px-6 py-24">
-  <div class="reveal">
-    <p class="label text-copper text-sm">// 01 — Qué es</p>
-    <h2 class="display text-5xl sm:text-7xl mt-3 text-bone">¿Qué es <span class="text-copper">Revolution?</span></h2>
+<!-- STATS BAR -->
+<section class="py-16 px-6">
+  <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+    <div class="reveal">
+      <p class="display text-4xl sm:text-5xl text-accent">100</p>
+      <p class="label text-[10px] text-bone-mut mt-2">Participantes</p>
+    </div>
+    <div class="reveal">
+      <p class="display text-4xl sm:text-5xl text-bone">48h</p>
+      <p class="label text-[10px] text-bone-mut mt-2">De hackathon</p>
+    </div>
+    <div class="reveal">
+      <p class="display text-4xl sm:text-5xl text-accent2">3</p>
+      <p class="label text-[10px] text-bone-mut mt-2">Categorías</p>
+    </div>
+    <div class="reveal">
+      <p class="display text-4xl sm:text-5xl text-bone">$0</p>
+      <p class="label text-[10px] text-bone-mut mt-2">Costo</p>
+    </div>
   </div>
-  <div class="grid md:grid-cols-2 gap-8 mt-12">
+</section>
+
+<div class="section-glow"></div>
+
+<!-- QUÉ ES -->
+<section id="que-es" class="max-w-5xl mx-auto px-6 py-24">
+  <div class="reveal">
+    <p class="label text-accent text-sm">01 — Qué es</p>
+    <h2 class="display text-4xl sm:text-6xl mt-3">¿Qué es <span class="text-accent">Revolution?</span></h2>
+  </div>
+  <div class="grid md:grid-cols-2 gap-10 mt-14">
     <div class="reveal space-y-5 text-lg text-bone/80 leading-relaxed">
       <p>Nació porque queríamos dominar <strong class="text-bone">electrónica, robótica e ingeniería</strong> sin gastar miles de pesos ni esperar a la universidad.</p>
-      <p>Es un hackathon de hardware de <strong class="text-bone">48 horas</strong> donde adolescentes construyen robots reales y <em class="text-copper not-italic font-semibold">los hacen pelear.</em> La edad no limita la capacidad de construir.</p>
-      <p>Motores que giran, chispas que vuelan y una comunidad que no se rinde. <strong class="text-bone">Y es completamente gratis.</strong></p>
+      <p>Es un hackathon de hardware de <strong class="text-bone">48 horas</strong> donde adolescentes construyen robots funcionales y los ponen a competir. La edad no limita la capacidad de construir.</p>
+      <p>Motores, circuitos y una comunidad que aprende haciendo. <strong class="text-bone">Completamente gratis.</strong></p>
     </div>
-    <div class="reveal panel-light acc rounded-2xl p-8" style="--acc:#39A98C">
-      <h3 class="display text-2xl mb-5 flex items-center gap-2 text-ink"><i class="bi bi-clipboard2-check text-agave-dark"></i> No necesitas experiencia</h3>
+    <div class="reveal card-light p-8 rounded-2xl">
+      <h3 class="display text-2xl mb-6 flex items-center gap-3 text-ink"><i class="bi bi-clipboard2-check text-accent2"></i> No necesitas experiencia</h3>
       <ul class="space-y-4 text-ink-soft font-medium">
-        <li class="flex items-start gap-3"><i class="bi bi-cpu-fill text-copper mt-1"></i> Hardware y kits incluidos</li>
-        <li class="flex items-start gap-3"><i class="bi bi-people-fill text-copper mt-1"></i> Mentoría en todo momento</li>
-        <li class="flex items-start gap-3"><i class="bi bi-cup-hot-fill text-copper mt-1"></i> Comida durante el evento</li>
-        <li class="flex items-start gap-3"><i class="bi bi-fire text-copper mt-1"></i> Una tribu que no se rinde</li>
-        <li class="flex items-start gap-3"><i class="bi bi-cash-coin text-copper mt-1"></i> 100% gratis, siempre</li>
+        <li class="flex items-start gap-3"><span class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0"><i class="bi bi-cpu-fill text-accent text-sm"></i></span> Hardware y kits incluidos</li>
+        <li class="flex items-start gap-3"><span class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0"><i class="bi bi-people-fill text-accent text-sm"></i></span> Mentoría en todo momento</li>
+        <li class="flex items-start gap-3"><span class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0"><i class="bi bi-cup-hot-fill text-accent text-sm"></i></span> Comida durante el evento</li>
+        <li class="flex items-start gap-3"><span class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0"><i class="bi bi-lightbulb-fill text-accent text-sm"></i></span> Comunidad de makers</li>
+        <li class="flex items-start gap-3"><span class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0"><i class="bi bi-cash-coin text-accent text-sm"></i></span> 100% gratis, siempre</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- ════ PROYECTOS ════ -->
-<section id="proyectos" class="relative bg-night2 border-y border-white/10 py-24 overflow-hidden">
-  <div class="max-w-6xl mx-auto px-6">
+<div class="section-glow"></div>
+
+<!-- PROYECTOS -->
+<section id="proyectos" class="relative py-24 overflow-hidden">
+  <div class="absolute inset-0 bg-night2"></div>
+  <!-- Subtle gradient accent -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-accent/[.03] rounded-full blur-[100px]"></div>
+
+  <div class="relative max-w-5xl mx-auto px-6">
     <div class="reveal">
-      <p class="label text-copper text-sm">// 02 — Build</p>
-      <h2 class="display text-5xl sm:text-7xl mt-3 text-bone">Elige tu <span class="text-copper">arma</span></h2>
-      <p class="text-bone-mut mt-4 max-w-xl">Mínimo 3, máximo 4 por equipo. Todos terminan en el ring.</p>
+      <p class="label text-accent text-sm">02 — Proyectos</p>
+      <h2 class="display text-4xl sm:text-6xl mt-3">Elige tu <span class="text-accent">proyecto</span></h2>
+      <p class="text-bone-mut mt-4 max-w-xl">Equipos de 3 a 4 personas. Todos terminan compitiendo.</p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 mt-12">
-      <article class="reveal panel acc loteria rounded-2xl p-7" style="--acc:#D2773B">
-        <div class="flex items-center justify-between label text-xs text-bone-mut"><span>Unit_01</span><span class="text-copper">Combate</span></div>
-        <i class="bi bi-bullseye text-5xl text-copper my-5 inline-block"></i>
-        <h3 class="display text-3xl text-bone">Robot Sumo</h3>
-        <p class="text-bone/70 mt-3">Empuja a tu rival fuera del ring. Reto extra: <strong class="text-bone">brazo inalámbrico con potenciómetro.</strong></p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 mt-14">
+      <article class="reveal card p-7 group">
+        <div class="flex items-center justify-between">
+          <p class="label text-[10px] text-bone-mut">Categoría 01</p>
+          <span class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition">
+            <i class="bi bi-bullseye text-xl text-accent"></i>
+          </span>
+        </div>
+        <h3 class="display text-2xl mt-5">Robot Sumo</h3>
+        <p class="text-bone/60 mt-3 leading-relaxed">Empuja a tu rival fuera del ring. Reto extra: <strong class="text-bone/90">brazo inalámbrico con potenciómetro.</strong></p>
       </article>
-      <article class="reveal panel acc loteria rounded-2xl p-7" style="--acc:#39A98C">
-        <div class="flex items-center justify-between label text-xs text-bone-mut"><span>Unit_02</span><span class="text-agave">Locomoción</span></div>
-        <i class="bi bi-bug-fill text-5xl text-agave my-5 inline-block"></i>
-        <h3 class="display text-3xl text-bone">Quadruped Bot</h3>
-        <p class="text-bone/70 mt-3">Robot de 4 patas que camina. Reto extra: <strong class="text-bone">cámara FPV</strong> en primera persona.</p>
+      <article class="reveal card p-7 group">
+        <div class="flex items-center justify-between">
+          <p class="label text-[10px] text-bone-mut">Categoría 02</p>
+          <span class="w-10 h-10 rounded-xl bg-accent2/10 flex items-center justify-center group-hover:bg-accent2/20 transition">
+            <i class="bi bi-bug-fill text-xl text-accent2"></i>
+          </span>
+        </div>
+        <h3 class="display text-2xl mt-5">Quadruped Bot</h3>
+        <p class="text-bone/60 mt-3 leading-relaxed">Robot de 4 patas que camina. Reto extra: <strong class="text-bone/90">cámara FPV</strong> en primera persona.</p>
       </article>
-      <article class="reveal panel acc loteria rounded-2xl p-7 sm:col-span-2 lg:col-span-1 sm:max-w-md sm:mx-auto lg:max-w-none" style="--acc:#F2A43A">
-        <div class="flex items-center justify-between label text-xs text-bone-mut"><span>Unit_03</span><span class="text-marigold">Velocidad</span></div>
-        <i class="bi bi-controller text-5xl text-marigold my-5 inline-block"></i>
-        <h3 class="display text-3xl text-bone">Carro RC</h3>
-        <p class="text-bone/70 mt-3">Control remoto a toda velocidad. Reto extra: <strong class="text-bone">control por gestos de mano.</strong></p>
+      <article class="reveal card p-7 sm:col-span-2 lg:col-span-1 sm:max-w-md sm:mx-auto lg:max-w-none group">
+        <div class="flex items-center justify-between">
+          <p class="label text-[10px] text-bone-mut">Categoría 03</p>
+          <span class="w-10 h-10 rounded-xl bg-amber-400/10 flex items-center justify-center group-hover:bg-amber-400/20 transition">
+            <i class="bi bi-controller text-xl text-amber-400"></i>
+          </span>
+        </div>
+        <h3 class="display text-2xl mt-5">Carro RC</h3>
+        <p class="text-bone/60 mt-3 leading-relaxed">Control remoto a toda velocidad. Reto extra: <strong class="text-bone/90">control por gestos de mano.</strong></p>
       </article>
     </div>
     <p class="reveal text-center text-bone-mut mt-12 label text-xs">
-      <i class="bi bi-box-seam text-copper"></i> Cada equipo recibe un kit con drones, base de quadruped y materiales según el proyecto.
+      <i class="bi bi-box-seam text-accent"></i> Cada equipo recibe un kit con materiales según el proyecto.
     </p>
   </div>
 </section>
 
-<!-- ════ TIMELINE ════ -->
-<section id="timeline" class="max-w-4xl mx-auto px-6 py-24">
+<div class="section-glow"></div>
+
+<!-- TIMELINE -->
+<section id="timeline" class="max-w-3xl mx-auto px-6 py-24">
   <div class="reveal">
-    <p class="label text-copper text-sm">// 03 — Programa</p>
-    <h2 class="display text-5xl sm:text-7xl mt-3 text-bone">48 horas <span class="text-copper">non-stop</span></h2>
+    <p class="label text-accent text-sm">03 — Programa</p>
+    <h2 class="display text-4xl sm:text-6xl mt-3">48 horas <span class="text-accent">de hackathon</span></h2>
   </div>
-  <ol class="mt-14 relative ml-3 space-y-9">
-    <span class="absolute left-0 top-2 bottom-2 w-[2px] bg-gradient-to-b from-copper via-agave to-marigold"></span>
+  <ol class="mt-14 relative ml-3 space-y-10">
+    <span class="absolute left-0 top-2 bottom-2 w-[2px] bg-gradient-to-b from-accent via-accent2 to-amber-400 rounded-full"></span>
     <li class="reveal ml-8 relative">
-      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-copper rounded-full grid place-items-center text-night text-sm"><i class="bi bi-flag-fill"></i></span>
-      <p class="label text-xs text-marigold">Vie 20 · 14:00–16:00</p>
-      <h3 class="display text-2xl mt-1 text-bone">Registro & Ceremonia</h3>
-      <p class="text-bone/70 mt-1">Llegada, kits, gafetes y apertura (30 min). Conoce a tu equipo.</p>
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-accent rounded-full grid place-items-center text-white text-sm shadow-lg shadow-accent/20"><i class="bi bi-flag-fill"></i></span>
+      <p class="label text-[10px] text-bone-mut">Viernes · 14:00–16:00</p>
+      <h3 class="display text-xl mt-1">Registro y apertura</h3>
+      <p class="text-bone/60 mt-1">Llegada, entrega de kits, gafetes y ceremonia de apertura. Conoce a tu equipo.</p>
     </li>
     <li class="reveal ml-8 relative">
-      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-rosa rounded-full grid place-items-center text-night text-sm"><i class="bi bi-shield-shaded"></i></span>
-      <p class="label text-xs text-marigold">Viernes 20 · Antes de arrancar</p>
-      <h3 class="display text-2xl mt-1 text-bone">LARPing · arma tu equipo</h3>
-      <p class="text-bone/70 mt-1">Sesión de LARPing para formar escuadrones: <strong class="text-rosa">exagera tus logros</strong>, presume tu aura y convence a los demás de que te quieren en su equipo. Be a larper.</p>
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-accent rounded-full grid place-items-center text-white text-sm shadow-lg shadow-accent/20"><i class="bi bi-people-fill"></i></span>
+      <p class="label text-[10px] text-bone-mut">Viernes · Antes de arrancar</p>
+      <h3 class="display text-xl mt-1">Formación de equipos</h3>
+      <p class="text-bone/60 mt-1">Dinámica para conocerse y armar equipos. Presenta tus habilidades y encuentra a tus compañeros.</p>
     </li>
     <li class="reveal ml-8 relative">
-      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-agave rounded-full grid place-items-center text-night text-sm"><i class="bi bi-tools"></i></span>
-      <p class="label text-xs text-marigold">Día 1 · Noche</p>
-      <h3 class="display text-2xl mt-1 text-bone">Construye</h3>
-      <p class="text-bone/70 mt-1">Talleres guiados, primer prototipo funcional, cena y networking.</p>
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-accent2 rounded-full grid place-items-center text-white text-sm shadow-lg shadow-accent2/20"><i class="bi bi-tools"></i></span>
+      <p class="label text-[10px] text-bone-mut">Día 1 · Noche</p>
+      <h3 class="display text-xl mt-1">Construcción</h3>
+      <p class="text-bone/60 mt-1">Talleres guiados, primer prototipo funcional, cena y networking.</p>
     </li>
     <li class="reveal ml-8 relative">
-      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-rosa rounded-full grid place-items-center text-night text-sm"><i class="bi bi-moon-stars-fill"></i></span>
-      <p class="label text-xs text-marigold">Madrugada</p>
-      <h3 class="display text-2xl mt-1 text-bone">Modo descanso</h3>
-      <p class="text-bone/70 mt-1">Karaoke, Just Dance, chocolate Abuelita + pan dulce + historias de horror. Demo Show de madrugada.</p>
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-night3 border border-white/10 rounded-full grid place-items-center text-bone-mut text-sm"><i class="bi bi-moon-stars-fill"></i></span>
+      <p class="label text-[10px] text-bone-mut">Madrugada</p>
+      <h3 class="display text-xl mt-1">Descanso y convivencia</h3>
+      <p class="text-bone/60 mt-1">Karaoke, Just Dance, snacks y demos de madrugada para quien quiera seguir.</p>
     </li>
     <li class="reveal ml-8 relative">
-      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-marigold rounded-full grid place-items-center text-night text-sm"><i class="bi bi-trophy-fill"></i></span>
-      <p class="label text-xs text-marigold">Día 2 · Cierre</p>
-      <h3 class="display text-2xl mt-1 text-bone">Demo, votación & batalla</h3>
-      <p class="text-bone/70 mt-1">Demos finales, votación peer-to-peer (most aura, most woah, most dance) y lo que todos esperan: <strong class="text-copper">I wanna see a fight.</strong></p>
+      <span class="absolute -left-[2.7rem] top-0 w-8 h-8 bg-amber-400 rounded-full grid place-items-center text-night text-sm shadow-lg shadow-amber-400/20"><i class="bi bi-trophy-fill"></i></span>
+      <p class="label text-[10px] text-bone-mut">Día 2 · Cierre</p>
+      <h3 class="display text-xl mt-1">Demos, votación y competencia</h3>
+      <p class="text-bone/60 mt-1">Presentaciones finales, votación entre participantes y la competencia de robots.</p>
     </li>
   </ol>
 </section>
 
-<!-- ════ DINÁMICAS ════ -->
-<section class="bg-night2 border-y border-white/10 py-24">
-  <div class="max-w-6xl mx-auto px-6">
+<div class="section-glow"></div>
+
+<!-- DINÁMICAS -->
+<section class="relative py-24 overflow-hidden">
+  <div class="absolute inset-0 bg-night2"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-accent2/[.03] rounded-full blur-[100px]"></div>
+
+  <div class="relative max-w-5xl mx-auto px-6">
     <div class="reveal">
-      <p class="label text-copper text-sm">// 04 — No solo se construye</p>
-      <h2 class="display text-5xl sm:text-6xl mt-3 text-bone">Dinámicas & <span class="text-copper">aura</span></h2>
+      <p class="label text-accent text-sm">04 — Actividades</p>
+      <h2 class="display text-4xl sm:text-6xl mt-3">Más allá de <span class="text-accent">construir</span></h2>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
-      <div class="reveal panel acc rounded-2xl p-6 text-center" style="--acc:#D2773B"><i class="bi bi-mic-fill text-3xl text-copper"></i><h3 class="display text-xl mt-3 text-bone">Karaoke</h3><p class="text-sm text-bone-mut">Olivia Rodrigo & clásicos</p></div>
-      <div class="reveal panel acc rounded-2xl p-6 text-center" style="--acc:#39A98C"><i class="bi bi-music-note-beamed text-3xl text-agave"></i><h3 class="display text-xl mt-3 text-bone">Just Dance</h3><p class="text-sm text-bone-mut">Most dance show-off</p></div>
-      <div class="reveal panel acc rounded-2xl p-6 text-center" style="--acc:#FF4D8D"><i class="bi bi-camera-reels-fill text-3xl text-rosa"></i><h3 class="display text-xl mt-3 text-bone">Livestream</h3><p class="text-sm text-bone-mut">Fotos en vivo del hack</p></div>
-      <div class="reveal panel acc rounded-2xl p-6 text-center" style="--acc:#F2A43A"><i class="bi bi-shield-shaded text-3xl text-marigold"></i><h3 class="display text-xl mt-3 text-bone">LARPing</h3><p class="text-sm text-bone-mut">Be a larper</p></div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mt-12">
+      <div class="reveal card p-6 text-center">
+        <span class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mx-auto"><i class="bi bi-mic-fill text-2xl text-accent"></i></span>
+        <h3 class="display text-lg mt-4">Karaoke</h3>
+        <p class="text-sm text-bone-mut mt-1">Sesión nocturna</p>
+      </div>
+      <div class="reveal card p-6 text-center">
+        <span class="w-12 h-12 rounded-xl bg-accent2/10 flex items-center justify-center mx-auto"><i class="bi bi-music-note-beamed text-2xl text-accent2"></i></span>
+        <h3 class="display text-lg mt-4">Just Dance</h3>
+        <p class="text-sm text-bone-mut mt-1">Competencia de baile</p>
+      </div>
+      <div class="reveal card p-6 text-center">
+        <span class="w-12 h-12 rounded-xl bg-rose-400/10 flex items-center justify-center mx-auto"><i class="bi bi-camera-reels-fill text-2xl text-rose-400"></i></span>
+        <h3 class="display text-lg mt-4">Livestream</h3>
+        <p class="text-sm text-bone-mut mt-1">Cobertura en vivo</p>
+      </div>
+      <div class="reveal card p-6 text-center">
+        <span class="w-12 h-12 rounded-xl bg-amber-400/10 flex items-center justify-center mx-auto"><i class="bi bi-shop text-2xl text-amber-400"></i></span>
+        <h3 class="display text-lg mt-4">Tienda</h3>
+        <p class="text-sm text-bone-mut mt-1">Canjea puntos</p>
+      </div>
     </div>
-    <div class="reveal mt-8 panel-light rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6">
-      <i class="bi bi-shop text-5xl text-copper"></i>
+    <div class="reveal mt-8 card-light rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6">
+      <span class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+        <i class="bi bi-shop text-3xl text-accent"></i>
+      </span>
       <div>
-        <h3 class="display text-2xl text-ink">Tienda de puntos física</h3>
-        <p class="text-ink-soft mt-1">Gana puntos durante el evento y canjéalos <span class="text-copper-dark font-semibold">cuando quieras</span> por comida, helado, pins, stickers, PCBs, reglas-PCB y llaveros.</p>
+        <h3 class="display text-xl text-ink">Tienda de puntos</h3>
+        <p class="text-ink-soft mt-1">Gana puntos durante el evento y canjéalos por comida, helado, stickers, PCBs, reglas-PCB y llaveros.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════ MERCH ════ -->
-<section id="merch" class="max-w-6xl mx-auto px-6 py-24">
+<div class="section-glow"></div>
+
+<!-- MERCH -->
+<section id="merch" class="max-w-5xl mx-auto px-6 py-24">
   <div class="reveal">
-    <p class="label text-copper text-sm">// 05 — Merch</p>
-    <h2 class="display text-5xl sm:text-7xl mt-3 text-bone">Merch de <span class="text-copper">Revolution</span></h2>
-    <p class="text-bone-mut mt-3">Dos diseños, una sola camisa. Pásale el cursor.</p>
+    <p class="label text-accent text-sm">05 — Merch</p>
+    <h2 class="display text-4xl sm:text-6xl mt-3">Merch <span class="text-accent">oficial</span></h2>
+    <p class="text-bone-mut mt-3">Dos diseños, una sola camisa.</p>
   </div>
   <div class="grid md:grid-cols-2 gap-10 mt-12 items-center">
     <div class="reveal relative h-[420px] sm:h-[500px]">
-      <figure class="shirt-pile absolute left-[4%] top-[14%] w-[62%] z-10 -rotate-6 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
-        <img src="assets/media/revolution-tshirt-v1-front-backgroungout.png" alt="Camisa Revolution — diseño lotería Hack Club">
-        <figcaption class="label text-xs text-bone-mut mt-2">Lotería</figcaption>
+      <figure class="absolute left-[4%] top-[14%] w-[62%] z-10 -rotate-6 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer transition-transform duration-300">
+        <img src="assets/media/revolution-tshirt-v1-front-backgroungout.png" alt="Camisa Revolution — frente" class="drop-shadow-2xl">
+        <figcaption class="label text-xs text-bone-mut mt-2">Frente</figcaption>
       </figure>
-      <figure class="shirt-pile absolute right-[4%] top-[-2%] w-[62%] z-20 rotate-6 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
-        <img src="assets/media/revolution-tshirt-v1-back-backgroungout.png" alt="Camisa Revolution — script Revolution Hack Club">
-        <figcaption class="label text-xs text-bone-mut mt-2 text-right">Script</figcaption>
+      <figure class="absolute right-[4%] top-[-2%] w-[62%] z-20 rotate-6 hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer transition-transform duration-300">
+        <img src="assets/media/revolution-tshirt-v1-back-backgroungout.png" alt="Camisa Revolution — reverso" class="drop-shadow-2xl">
+        <figcaption class="label text-xs text-bone-mut mt-2 text-right">Reverso</figcaption>
       </figure>
     </div>
     <div class="reveal">
-      <p class="label text-xs text-agave mb-5"><i class="bi bi-cpu text-copper"></i> Y mucho más en el evento</p>
-      <div class="grid grid-cols-2 gap-5">
-        <div class="panel rounded-xl p-5"><i class="bi bi-person-badge text-2xl text-copper"></i><h3 class="display text-lg mt-2 text-bone">Camiseta</h3></div>
-        <div class="panel rounded-xl p-5"><i class="bi bi-card-heading text-2xl text-agave"></i><h3 class="display text-lg mt-2 text-bone">Lanyard</h3></div>
-        <div class="panel rounded-xl p-5"><i class="bi bi-sticky-fill text-2xl text-rosa"></i><h3 class="display text-lg mt-2 text-bone">Stickers</h3></div>
-        <div class="panel rounded-xl p-5"><i class="bi bi-key-fill text-2xl text-marigold"></i><h3 class="display text-lg mt-2 text-bone">Llaveros</h3></div>
-        <div class="panel rounded-xl p-5"><i class="bi bi-cpu text-2xl text-copper"></i><h3 class="display text-lg mt-2 text-bone">PCB</h3></div>
-        <div class="panel rounded-xl p-5"><i class="bi bi-bag-fill text-2xl text-agave"></i><h3 class="display text-lg mt-2 text-bone">Tote bag</h3></div>
+      <p class="label text-xs text-accent2 mb-5">Incluido en el evento</p>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="card p-5 group"><span class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition"><i class="bi bi-person-badge text-accent"></i></span><h3 class="display text-lg mt-3">Camiseta</h3></div>
+        <div class="card p-5 group"><span class="w-8 h-8 rounded-lg bg-accent2/10 flex items-center justify-center group-hover:bg-accent2/20 transition"><i class="bi bi-card-heading text-accent2"></i></span><h3 class="display text-lg mt-3">Lanyard</h3></div>
+        <div class="card p-5 group"><span class="w-8 h-8 rounded-lg bg-rose-400/10 flex items-center justify-center group-hover:bg-rose-400/20 transition"><i class="bi bi-sticky-fill text-rose-400"></i></span><h3 class="display text-lg mt-3">Stickers</h3></div>
+        <div class="card p-5 group"><span class="w-8 h-8 rounded-lg bg-amber-400/10 flex items-center justify-center group-hover:bg-amber-400/20 transition"><i class="bi bi-key-fill text-amber-400"></i></span><h3 class="display text-lg mt-3">Llaveros</h3></div>
+        <div class="card p-5 group"><span class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition"><i class="bi bi-cpu text-accent"></i></span><h3 class="display text-lg mt-3">PCB</h3></div>
+        <div class="card p-5 group"><span class="w-8 h-8 rounded-lg bg-accent2/10 flex items-center justify-center group-hover:bg-accent2/20 transition"><i class="bi bi-bag-fill text-accent2"></i></span><h3 class="display text-lg mt-3">Tote bag</h3></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════ SPONSORS ════ -->
-<section id="sponsors" class="bg-night2 border-y border-white/10 py-24">
-  <div class="max-w-4xl mx-auto px-6 text-center">
+<div class="section-glow"></div>
+
+<!-- SPONSORS -->
+<section id="sponsors" class="relative py-24 overflow-hidden">
+  <div class="absolute inset-0 bg-night2"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/[.02] rounded-full blur-[120px]"></div>
+
+  <div class="relative max-w-4xl mx-auto px-6 text-center">
     <div class="reveal">
-      <p class="label text-copper text-sm">// 06 — Aliados</p>
-      <h2 class="display text-5xl sm:text-7xl mt-3 text-bone">Sé un <span class="text-copper">aliado</span></h2>
-      <p class="text-bone/80 text-lg mt-6 max-w-2xl mx-auto">Revolution es 100% gratis para los makers gracias a empresas y personas que creen en la próxima generación de ingenieros.</p>
+      <p class="label text-accent text-sm">06 — Aliados</p>
+      <h2 class="display text-4xl sm:text-6xl mt-3">Sé un <span class="text-accent">aliado</span></h2>
+      <p class="text-bone/70 text-lg mt-6 max-w-2xl mx-auto leading-relaxed">Revolution es 100% gratis para los participantes gracias a empresas y personas que creen en la próxima generación de ingenieros.</p>
     </div>
     <div class="reveal grid sm:grid-cols-3 gap-6 mt-12 text-left">
-      <div class="panel acc rounded-2xl p-6" style="--acc:#D2773B"><i class="bi bi-cpu-fill text-3xl text-copper"></i><h3 class="display text-xl mt-3 text-bone">Hardware</h3><p class="text-bone/70 mt-1">Dona componentes y kits para los equipos.</p></div>
-      <div class="panel acc rounded-2xl p-6" style="--acc:#39A98C"><i class="bi bi-cup-straw text-3xl text-agave"></i><h3 class="display text-xl mt-3 text-bone">Comida & venue</h3><p class="text-bone/70 mt-1">Mantén a 100 makers con energía 48h.</p></div>
-      <div class="panel acc rounded-2xl p-6" style="--acc:#F2A43A"><i class="bi bi-megaphone-fill text-3xl text-marigold"></i><h3 class="display text-xl mt-3 text-bone">Marca</h3><p class="text-bone/70 mt-1">Tu logo en camisas, web y livestream.</p></div>
+      <div class="card p-6 group">
+        <span class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition"><i class="bi bi-cpu-fill text-xl text-accent"></i></span>
+        <h3 class="display text-lg mt-4">Hardware</h3>
+        <p class="text-bone/60 mt-2">Dona componentes y kits para los equipos.</p>
+      </div>
+      <div class="card p-6 group">
+        <span class="w-10 h-10 rounded-xl bg-accent2/10 flex items-center justify-center group-hover:bg-accent2/20 transition"><i class="bi bi-cup-straw text-xl text-accent2"></i></span>
+        <h3 class="display text-lg mt-4">Comida y venue</h3>
+        <p class="text-bone/60 mt-2">Mantén a 100 participantes con energía 48h.</p>
+      </div>
+      <div class="card p-6 group">
+        <span class="w-10 h-10 rounded-xl bg-amber-400/10 flex items-center justify-center group-hover:bg-amber-400/20 transition"><i class="bi bi-megaphone-fill text-xl text-amber-400"></i></span>
+        <h3 class="display text-lg mt-4">Marca</h3>
+        <p class="text-bone/60 mt-2">Tu logo en camisas, web y livestream.</p>
+      </div>
     </div>
     <a href="mailto:jesust9x@gmail.com?subject=Quiero%20ser%20aliado%20de%20Revolution" class="reveal btn btn-fill text-base px-8 py-4 mt-12 inline-flex items-center gap-2">
-      <i class="bi bi-envelope-fill"></i> Quiero aliarme
+      <i class="bi bi-envelope-fill"></i> Contactar
     </a>
   </div>
 </section>
 
-<!-- ════ REGISTRO ════ -->
-<section id="registro" class="sky relative py-28 px-6 overflow-hidden text-center">
-  <svg class="relative z-10 w-full -mt-28 mb-10" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 V40 Q360 62 720 44 T1440 46 V0 Z" fill="#1E1438"/></svg>
-  <div class="relative z-10 max-w-3xl mx-auto">
-    <p class="reveal label text-marigold text-sm">100 lugares · 48 horas · $0</p>
-    <h2 class="reveal display text-5xl sm:text-7xl mt-3 text-bone">Únete a la <span class="text-copper">revolución</span></h2>
-    <p class="reveal text-bone/85 text-lg mt-6">Hay dos formas de subirse a la revolución. Elige la tuya:</p>
+<div class="section-glow"></div>
 
-    <div class="reveal grid sm:grid-cols-2 gap-6 mt-9 text-left">
-      <!-- Camino 1: Participante -->
-      <div class="panel-light rounded-2xl p-7 flex flex-col">
+<!-- REGISTRO -->
+<section id="registro" class="relative py-28 px-6 text-center overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-b from-night2 via-night to-night"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-accent/[.04] rounded-full blur-[80px]"></div>
+
+  <div class="relative z-10 max-w-3xl mx-auto">
+    <p class="reveal label text-accent text-sm">100 lugares · 48 horas · $0</p>
+    <h2 class="reveal display text-4xl sm:text-6xl mt-3">Únete a <span class="text-accent">Revolution</span></h2>
+    <p class="reveal text-bone/70 text-lg mt-6">Dos formas de participar:</p>
+
+    <div class="reveal grid sm:grid-cols-2 gap-6 mt-10 text-left">
+      <div class="card-light rounded-2xl p-7 flex flex-col">
         <div class="flex items-center gap-3">
-          <span class="w-12 h-12 rounded-xl bg-copper text-night grid place-items-center text-2xl"><i class="bi bi-cpu-fill"></i></span>
-          <div><p class="label text-[10px] text-copper-dark">Camino 01</p><h3 class="display text-2xl leading-none">Soy participante</h3></div>
+          <span class="w-12 h-12 rounded-xl bg-accent text-white grid place-items-center text-2xl"><i class="bi bi-cpu-fill"></i></span>
+          <div><p class="label text-[10px] text-accent">Opción 01</p><h3 class="display text-xl leading-none">Soy participante</h3></div>
         </div>
         <p class="text-ink-soft mt-4 flex-1">Tienes <strong>13–18 años</strong> y quieres construir un robot, aprender hardware y competir. Es <strong>100% gratis.</strong></p>
         <div class="mt-5 flex flex-col gap-3">
           <a href="#" class="group btn btn-fill text-base px-6 py-3 flex items-center justify-center gap-2">Regístrate gratis <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i></a>
-          <a href="#" class="text-center label text-[11px] text-ink-soft hover:text-copper-dark transition"><i class="bi bi-file-earmark-text"></i> Documento legal (padres)</a>
+          <a href="#" class="text-center label text-[11px] text-ink-soft hover:text-accent transition"><i class="bi bi-file-earmark-text"></i> Documento legal (padres)</a>
         </div>
       </div>
-      <!-- Camino 2: Aliado / Sponsor -->
-      <div class="panel rounded-2xl p-7 flex flex-col border-2 border-marigold/60">
+      <div class="card rounded-2xl p-7 flex flex-col border-amber-400/20">
         <div class="flex items-center gap-3">
-          <span class="w-12 h-12 rounded-xl bg-marigold text-night grid place-items-center text-2xl"><i class="bi bi-stars"></i></span>
-          <div><p class="label text-[10px] text-marigold">Camino 02</p><h3 class="display text-2xl leading-none text-bone">Soy empresa / aliado</h3></div>
+          <span class="w-12 h-12 rounded-xl bg-amber-400 text-night grid place-items-center text-2xl"><i class="bi bi-building"></i></span>
+          <div><p class="label text-[10px] text-amber-400">Opción 02</p><h3 class="display text-xl leading-none text-bone">Soy empresa / aliado</h3></div>
         </div>
-        <p class="text-bone/75 mt-4 flex-1">Quieres patrocinar con <strong class="text-bone">hardware, comida, venue o marca</strong> y apoyar a la próxima generación de ingenieros mexicanos.</p>
+        <p class="text-bone/65 mt-4 flex-1">Quieres patrocinar con <strong class="text-bone">hardware, comida, venue o marca</strong> y apoyar a la próxima generación de ingenieros mexicanos.</p>
         <div class="mt-5 flex flex-col gap-3">
-          <a href="#sponsors" class="group btn text-base px-6 py-3 flex items-center justify-center gap-2 bg-marigold text-night border-night" style="box-shadow:4px 4px 0 #150E29">Quiero ser aliado <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i></a>
-          <a href="mailto:jesust9x@gmail.com?subject=Quiero%20ser%20aliado%20de%20Revolution" class="text-center label text-[11px] text-bone-mut hover:text-marigold transition"><i class="bi bi-envelope"></i> Escríbenos directo</a>
+          <a href="#sponsors" class="group btn text-base px-6 py-3 flex items-center justify-center gap-2 bg-amber-400 text-night rounded-lg font-bold hover:bg-amber-300 transition">Quiero ser aliado <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i></a>
+          <a href="mailto:jesust9x@gmail.com?subject=Quiero%20ser%20aliado%20de%20Revolution" class="text-center label text-[11px] text-bone-mut hover:text-amber-400 transition"><i class="bi bi-envelope"></i> Escríbenos directo</a>
         </div>
       </div>
     </div>
 
-    <p class="reveal label text-xs text-bone-mut mt-8"><i class="bi bi-geo-alt-fill text-copper"></i> El Horno3 · Parque Fundidora, Monterrey · 20 Nov</p>
+    <p class="reveal label text-xs text-bone-mut mt-12"><i class="bi bi-geo-alt-fill text-accent"></i> El Horno3 · Parque Fundidora, Monterrey · 20 de noviembre 2026</p>
   </div>
 </section>
 
-<div class="greca opacity-80"></div>
-
-<!-- ════ FOOTER ════ -->
-<footer class="bg-night py-12 px-6">
-  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-center">
-    <div class="text-2xl flex items-center gap-2">
-      <svg class="w-5 h-6" viewBox="0 0 40 56" aria-hidden="true"><g fill="#39A98C" stroke="#150E29" stroke-width="2"><path d="M20 56V30"/><path d="M20 34c-6-2-12-10-12-22 6 2 12 8 12 22z"/><path d="M20 34c6-2 12-10 12-22-6 2-12 8-12 22z"/><path d="M20 30c-4-4-6-14-2-26 4 6 6 16 2 26z"/></g></svg>
-      <span class="logo-mini">REVOLUTION</span>
-    </div>
+<!-- FOOTER -->
+<footer class="border-t border-white/[.06] py-12 px-6 bg-night">
+  <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-center">
+    <span class="text-xl font-extrabold tracking-tight">REVOLUTION</span>
     <div class="flex flex-col items-center gap-2">
-      <a href="https://hackclub.com"><img src="assets/media/hackclub-logo.png" alt="Hack Club" class="h-8 w-auto"></a>
-      <p class="label text-[11px] text-bone-mut">Hecho por y para adolescentes en Hack Club · MTY 2026</p>
+      <a href="https://hackclub.com"><img src="assets/media/hackclub-logo.png" alt="Hack Club" class="h-8 w-auto opacity-80 hover:opacity-100 transition"></a>
+      <p class="label text-[10px] text-bone-mut">Hecho por y para adolescentes en Hack Club · Monterrey 2026</p>
     </div>
-    <div class="flex gap-3 text-xl text-bone-mut">
-      <a href="https://hackclub.enterprise.slack.com/archives/C0BAE2BU361" class="hover:text-copper transition"><i class="bi bi-slack"></i></a>
-      <a href="https://www.instagram.com/hackclubmty_/" class="hover:text-copper transition"><i class="bi bi-instagram"></i></a>
-      <a href="https://github.com/JDHVa/Revolution-Modo-Guerra" class="hover:text-copper transition"><i class="bi bi-github"></i></a>
-      <a href="mailto:jesust9x@gmail.com" class="hover:text-copper transition"><i class="bi bi-envelope-fill"></i></a>
+    <div class="flex gap-4 text-xl text-bone-mut">
+      <a href="https://hackclub.enterprise.slack.com/archives/C0BAE2BU361" class="hover:text-accent transition"><i class="bi bi-slack"></i></a>
+      <a href="https://www.instagram.com/hackclubmty_/" class="hover:text-accent transition"><i class="bi bi-instagram"></i></a>
+      <a href="https://github.com/JDHVa/Revolution-Modo-Guerra" class="hover:text-accent transition"><i class="bi bi-github"></i></a>
+      <a href="mailto:jesust9x@gmail.com" class="hover:text-accent transition"><i class="bi bi-envelope-fill"></i></a>
     </div>
   </div>
 </footer>
 
 <script>
-  // Papel picado (colgado en arco de borde a borde)
-  (function(){
-    const colors = ['#F2A43A','#D2773B','#FF4D8D','#39A98C','#F4ECDC'];
-    function tile(c){
-      return `<svg width="62" height="92" viewBox="0 0 62 92">
-        <path d="M0 0 H62 V70 L54 80 L46 70 L38 80 L31 70 L24 80 L16 70 L8 80 L0 70 Z" fill="${c}"/>
-        <g fill="rgba(18,11,36,.5)">
-          <circle cx="31" cy="40" r="6"/>
-          <ellipse cx="31" cy="25" rx="4" ry="8"/><ellipse cx="31" cy="55" rx="4" ry="8"/>
-          <ellipse cx="17" cy="40" rx="8" ry="4"/><ellipse cx="45" cy="40" rx="8" ry="4"/>
-          <circle cx="13" cy="15" r="3"/><circle cx="49" cy="15" r="3"/>
-          <circle cx="13" cy="62" r="3"/><circle cx="49" cy="62" r="3"/>
-        </g>
-      </svg>`;
-    }
-    const el = document.getElementById('heroPicado');
-    if(el){
-      const sag = 60;                          // profundidad de cada semicírculo (arco hondo)
-      const width = window.innerWidth;         // 100% del ancho
-      const swags = Math.max(2, Math.round(width/440));  // semicírculos anchos de lado a lado
-      const H = sag*2 + 12;
-      // hilo en festón (serie de semicírculos)
-      let d = 'M0 4';
-      for(let j=0;j<swags;j++){
-        const seg = 1000/swags, mid = seg*(j+0.5), end = seg*(j+1);
-        d += ` Q${mid} ${4+sag*2} ${end} 4`;
-      }
-      let html = `<svg class="absolute -top-1 left-0 w-full pointer-events-none" style="height:${H}px" viewBox="0 0 1000 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#8a6a44" stroke-width="2.5"/></svg>`;
-      const n = Math.min(30, Math.ceil(width/56));
-      for(let i=0;i<n;i++){
-        const t = i/(n-1), phase = (t*swags) % 1;
-        const y = Math.sin(Math.PI*phase)*sag;        // baja en el centro de cada arco
-        const rot = (phase-0.5)*46;                   // inclinación en abanico (-23°..+23°)
-        // span externo: posición + inclinación (estático) · span interno: balanceo
-        html += `<span style="display:inline-block;transform:translateY(${y}px) rotate(${rot}deg)"><span class="papelp" style="display:inline-block;animation-delay:${(i%6)*0.18}s">${tile(colors[i%colors.length])}</span></span>`;
-      }
-      el.innerHTML = html;
-    }
-  })();
-
-  // Campo de estrellas + brasas (aura del fondo)
-  (function(){
-    const sf = document.getElementById('starfield');
-    if(sf){ let s=''; for(let i=0;i<80;i++){ const x=(Math.random()*100).toFixed(1), y=(Math.random()*72).toFixed(1), r=(Math.random()*1.5+0.5).toFixed(1), d=(Math.random()*3).toFixed(2);
-      s+=`<span class="star" style="left:${x}%;top:${y}%;width:${r*2}px;height:${r*2}px;animation-delay:${d}s;box-shadow:0 0 6px rgba(244,236,220,.6)"></span>`; } sf.innerHTML=s; }
-    const em = document.getElementById('embers');
-    if(em){ const c=['#F2A43A','#D2773B','#FF4D8D','#39A98C']; let s=''; for(let i=0;i<20;i++){ const x=(Math.random()*100).toFixed(1), sz=(Math.random()*4+2).toFixed(1), du=(Math.random()*8+9).toFixed(1), de=(Math.random()*12).toFixed(1), col=c[i%c.length];
-      s+=`<span class="ember" style="left:${x}%;width:${sz}px;height:${sz}px;background:${col};box-shadow:0 0 9px ${col};animation-duration:${du}s;animation-delay:-${de}s"></span>`; } em.innerHTML=s; }
-  })();
-
   const toggle = document.getElementById('navToggle');
   const menu = document.getElementById('mobileMenu');
   toggle.addEventListener('click', () => menu.classList.toggle('hidden'));
   menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.add('hidden')));
 
-  // nav píldora que se encoge al hacer scroll
   const navPill = document.getElementById('navPill');
   window.addEventListener('scroll', () => {
-    navPill.classList.toggle('shrink', window.scrollY > 40);
+    navPill.classList.toggle('shadow-2xl', window.scrollY > 40);
   }, { passive:true });
 
-  // reveal
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-  // parallax suave en el hero
-  const layers = document.querySelectorAll('[data-par]');
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    if (y > window.innerHeight) return;
-    layers.forEach(l => { l.style.transform = `translateY(${y * parseFloat(l.dataset.par)}px)` + (l.classList.contains('-translate-x-1/2') ? ' translateX(-50%)' : ''); });
-  }, { passive:true });
 </script>
 </body>
 </html>
