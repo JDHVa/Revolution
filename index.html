@@ -129,6 +129,10 @@
   ::selection{ background:#E04A2F; color:#fff; }
   ::-webkit-scrollbar{ width:8px; } ::-webkit-scrollbar-track{ background:#0A0A0B; }
   ::-webkit-scrollbar-thumb{ background:#222; border-radius:4px; } ::-webkit-scrollbar-thumb:hover{ background:#E04A2F; }
+  .hero-title{ font-size:9vw; width:100%; text-align:center; }
+  @media(min-width:640px){ .hero-title{ font-size:7vw; } }
+  @media(min-width:1024px){ .hero-title{ font-size:9rem; } }
+
   @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
 </style>
 </head>
@@ -162,7 +166,7 @@
 </nav>
 
 <!-- HERO -->
-<header id="home" class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-28 pb-20 overflow-hidden">
+<header id="home" class="relative min-h-screen flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-24 pb-16 sm:pt-28 sm:pb-20 overflow-hidden">
   <!-- Background layers -->
   <div class="absolute inset-0 bg-gradient-to-b from-night via-night2 to-night"></div>
   <div class="absolute inset-0 opacity-[.03]" style="background-image:radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size:48px 48px;"></div>
@@ -194,30 +198,30 @@
       <span class="label text-xs text-bone-mut">presenta</span>
     </div>
 
-    <h1 class="display text-7xl sm:text-[7rem] lg:text-[9rem]">
+    <h1 class="display hero-title w-full">
       REVOL<span class="title-accent">U</span>TION
     </h1>
 
-    <div class="mt-6 inline-flex items-center gap-4 label text-[11px] text-bone-mut">
+    <div class="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-4 label text-[10px] sm:text-[11px] text-bone-mut justify-center">
       <span>Hardware</span>
-      <span class="w-1 h-1 rounded-full bg-accent inline-block"></span>
+      <span class="w-1 h-1 rounded-full bg-accent inline-block flex-shrink-0"></span>
       <span>48 horas</span>
-      <span class="w-1 h-1 rounded-full bg-accent inline-block"></span>
+      <span class="w-1 h-1 rounded-full bg-accent inline-block flex-shrink-0"></span>
       <span>Monterrey 2026</span>
     </div>
 
-    <p class="font-semibold text-2xl sm:text-3xl text-bone mt-10 max-w-2xl mx-auto leading-snug">
+    <p class="font-semibold text-base sm:text-2xl md:text-3xl text-bone mt-5 sm:mt-10 max-w-2xl mx-auto leading-snug">
       Construye un robot. Hazlo competir.<br><span class="text-accent">Demuestra lo que puedes hacer.</span>
     </p>
-    <p class="text-bone-mut mt-4 max-w-xl mx-auto text-lg leading-relaxed">
+    <p class="text-bone-mut mt-3 sm:mt-4 max-w-xl mx-auto text-xs sm:text-lg leading-relaxed">
       Un hackathon de hardware de 48 horas donde adolescentes construyen robots reales. Sin costo. Sin experiencia previa.
     </p>
 
-    <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="#registro" class="group btn btn-fill text-base px-8 py-4 flex items-center gap-2">
+    <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+      <a href="#registro" class="group btn btn-fill text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 flex items-center gap-2 w-full sm:w-auto justify-center">
         Regístrate gratis <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
       </a>
-      <a href="#proyectos" class="btn btn-ghost text-base px-8 py-4">Ver proyectos</a>
+      <a href="#proyectos" class="btn btn-ghost text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto text-center">Ver proyectos</a>
     </div>
   </div>
 
