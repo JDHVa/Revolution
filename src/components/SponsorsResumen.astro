@@ -1,0 +1,184 @@
+---
+import Section from './Section.astro';
+import { tiers, confirmados } from '../data/sponsors';
+import { site } from '../data/site';
+---
+
+<Section
+  id="sponsors"
+  fondo="tinta"
+  etiqueta="Patrocinio"
+  titulo="Sé parte de esto"
+  entradilla="No estamos pidiendo caridad: estamos ofreciendo el primer contacto con la siguiente generación de ingenieros de Monterrey. Hay cuatro formas de sumarse."
+  pcb={false}
+>
+  <ul class="tiers">
+    {
+      tiers.map((t) => (
+        <li class:list={['tier', `tier--${t.color}`]}>
+          <h3 class="display tier__nombre">{t.nombre}</h3>
+          <p class="tier__resumen">{t.resumen}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="sponsors__cierre">
+    <p class="sponsors__pitch">
+      Aceptamos dinero, componentes, comida o espacio. <strong
+        >No necesitas patrocinar todo</strong
+      > — una ayuda chica también cambia el evento.
+    </p>
+    <div class="sponsors__acciones">
+      <a href="/sponsors" class="btn btn-activo sponsors__cta">Ver el dossier completo</a>
+      <a href={`mailto:${site.contacto.emailSponsors}`} class="btn btn-activo sponsors__cta-2">
+        Escríbenos
+      </a>
+    </div>
+  </div>
+
+  {
+    confirmados.length > 0 && (
+      <div class="sponsors__confirmados">
+        <p class="label sponsors__confirmados-titulo">Ya nos apoyan</p>
+        <ul>
+          {confirmados.map((c) => (
+            <li>
+              <a href={c.url} target="_blank" rel="noopener noreferrer">
+                <img src={`/media/sponsors/${c.logo}`} alt={c.nombre} loading="lazy" height="44" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</Section>
+
+<style>
+  .tiers {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .tier {
+    border: 1px solid color-mix(in srgb, var(--color-cal) 22%, transparent);
+    border-radius: 2px;
+    padding: 1.4rem;
+    /* La barra de color es lo único que distingue un nivel de otro:
+       sin ella todas las tarjetas se verían iguales. */
+    border-top: 4px solid var(--tier-color);
+  }
+
+  /* Todos los acentos de esta sección van sobre tinta, así que son las
+     variantes claras. Los tonos base están calibrados para fondo cal y
+     aquí se quedarían por debajo de AA. */
+  .tier--cobre {
+    --tier-color: var(--color-cobre-claro);
+  }
+  .tier--agave {
+    --tier-color: #58b494;
+  }
+  .tier--talavera {
+    --tier-color: #7ba7e0;
+  }
+  .tier--rosa {
+    --tier-color: #ef6f95;
+  }
+
+  .tier__nombre {
+    font-size: var(--text-xl);
+    color: var(--tier-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .tier__resumen {
+    color: color-mix(in srgb, var(--color-cal) 72%, transparent);
+    font-size: var(--text-base);
+  }
+
+  /* ── Cierre ──────────────────────────────────────── */
+  .sponsors__cierre {
+    margin-top: 2.5rem;
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .sponsors__pitch {
+    font-size: var(--text-lg);
+    color: color-mix(in srgb, var(--color-cal) 78%, transparent);
+    max-width: 52ch;
+  }
+  .sponsors__pitch strong {
+    color: var(--color-cal);
+    font-weight: 600;
+  }
+
+  .sponsors__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .sponsors__cta {
+    /* Cobre claro con texto tinta = 5.6:1. La combinación intuitiva
+       (cobre + texto claro) se queda en 3.5:1 y no pasa AA. */
+    background: var(--color-cobre-claro);
+    color: var(--color-tinta);
+    border-color: var(--color-cal);
+    box-shadow: 4px 4px 0 var(--color-cal);
+  }
+  .sponsors__cta-2 {
+    background: transparent;
+    color: var(--color-cal);
+    border-color: var(--color-cal);
+    box-shadow: 4px 4px 0 var(--color-cal);
+  }
+  .sponsors__cta:hover,
+  .sponsors__cta-2:hover {
+    box-shadow: 2px 2px 0 var(--color-cal);
+  }
+  .sponsors__cta:active,
+  .sponsors__cta-2:active {
+    box-shadow: 0 0 0 var(--color-cal);
+  }
+
+  /* ── Logos confirmados ───────────────────────────── */
+  .sponsors__confirmados {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-cal) 22%, transparent);
+  }
+  .sponsors__confirmados-titulo {
+    color: var(--color-cobre-claro);
+    margin-bottom: 1.25rem;
+  }
+  .sponsors__confirmados ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  @media (min-width: 720px) {
+    .tiers {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .tiers {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .sponsors__cierre {
+      grid-template-columns: 1fr auto;
+      gap: 2.5rem;
+    }
+  }
+</style>

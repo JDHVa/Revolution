@@ -1,0 +1,260 @@
+@import 'tailwindcss';
+
+/* Fuentes self-hosted. Archivo con eje de ancho (wdth) para el look de cartel condensado. */
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+
+/* ─────────────────────────────────────────────────────────────
+   TOKENS — paleta "casa de abuelita"
+   Regla de uso: un solo acento por sección. El rosa se reserva
+   para el CTA de registro y nada más.
+   ───────────────────────────────────────────────────────────── */
+@theme {
+  --color-cal: #f5ede0; /* pared encalada — fondo */
+  --color-cal-2: #ede2d0; /* superficie alterna, tarjetas */
+  --color-cal-3: #e2d5bf; /* bordes suaves, separadores */
+  --color-tinta: #2a211c; /* texto principal — 12.6:1 sobre cal */
+  --color-tinta-2: #6b5d52; /* texto secundario — 5.1:1 sobre cal */
+  /* Los tres cobres existen por contraste, no por capricho. Cada uno tiene
+     un fondo para el que es seguro; usar el equivocado rompe AA. */
+  --color-cobre: #c4622d; /* sobre cal: 3.5:1 — SOLO texto grande y gráficos */
+  --color-cobre-2: #9c4c21; /* sobre cal: 5.2:1 — texto chico y etiquetas */
+  --color-cobre-claro: #dc8446; /* sobre tinta: 5.6:1 — texto chico en oscuro */
+  --color-agave: #2f7d62; /* acento secundario */
+  --color-rosa: #c42d5c; /* CTA. Sobre él va texto cal a 4.7:1 */
+  --color-talavera: #2b5fa8; /* azul de mosaico */
+
+  --font-display: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  /* Escala fluida. Un solo lugar donde vive el tamaño del texto. */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: clamp(1.0625rem, 0.4vw + 0.97rem, 1.1875rem);
+  --text-xl: clamp(1.25rem, 0.6vw + 1.1rem, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.1vw + 1.25rem, 2rem);
+  --text-3xl: clamp(1.875rem, 2vw + 1.4rem, 2.75rem);
+  --text-4xl: clamp(2.25rem, 3.4vw + 1.5rem, 3.75rem);
+  --text-5xl: clamp(2.4rem, 5.5vw + 1.5rem, 5.5rem);
+  /* El piso tiene que dejar caber "REVOLUTION" completo en 320px:
+     10 caracteres a ~0.54em de avance = ~5.4em, y sólo hay ~245px útiles
+     después del padding y el marco. De ahí sale el 2.6rem. */
+  --text-6xl: clamp(2.6rem, 8vw + 1.25rem, 7.5rem);
+
+  --radius-card: 2px; /* casi cuadrado: se ve impreso, no renderizado */
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BASE
+   ───────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* el nav fijo no debe tapar la sección a la que saltas */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Mosaico de talavera: textura de pared encalada.
+     La opacidad es baja a propósito — debe leerse como textura, no como
+     estampado. Si se nota, está mal.
+
+     Va como fondo del body y scrollea con la página. Una versión anterior lo
+     tenía como un div `position: fixed` a viewport completo: se repinta en
+     cada frame de scroll y cuelga al rasterizador. Fijo no aportaba nada
+     (el patrón es demasiado tenue para que se perciba el parallax) y costaba
+     carísimo, así que scrollea. */
+  body {
+    background-color: var(--color-cal);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%232B5FA8' stroke-width='2' opacity='0.05'%3E%3Cpath d='M40 8 L72 40 L40 72 L8 40 Z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23C4622D' stroke-width='2' opacity='0.05'%3E%3Cpath d='M40 24 L56 40 L40 56 L24 40 Z'/%3E%3C/g%3E%3Cg fill='%232B5FA8' opacity='0.05'%3E%3Ccircle cx='40' cy='40' r='4'/%3E%3Cpath d='M0 0 L16 0 L0 16 Z'/%3E%3Cpath d='M80 0 L64 0 L80 16 Z'/%3E%3Cpath d='M0 80 L16 80 L0 64 Z'/%3E%3Cpath d='M80 80 L64 80 L80 64 Z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 64px 64px;
+    background-repeat: repeat;
+    color: var(--color-tinta);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Foco visible en TODO lo interactivo. No se negocia. */
+  :focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  ::selection {
+    background: var(--color-cobre);
+    color: var(--color-cal);
+  }
+
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Quita el triangulito nativo del <details>; ponemos el nuestro. */
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary {
+    list-style: none;
+    cursor: pointer;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   UTILIDADES DE MARCA
+   ───────────────────────────────────────────────────────────── */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+
+/* Versión aún más condensada, para titulares grandes tipo cartel. */
+@utility display-cartel {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 68%;
+  line-height: 0.88;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+}
+
+/* Etiqueta técnica: horas, tiers, numeritos. Sabor de hardware sin decorar. */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* Tarjeta impresa: borde sólido de tinta y sombra dura desplazada. */
+@utility carta {
+  background: var(--color-cal);
+  border: 2px solid var(--color-tinta);
+  border-radius: var(--radius-card);
+  box-shadow: 4px 4px 0 var(--color-tinta);
+}
+
+@utility carta-plana {
+  background: var(--color-cal-2);
+  border: 1px solid var(--color-cal-3);
+  border-radius: var(--radius-card);
+}
+
+/* Botón principal. El desplazamiento de la sombra es toda la animación que hay. */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.6rem;
+  border: 2px solid var(--color-tinta);
+  border-radius: var(--radius-card);
+  box-shadow: 4px 4px 0 var(--color-tinta);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease;
+}
+
+@utility btn-activo {
+  &:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--color-tinta);
+  }
+  &:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--color-tinta);
+  }
+}
+
+/* Estado honesto para lo que todavía no existe: sede, forms, etc. */
+@utility pendiente {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-tinta-2);
+  background: var(--color-cal-2);
+  border: 1px dashed var(--color-tinta-2);
+  border-radius: var(--radius-card);
+  padding: 0.35rem 0.7rem;
+  display: inline-block;
+}
+
+/* Ancho de lectura cómodo para texto largo (/legal, /sponsors). */
+@utility prosa {
+  max-width: 68ch;
+  & p {
+    margin-block: 0.9em;
+  }
+  & p,
+  & li {
+    color: var(--color-tinta-2);
+    font-size: var(--text-lg);
+  }
+  & strong {
+    color: var(--color-tinta);
+    font-weight: 600;
+  }
+  & a {
+    color: var(--color-cobre-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MOVIMIENTO — hay muy poco, y se apaga completo si lo piden.
+   ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  /* `::details-content` no lo cubre el selector universal de arriba, y es el
+     que anima el despliegue de las preguntas del FAQ. Sin esta regla, quien
+     pidió menos movimiento igual vería la animación. */
+  *::details-content {
+    transition-duration: 0.001ms !important;
+  }
+}

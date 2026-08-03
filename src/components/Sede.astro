@@ -1,0 +1,132 @@
+---
+import Section from './Section.astro';
+import { site } from '../data/site';
+
+const { venue } = site;
+---
+
+<Section
+  id="sede"
+  fondo="cal2"
+  etiqueta="Dónde"
+  titulo="La sede"
+  entradilla={venue.confirmado ? undefined : venue.nota}
+>
+  <div class="sede">
+    <div class="sede__datos">
+      {
+        venue.confirmado ? (
+          <>
+            <h3 class="display sede__nombre">{venue.nombre}</h3>
+            {venue.direccion && <p class="sede__direccion">{venue.direccion}</p>}
+            <p class="sede__ciudad label">{venue.ciudad}</p>
+            {venue.mapa && (
+              <a
+                href={venue.mapa}
+                class="btn btn-activo sede__cta"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ver en el mapa
+              </a>
+            )}
+          </>
+        ) : (
+          <>
+            <p class="pendiente">Sede por confirmar</p>
+            <h3 class="display sede__nombre">{venue.ciudad}</h3>
+            <p class="sede__texto">
+              Estamos cerrando la sede con las opciones que tenemos en la ciudad. En cuanto quede
+              firmada, la publicamos aquí con dirección y mapa, y la anunciamos en nuestras redes.
+            </p>
+            <p class="sede__texto">
+              Lo que sí está definido: es un espacio cerrado en Monterrey, con área de trabajo, área
+              de descanso separada y staff adulto presente toda la noche.
+            </p>
+          </>
+        )
+      }
+    </div>
+
+    <ul class="sede__incluye">
+      <li>
+        <h4 class="display">Mesa y herramienta</h4>
+        <p>Espacio de trabajo por equipo, con corriente, cautines y multímetros compartidos.</p>
+      </li>
+      <li>
+        <h4 class="display">Comida incluida</h4>
+        <p>Comida, cena y desayuno para todos los participantes. Avísanos de tus alergias al registrarte.</p>
+      </li>
+      <li>
+        <h4 class="display">Dónde dormir</h4>
+        <p>Área de descanso separada y supervisada. Trae tu saco de dormir si puedes.</p>
+      </li>
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .sede {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .sede__nombre {
+    font-size: var(--text-3xl);
+    margin-top: 0.9rem;
+  }
+
+  .sede__direccion,
+  .sede__texto {
+    margin-top: 0.9rem;
+    color: var(--color-tinta-2);
+    font-size: var(--text-lg);
+    max-width: 52ch;
+  }
+
+  .sede__ciudad {
+    margin-top: 0.6rem;
+    color: var(--color-tinta-2);
+  }
+
+  .sede__cta {
+    margin-top: 1.5rem;
+    background: var(--color-cal);
+    color: var(--color-tinta);
+  }
+
+  .sede__incluye {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1px;
+    background: var(--color-cal-3);
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .sede__incluye li {
+    background: var(--color-cal);
+    padding: 1.25rem 1.4rem;
+  }
+
+  .sede__incluye h4 {
+    font-size: var(--text-lg);
+    margin-bottom: 0.35rem;
+  }
+
+  .sede__incluye p {
+    color: var(--color-tinta-2);
+    font-size: var(--text-base);
+  }
+
+  @media (min-width: 880px) {
+    .sede {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3.5rem;
+    }
+  }
+</style>

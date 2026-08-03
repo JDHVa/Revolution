@@ -1,0 +1,203 @@
+---
+import Wordmark from './Wordmark.astro';
+import PcbCorners from './deco/PcbCorners.astro';
+import Banqueta from './deco/Banqueta.astro';
+import { site, disponible } from '../data/site';
+
+const registroListo = disponible(site.links.registro);
+---
+
+<section class="hero">
+  <PcbCorners esquinas={['si', 'sd', 'ii', 'id']} tam={190} opacidad={0.45} />
+
+  <div class="hero__caja">
+    <p class="label hero__ubicacion">Monterrey, Nuevo León · {site.fechas.anio}</p>
+
+    <h1 class="hero__titulo">
+      <span class="sr-only">REVOLUTION — hackathon de hardware en Monterrey</span>
+      <Wordmark tam="hero" />
+    </h1>
+
+    <p class="hero__lema">
+      24 horas para construir algo que funcione.<br />
+      <strong>Gratis, para prepa, sin experiencia previa.</strong>
+    </p>
+
+    <div class="hero__acciones">
+      {
+        registroListo ? (
+          <a href={site.links.registro.url} class="btn btn-activo hero__cta">
+            Registrarme
+          </a>
+        ) : (
+          <span class="pendiente hero__pendiente">El registro abre pronto</span>
+        )
+      }
+      <a href="#que-es" class="btn btn-activo hero__cta-2">Qué es esto</a>
+    </div>
+
+    <dl class="hero__cifras">
+      {
+        site.cifras.map((c) => (
+          <div class="hero__cifra">
+            <dt class="display hero__cifra-valor">{c.valor}</dt>
+            <dd class="label hero__cifra-etiqueta">{c.etiqueta}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <p class="hero__fecha label">
+      {site.fechas.etiquetaLarga}
+    </p>
+  </div>
+
+  <Banqueta />
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-top: clamp(3rem, 8vw, 6rem);
+    display: grid;
+  }
+
+  .hero__caja {
+    position: relative;
+    max-width: 62rem;
+    margin-inline: auto;
+    padding: 0 1rem clamp(3rem, 6vw, 5rem);
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 1.75rem;
+  }
+  /* Sin esto, un hijo del grid más ancho que la columna ensancha la caja
+     entera y aparece scroll horizontal en pantallas chicas. */
+  .hero__caja > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  @media (min-width: 400px) {
+    .hero__caja {
+      padding-inline: 1.25rem;
+    }
+  }
+
+  .hero__ubicacion {
+    color: var(--color-tinta-2);
+  }
+
+  .hero__titulo {
+    margin: 0;
+  }
+
+  .hero__lema {
+    font-size: var(--text-xl);
+    color: var(--color-tinta-2);
+    max-width: 44ch;
+    line-height: 1.5;
+    /* Los saltos son manuales (<br>): que el navegador no meta los suyos. */
+    text-wrap: balance;
+  }
+  .hero__lema strong {
+    color: var(--color-tinta);
+    font-weight: 600;
+  }
+
+  .hero__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    justify-content: center;
+    /* El aviso de "registro pronto" y el botón deben medir lo mismo de alto,
+       si no se ve como si uno estuviera mal puesto. */
+    align-items: stretch;
+  }
+  .hero__acciones > * {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.1rem;
+  }
+
+  /* En móvil se apilan; de anchos distintos se ven desparejos, así que
+     ocupan el ancho completo. */
+  @media (max-width: 559px) {
+    .hero__acciones {
+      width: 100%;
+      max-width: 20rem;
+    }
+    .hero__acciones > * {
+      flex: 1 1 100%;
+    }
+  }
+
+  .hero__cta {
+    background: var(--color-rosa);
+    color: var(--color-cal);
+  }
+  .hero__cta-2 {
+    background: var(--color-cal);
+    color: var(--color-tinta);
+  }
+  .hero__pendiente {
+    align-self: center;
+    padding: 0.85rem 1.4rem;
+  }
+
+  /* ── Cifras ──────────────────────────────────────── */
+  .hero__cifras {
+    margin: 0.5rem 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--color-cal-3);
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    width: 100%;
+    max-width: 40rem;
+    overflow: hidden;
+  }
+
+  .hero__cifra {
+    background: var(--color-cal);
+    padding: 1rem 0.75rem;
+    display: grid;
+    gap: 0.15rem;
+    place-items: center;
+  }
+
+  .hero__cifra-valor {
+    font-size: var(--text-3xl);
+    color: var(--color-cobre);
+  }
+
+  .hero__cifra-etiqueta {
+    color: var(--color-tinta-2);
+    margin: 0;
+  }
+
+  .hero__fecha {
+    color: var(--color-tinta);
+    letter-spacing: 0.2em;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (min-width: 720px) {
+    .hero__cifras {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,38 @@
+---
+/**
+ * BANQUETA — divisor entre secciones.
+ *
+ * Losetas de concreto con su junta, como la banqueta de una calle de
+ * Monterrey. 100% CSS: dos degradados de pasos duros (sin transición, así que
+ * no cuenta como "degradado" de los feos) formando la cuadrícula.
+ */
+interface Props {
+  class?: string;
+}
+const { class: klass = '' } = Astro.props;
+---
+
+<div class:list={['banqueta', klass]} aria-hidden="true"></div>
+
+<style>
+  .banqueta {
+    height: 18px;
+    width: 100%;
+    background-color: var(--color-cal-2);
+    /* juntas verticales cada 64px + una junta horizontal a media altura */
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        var(--color-cal-3) 0 2px,
+        transparent 2px 64px
+      ),
+      linear-gradient(
+        180deg,
+        transparent 0 8px,
+        var(--color-cal-3) 8px 10px,
+        transparent 10px 100%
+      );
+    border-top: 1px solid var(--color-cal-3);
+    border-bottom: 1px solid var(--color-cal-3);
+  }
+</style>

@@ -1,0 +1,312 @@
+---
+import Wordmark from './Wordmark.astro';
+import { site, disponible } from '../data/site';
+
+interface Props {
+  pagina?: 'inicio' | 'sponsors' | 'legal';
+}
+const { pagina = 'inicio' } = Astro.props;
+
+/* Desde /sponsors o /legal, las anclas tienen que apuntar a la portada. */
+const base = pagina === 'inicio' ? '' : '/';
+
+const enlaces = [
+  { texto: '¿Qué es?', href: `${base}#que-es` },
+  { texto: 'Horario', href: `${base}#horario` },
+  { texto: 'Talleres', href: `${base}#talleres` },
+  { texto: 'FAQ', href: `${base}#faq` },
+  { texto: 'Equipo', href: `${base}#equipo` },
+  { texto: 'Patrocinio', href: '/sponsors' },
+];
+
+const registroListo = disponible(site.links.registro);
+---
+
+<header class="nav">
+  <div class="nav__barra">
+    <Wordmark tam="nav" href="/" />
+
+    <nav class="nav__enlaces" aria-label="Navegación principal">
+      {
+        enlaces.map((e) => (
+          <a
+            href={e.href}
+            class="nav__enlace"
+            aria-current={pagina === 'sponsors' && e.href === '/sponsors' ? 'page' : undefined}
+          >
+            {e.texto}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="nav__acciones">
+      {
+        registroListo ? (
+          <a href={site.links.registro.url} class="btn btn-activo nav__cta">
+            Registrarme
+          </a>
+        ) : (
+          <span class="nav__cta-pendiente label" title="Todavía no abre el registro">
+            Registro pronto
+          </span>
+        )
+      }
+
+      <button
+        type="button"
+        class="nav__hamburguesa"
+        id="navToggle"
+        aria-expanded="false"
+        aria-controls="navMenu"
+      >
+        <span class="sr-only">Abrir menú</span>
+        <span class="nav__barritas" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menú móvil -->
+  <div class="nav__menu" id="navMenu" hidden>
+    <nav aria-label="Navegación móvil">
+      {enlaces.map((e) => <a href={e.href} class="nav__menu-enlace">{e.texto}</a>)}
+      <a href="/legal" class="nav__menu-enlace">Información legal</a>
+    </nav>
+    {
+      registroListo ? (
+        <a href={site.links.registro.url} class="btn btn-activo nav__menu-cta">
+          Registrarme
+        </a>
+      ) : (
+        <span class="pendiente nav__menu-cta">El registro abre pronto</span>
+      )
+    }
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    /* Fondo opaco a propósito: un backdrop-filter aquí, encima del mosaico
+       fijo, obliga al navegador a repintar la página entera en cada frame de
+       scroll. En un documento de ~9000px eso tira los FPS al suelo. El blur
+       no aportaba nada visualmente sobre un fondo claro y plano. */
+    background: var(--color-cal);
+    border-bottom: 2px solid var(--color-tinta);
+  }
+
+  .nav__barra {
+    max-width: 78rem;
+    margin-inline: auto;
+    padding: 0.7rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  .nav__enlaces {
+    display: none;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .nav__enlace {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-tinta-2);
+    text-decoration: none;
+    padding: 0.45rem 0.6rem;
+    border-radius: 2px;
+    /* Reserva el espacio del subrayado para que el hover no mueva nada. */
+    border-bottom: 2px solid transparent;
+    transition:
+      color 0.12s ease,
+      border-color 0.12s ease;
+  }
+  .nav__enlace:hover,
+  .nav__enlace[aria-current='page'] {
+    color: var(--color-tinta);
+    border-bottom-color: var(--color-cobre);
+  }
+
+  .nav__acciones {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .nav__cta {
+    background: var(--color-rosa);
+    color: var(--color-cal);
+    padding: 0.6rem 1.1rem;
+    font-size: 0.78rem;
+    box-shadow: 3px 3px 0 var(--color-tinta);
+  }
+
+  .nav__cta-pendiente {
+    display: none;
+    color: var(--color-tinta-2);
+    border: 1px dashed var(--color-tinta-2);
+    border-radius: 2px;
+    padding: 0.5rem 0.8rem;
+  }
+
+  /* ── Hamburguesa ─────────────────────────────────── */
+  .nav__hamburguesa {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    background: var(--color-cal);
+    cursor: pointer;
+  }
+  .nav__barritas {
+    display: grid;
+    gap: 4px;
+  }
+  .nav__barritas span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--color-tinta);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  /* Al abrir, las barras se cruzan en X. */
+  .nav__hamburguesa[aria-expanded='true'] .nav__barritas span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .nav__hamburguesa[aria-expanded='true'] .nav__barritas span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav__hamburguesa[aria-expanded='true'] .nav__barritas span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  /* ── Menú desplegable ────────────────────────────── */
+  .nav__menu {
+    border-top: 1px solid var(--color-cal-3);
+    background: var(--color-cal);
+    padding: 1rem 1.25rem 1.5rem;
+  }
+  .nav__menu[hidden] {
+    display: none;
+  }
+  .nav__menu nav {
+    display: grid;
+  }
+  .nav__menu-enlace {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-tinta);
+    text-decoration: none;
+    padding: 0.85rem 0.25rem;
+    border-bottom: 1px solid var(--color-cal-3);
+  }
+  .nav__menu-cta {
+    margin-top: 1.1rem;
+    width: 100%;
+    background: var(--color-rosa);
+    color: var(--color-cal);
+    text-align: center;
+  }
+  span.nav__menu-cta {
+    background: var(--color-cal-2);
+    color: var(--color-tinta-2);
+    display: block;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ── Escritorio ──────────────────────────────────── */
+  @media (min-width: 900px) {
+    .nav__enlaces {
+      display: flex;
+    }
+    .nav__hamburguesa {
+      display: none;
+    }
+    .nav__menu {
+      display: none !important;
+    }
+    .nav__cta-pendiente {
+      display: inline-block;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('navToggle');
+  const menu = document.getElementById('navMenu');
+
+  if (toggle && menu) {
+    const abrir = () => {
+      menu.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.querySelector('.sr-only')!.textContent = 'Cerrar menú';
+    };
+
+    const cerrar = ({ devolverFoco = false } = {}) => {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.querySelector('.sr-only')!.textContent = 'Abrir menú';
+      if (devolverFoco) toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => {
+      toggle.getAttribute('aria-expanded') === 'true' ? cerrar() : abrir();
+    });
+
+    // Al elegir un destino, el menú sobra.
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) cerrar();
+    });
+
+    // Escape cierra y devuelve el foco al botón, que es donde estaba.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) cerrar({ devolverFoco: true });
+    });
+
+    // Mantiene el foco dentro del menú mientras está abierto.
+    menu.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusables = menu.querySelectorAll<HTMLElement>('a, button');
+      if (focusables.length === 0) return;
+      const primero = focusables[0];
+      const ultimo = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === primero) {
+        e.preventDefault();
+        toggle.focus();
+      } else if (!e.shiftKey && document.activeElement === ultimo) {
+        e.preventDefault();
+        toggle.focus();
+      }
+    });
+
+    // Si el viewport crece hasta escritorio, el menú móvil deja de tener sentido.
+    matchMedia('(min-width: 900px)').addEventListener('change', (e) => {
+      if (e.matches && !menu.hidden) cerrar();
+    });
+  }
+</script>

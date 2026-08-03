@@ -1,0 +1,90 @@
+---
+/**
+ * TRAZAS DE PCB — esquinas de circuito impreso.
+ *
+ * Van en las esquinas de las secciones. Líneas finas con vías (los circulitos
+ * donde una traza cambia de capa), en los colores de la paleta mexicana.
+ * Estáticas: nada de animación de flujo, eso es lo que hace que un sitio se
+ * vea generado.
+ *
+ * El SVG se dibuja una vez y se rota por CSS para las otras tres esquinas,
+ * así que no se repite markup.
+ */
+interface Props {
+  /** Qué esquinas mostrar. */
+  esquinas?: ('si' | 'sd' | 'ii' | 'id')[];
+  /** Tamaño del cuadro de la traza, en px. */
+  tam?: number;
+  opacidad?: number;
+}
+
+const { esquinas = ['si', 'id'], tam = 150, opacidad = 0.5 } = Astro.props;
+
+const posiciones: Record<string, string> = {
+  si: 'top:0;left:0;',
+  sd: 'top:0;right:0;transform:scaleX(-1);',
+  ii: 'bottom:0;left:0;transform:scaleY(-1);',
+  id: 'bottom:0;right:0;transform:scale(-1,-1);',
+};
+---
+
+<div class="pcb" aria-hidden="true">
+  {
+    esquinas.map((e) => (
+      <svg
+        class="pcb-traza"
+        style={`${posiciones[e]} width:${tam}px; height:${tam}px; opacity:${opacidad};`}
+        viewBox="0 0 150 150"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* traza principal: baja, escalona y sale por la izquierda */}
+        <path
+          d="M18 0 V34 L34 50 V78 H10"
+          stroke="var(--color-cobre)"
+          stroke-width="1.5"
+          stroke-linecap="square"
+        />
+        {/* traza secundaria en agave */}
+        <path
+          d="M44 0 V22 L64 42 V62"
+          stroke="var(--color-agave)"
+          stroke-width="1.5"
+          stroke-linecap="square"
+        />
+        {/* traza corta en talavera */}
+        <path d="M70 0 V16 L86 32 H112" stroke="var(--color-talavera)" stroke-width="1.5" stroke-linecap="square" />
+        {/* bus de tres líneas paralelas */}
+        <path d="M0 96 H52 M0 104 H44 M0 112 H60" stroke="var(--color-cobre)" stroke-width="1.5" stroke-linecap="square" />
+
+        {/* vías: anillo con perforación */}
+        <circle cx="10" cy="78" r="4" stroke="var(--color-cobre)" stroke-width="1.5" />
+        <circle cx="64" cy="62" r="4" stroke="var(--color-agave)" stroke-width="1.5" />
+        <circle cx="112" cy="32" r="4" stroke="var(--color-talavera)" stroke-width="1.5" />
+        <circle cx="60" cy="112" r="3" stroke="var(--color-cobre)" stroke-width="1.5" />
+
+        {/* pads cuadrados */}
+        <rect x="49" y="93" width="6" height="6" fill="var(--color-cobre)" />
+        <rect x="41" y="101" width="6" height="6" fill="var(--color-cobre)" />
+      </svg>
+    ))
+  }
+</div>
+
+<style>
+  .pcb {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .pcb-traza {
+    position: absolute;
+  }
+  /* En móvil estorban más de lo que aportan: son ruido en 360px de ancho. */
+  @media (max-width: 640px) {
+    .pcb {
+      display: none;
+    }
+  }
+</style>

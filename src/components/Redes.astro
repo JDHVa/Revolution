@@ -1,0 +1,158 @@
+---
+import Section from './Section.astro';
+import { site, disponible } from '../data/site';
+
+const canales = [
+  {
+    titulo: 'Instagram de Revolution',
+    texto: 'Los anuncios oficiales: fechas, sede, apertura de registro y todo lo del evento.',
+    link: site.links.instagram,
+    etiqueta: 'Seguir',
+  },
+  {
+    titulo: 'Instagram de High Coders',
+    texto: 'La comunidad detrás del evento. Ahí vive lo que hacemos el resto del año.',
+    link: site.links.instagramHighCoders,
+    etiqueta: 'Seguir',
+  },
+  {
+    titulo: 'Grupo de WhatsApp',
+    texto: 'Para dudas rápidas, avisos del día del evento y organizarte con otros participantes.',
+    link: site.links.whatsapp,
+    etiqueta: 'Entrar al grupo',
+  },
+];
+---
+
+<Section
+  id="contacto"
+  etiqueta="Mantente al tanto"
+  titulo="Dónde encontrarnos"
+  entradilla="Todo lo importante lo publicamos en los tres lados. Si tienes una duda que no está en las preguntas frecuentes, escríbenos directo."
+>
+  <ul class="canales">
+    {
+      canales.map((c) => (
+        <li class="canal">
+          <h3 class="display canal__titulo">{c.titulo}</h3>
+          <p class="canal__texto">{c.texto}</p>
+          {disponible(c.link) ? (
+            <a
+              class="canal__link"
+              href={c.link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {c.etiqueta} <span aria-hidden="true">→</span>
+            </a>
+          ) : (
+            <p class="pendiente canal__pendiente">Disponible pronto</p>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="correo">
+    <div>
+      <h3 class="display correo__titulo">¿Otra pregunta?</h3>
+      <p class="correo__texto">
+        Escríbenos por correo. Contesta una persona real, normalmente el mismo día.
+      </p>
+    </div>
+    <a href={`mailto:${site.contacto.email}`} class="btn btn-activo correo__cta">
+      {site.contacto.email}
+    </a>
+  </div>
+</Section>
+
+<style>
+  .canales {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .canal {
+    border-top: 2px solid var(--color-tinta);
+    padding-top: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .canal__titulo {
+    font-size: var(--text-lg);
+  }
+
+  .canal__texto {
+    color: var(--color-tinta-2);
+    font-size: var(--text-base);
+    flex: 1;
+  }
+
+  .canal__link {
+    margin-top: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-cobre-2);
+    text-decoration: none;
+    width: fit-content;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.12s ease;
+  }
+  .canal__link:hover {
+    border-bottom-color: var(--color-cobre);
+  }
+
+  .canal__pendiente {
+    margin-top: 0.5rem;
+    width: fit-content;
+  }
+
+  /* ── Bloque de correo ────────────────────────────── */
+  .correo {
+    margin-top: 3rem;
+    background: var(--color-cal-2);
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    padding: 1.75rem;
+    display: grid;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  .correo__titulo {
+    font-size: var(--text-2xl);
+  }
+
+  .correo__texto {
+    margin-top: 0.4rem;
+    color: var(--color-tinta-2);
+  }
+
+  .correo__cta {
+    background: var(--color-cal);
+    color: var(--color-tinta);
+    /* El correo es largo: que no rompa la caja en pantallas chicas. */
+    text-transform: none;
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 880px) {
+    .canales {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2rem;
+    }
+    .correo {
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+    }
+  }
+</style>

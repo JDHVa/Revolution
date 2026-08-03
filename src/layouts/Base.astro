@@ -1,0 +1,140 @@
+---
+import '../styles/global.css';
+// El wordmark del hero es el elemento LCP y va en Archivo condensada. Sin
+// precargarla, se pinta primero con la fuente de sistema y luego brinca al
+// cambiar — un salto de layout justo en lo más grande de la página.
+import archivoUrl from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import { site } from '../data/site';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Concha from '../components/Concha.astro';
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+  /** Marca la sección activa en el nav. */
+  pagina?: 'inicio' | 'sponsors' | 'legal';
+}
+
+const { titulo, descripcion = site.descripcion, pagina = 'inicio' } = Astro.props;
+
+const tituloCompleto =
+  pagina === 'inicio' ? `${site.nombre} — ${site.tagline}` : `${titulo} · ${site.nombre}`;
+
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/media/og.png', Astro.site).href;
+
+// Datos estructurados: ayudan a que Google muestre el evento con fecha y
+// lugar en los resultados. El precio 0 es literal — es gratis.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: 'REVOLUTION',
+  description: site.descripcion,
+  startDate: site.fechas.inicio,
+  endDate: site.fechas.fin,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: {
+    '@type': 'Place',
+    name: site.venue.confirmado ? site.venue.nombre : 'Monterrey, Nuevo León',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Monterrey',
+      addressRegion: 'Nuevo León',
+      addressCountry: 'MX',
+    },
+  },
+  organizer: {
+    '@type': 'Organization',
+    name: site.organizacion,
+    url: site.links.hackClub.url,
+  },
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'MXN',
+    availability: 'https://schema.org/InStock',
+    url,
+  },
+  typicalAgeRange: '15-18',
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={url} />
+
+    <link
+      rel="preload"
+      href={archivoUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/media/favicon.svg" />
+    <meta name="theme-color" content="#F5EDE0" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.nombre} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={url} />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(jsonLd)}
+    />
+  </head>
+
+  <body>
+    <a href="#contenido" class="salto">Saltar al contenido</a>
+
+    <Concha />
+
+    <Nav pagina={pagina} />
+
+    <main id="contenido">
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  /* Skip-link: invisible hasta que le llega el foco con Tab. */
+  .salto {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -120%);
+    z-index: 100;
+    background: var(--color-tinta);
+    color: var(--color-cal);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0 0 2px 2px;
+    transition: transform 0.15s ease;
+  }
+  .salto:focus-visible {
+    transform: translate(-50%, 0);
+    outline-offset: -4px;
+  }
+</style>

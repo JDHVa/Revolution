@@ -1,0 +1,53 @@
+---
+/**
+ * GRECA — franja de escalón prehispánico, teselable.
+ *
+ * Patrón CSS puro (data-URI + repeat-x): cero JavaScript, cero layout thrash.
+ * Decorativa: va oculta a lectores de pantalla.
+ *
+ * Los colores van escritos en el data-URI porque un SVG embebido no puede
+ * leer variables CSS. Son constantes de marca, así que no pasa nada — pero si
+ * cambias la paleta en global.css, acuérdate de cambiarlas aquí también.
+ */
+interface Props {
+  /** Alto de la franja en px. */
+  alto?: number;
+  /** 'tres' = cobre + agave + talavera. 'cobre' / 'tinta' = un solo color. */
+  variante?: 'tres' | 'cobre' | 'tinta';
+  class?: string;
+}
+
+const { alto = 14, variante = 'tres', class: klass = '' } = Astro.props;
+
+const COBRE = '%23C4622D';
+const AGAVE = '%232F7D62';
+const TALAVERA = '%232B5FA8';
+const TINTA = '%232A211C';
+
+const paso = 'M0 22 H8 V14 H16 V6 H32 V14 H40 V22 H48';
+
+const trazos =
+  variante === 'tres'
+    ? `%3Cpath d='${paso}' fill='none' stroke='${COBRE}' stroke-width='4'/%3E` +
+      `%3Cpath d='M16 6 H32' stroke='${AGAVE}' stroke-width='4'/%3E` +
+      `%3Cpath d='M0 22 H8' stroke='${TALAVERA}' stroke-width='4'/%3E`
+    : `%3Cpath d='${paso}' fill='none' stroke='${variante === 'cobre' ? COBRE : TINTA}' stroke-width='4'/%3E`;
+
+const patron = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='28' viewBox='0 0 48 28'%3E${trazos}%3C/svg%3E")`;
+---
+
+<div
+  class:list={['greca', klass]}
+  style={`height:${alto}px; background-image:${patron};`}
+  aria-hidden="true"
+>
+</div>
+
+<style>
+  .greca {
+    width: 100%;
+    background-repeat: repeat-x;
+    background-position: center;
+    background-size: auto 100%;
+  }
+</style>

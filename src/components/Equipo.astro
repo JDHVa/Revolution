@@ -1,0 +1,213 @@
+---
+import Section from './Section.astro';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { equipo } from '../data/equipo';
+
+/**
+ * Los retratos viven en src/assets/equipo/ (no en public/) precisamente para
+ * que Astro los procese: los reescala al tamaño que de verdad se usa y los
+ * convierte a webp. Los originales son de 1080×1080 y aquí se muestran a
+ * 104px — servirlos tal cual sería medio mega de más por cuatro miniaturas.
+ *
+ * El glob deja que equipo.ts siga guardando sólo el nombre del archivo.
+ */
+const fotos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/equipo/*.{jpg,jpeg,png,webp}',
+  { eager: true }
+);
+
+const buscarFoto = (archivo: string | null) =>
+  archivo ? fotos[`../assets/equipo/${archivo}`]?.default : undefined;
+
+/** Iniciales para el placeholder mientras no hay foto. */
+const iniciales = (nombre: string) =>
+  nombre
+    .split(' ')
+    .slice(0, 2)
+    .map((p) => p[0])
+    .join('')
+    .toUpperCase();
+---
+
+<Section
+  id="equipo"
+  etiqueta="Quiénes somos"
+  titulo="El equipo organizador"
+  entradilla="Somos estudiantes de prepa y universidad de Monterrey. Ninguno ha organizado un hackathon antes — lo estamos aprendiendo en el camino, igual que tú vas a aprender a soldar."
+>
+  <ul class="equipo">
+    {
+      equipo.map((p) => {
+        const foto = buscarFoto(p.foto);
+        // Encuadre: escalamos alrededor del centro y luego corregimos para
+        // que el punto donde está la cara quede justo en medio del círculo.
+        const e = p.encuadre ?? {};
+        const zoom = e.zoom ?? 1;
+        const girar = e.girar ?? 0;
+        // El transform se aplica de derecha a izquierda: primero endereza
+        // (rotate), luego acerca (scale) y al final recentra (translate).
+        const dx = -((e.x ?? 50) - 50) * zoom;
+        const dy = -((e.y ?? 50) - 50) * zoom;
+        // El zoom del encuadre es un transform de CSS, así que amplía el
+        // bitmap que ya generó Astro. Si le pedimos siempre el mismo tamaño,
+        // acercarse sale borroso. Pidiéndolo proporcional al zoom, el
+        // acercamiento no pierde nada. El tope evita que una foto mal
+        // encuadrada dispare el peso.
+        const lado = Math.min(Math.round(208 * zoom), 820);
+        return (
+        <li class="persona">
+          <div
+            class="persona__retrato"
+            style={`--foto-t: translate(${dx}%, ${dy}%) scale(${zoom}) rotate(${girar}deg);`}
+          >
+            {foto ? (
+              <Image
+                src={foto}
+                alt={`Retrato de ${p.nombre}`}
+                width={lado}
+                height={lado}
+                densities={[1, 2]}
+                format="webp"
+                quality={78}
+                loading="lazy"
+              />
+            ) : (
+              <span class="display persona__iniciales" aria-hidden="true">
+                {iniciales(p.nombre)}
+              </span>
+            )}
+          </div>
+
+          <div class="persona__datos">
+            <h3 class="display persona__nombre">{p.nombre}</h3>
+            <p class="label persona__rol">{p.rol}</p>
+            <p class="persona__escuela">{p.escuela}</p>
+
+            <ul class="persona__areas">
+              {p.areas.map((a) => (
+                <li class="label persona__area">{a}</li>
+              ))}
+            </ul>
+
+            {p.email && (
+              <a class="persona__email" href={`mailto:${p.email}`}>
+                {p.email}
+              </a>
+            )}
+          </div>
+        </li>
+        );
+      })
+    }
+  </ul>
+</Section>
+
+<style>
+  .equipo {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .persona {
+    background: var(--color-cal);
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    padding: 1.5rem;
+    display: grid;
+    gap: 1.1rem;
+    justify-items: center;
+    text-align: center;
+    /* Las tarjetas miden todas lo mismo de alto. Sin esto, el sobrante se
+       reparte entre las filas del grid y los nombres quedan a distinta
+       altura de una tarjeta a otra; así el sobrante se va todo abajo. */
+    align-content: start;
+  }
+
+  .persona__retrato {
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--color-tinta);
+    background: var(--color-cobre);
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+  }
+  .persona__retrato img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* El encuadre por persona sale de `encuadre` en equipo.ts. Sin él,
+       --foto-t es la identidad y la foto se ve completa y centrada. */
+    transform: var(--foto-t, none);
+  }
+
+  .persona__iniciales {
+    color: var(--color-cal);
+    font-size: 2rem;
+    letter-spacing: 0.02em;
+  }
+
+  .persona__nombre {
+    font-size: var(--text-xl);
+  }
+
+  .persona__rol {
+    color: var(--color-cobre-2);
+    margin-top: 0.3rem;
+  }
+
+  .persona__escuela {
+    margin-top: 0.5rem;
+    font-size: var(--text-sm);
+    color: var(--color-tinta-2);
+    line-height: 1.45;
+  }
+
+  .persona__areas {
+    list-style: none;
+    padding: 0;
+    margin: 0.9rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+  }
+
+  .persona__area {
+    border: 1px solid var(--color-cal-3);
+    background: var(--color-cal-2);
+    border-radius: 2px;
+    padding: 0.28rem 0.5rem;
+    color: var(--color-tinta-2);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  .persona__email {
+    margin-top: 0.85rem;
+    display: inline-block;
+    font-size: var(--text-sm);
+    color: var(--color-cobre-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    /* Los correos largos no deben desbordar la tarjeta en móvil. */
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 640px) {
+    .equipo {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .equipo {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

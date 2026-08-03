@@ -1,0 +1,142 @@
+---
+import Section from './Section.astro';
+import { horario } from '../data/horario';
+import { site } from '../data/site';
+---
+
+<Section
+  id="horario"
+  fondo="cal2"
+  etiqueta="Programa"
+  titulo="24 horas, hora por hora"
+  entradilla={`Así se ve el ${site.fechas.etiquetaLarga.toLowerCase()}. Los horarios pueden moverse un poco, pero el arranque y el cierre son fijos.`}
+>
+  <div class="horario">
+    {
+      horario.map((dia) => (
+        <div class="dia">
+          <div class="dia__encabezado">
+            <h3 class="display dia__nombre">{dia.etiqueta}</h3>
+            <p class="label dia__fecha">{dia.fecha}</p>
+          </div>
+
+          <ol class="dia__lista">
+            {dia.bloques.map((b) => (
+              <li class:list={['bloque', b.destacado && 'bloque--destacado']}>
+                <p class="label bloque__hora">{b.hora}</p>
+                <div class="bloque__cuerpo">
+                  <h4 class="bloque__titulo">{b.titulo}</h4>
+                  {b.detalle && <p class="bloque__detalle">{b.detalle}</p>}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))
+    }
+  </div>
+</Section>
+
+<style>
+  .horario {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .dia__encabezado {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    padding-bottom: 0.9rem;
+    border-bottom: 2px solid var(--color-tinta);
+    margin-bottom: 0.5rem;
+  }
+
+  .dia__nombre {
+    font-size: var(--text-2xl);
+  }
+
+  .dia__fecha {
+    color: var(--color-cobre-2);
+  }
+
+  .dia__lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Línea de tiempo: la raya vertical la dibuja el borde izquierdo
+     del bloque, y el punto es el ::before. */
+  .bloque {
+    display: grid;
+    grid-template-columns: 4.25rem 1fr;
+    gap: 0 1.25rem;
+    padding: 1.1rem 0 1.1rem 0;
+    position: relative;
+  }
+
+  .bloque__cuerpo {
+    border-left: 2px solid var(--color-cal-3);
+    padding-left: 1.35rem;
+    padding-bottom: 0.15rem;
+  }
+  /* El último no necesita continuar la línea hacia abajo. */
+  .bloque:last-child .bloque__cuerpo {
+    border-left-color: transparent;
+  }
+
+  .bloque__cuerpo::before {
+    content: '';
+    position: absolute;
+    left: 5.5rem;
+    top: 1.45rem;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--color-cal-2);
+    border: 2px solid var(--color-tinta-2);
+    transform: translateX(-50%);
+  }
+
+  .bloque--destacado .bloque__cuerpo::before {
+    background: var(--color-cobre);
+    border-color: var(--color-cobre);
+  }
+
+  .bloque__hora {
+    color: var(--color-tinta-2);
+    padding-top: 0.25rem;
+    text-align: right;
+    letter-spacing: 0.06em;
+  }
+  .bloque--destacado .bloque__hora {
+    color: var(--color-cobre-2);
+  }
+
+  .bloque__titulo {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-tinta);
+  }
+  .bloque--destacado .bloque__titulo {
+    color: var(--color-cobre-2);
+  }
+
+  .bloque__detalle {
+    margin-top: 0.3rem;
+    font-size: var(--text-base);
+    color: var(--color-tinta-2);
+    max-width: 46ch;
+  }
+
+  @media (min-width: 880px) {
+    .horario {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3.5rem;
+    }
+  }
+</style>

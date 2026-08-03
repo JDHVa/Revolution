@@ -1,0 +1,1 @@
+PDFs legales cuando esten listos. La ruta va en src/data/legal.ts

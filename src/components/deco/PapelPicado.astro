@@ -1,0 +1,39 @@
+---
+/**
+ * PAPEL PICADO — banderines que enmarcan la sección de FAQ.
+ *
+ * La geometría vive en src/lib/papel.ts, compartida con el divisor que
+ * separa las preguntas entre sí.
+ *
+ * Estático: el papel picado real se mueve con el aire, pero una animación de
+ * vaivén aquí sería justo el adorno que estamos evitando.
+ */
+import { banderines } from '../../lib/papel';
+
+interface Props {
+  /** 'arriba' cuelga hacia abajo; 'abajo' va volteado para cerrar el marco. */
+  lado?: 'arriba' | 'abajo';
+  alto?: number;
+  class?: string;
+}
+
+const { lado = 'arriba', alto = 62, class: klass = '' } = Astro.props;
+---
+
+<div
+  class:list={['papel', klass]}
+  style={`height:${alto}px; background-image:url("${banderines()}"); ${
+    lado === 'abajo' ? 'transform:rotate(180deg);' : ''
+  }`}
+  aria-hidden="true"
+>
+</div>
+
+<style>
+  .papel {
+    width: 100%;
+    background-repeat: repeat-x;
+    background-position: top center;
+    background-size: auto 100%;
+  }
+</style>

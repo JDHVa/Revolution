@@ -1,0 +1,184 @@
+---
+/**
+ * PANTALLA DE CARGA — la concha.
+ *
+ * Una concha se dibuja sola en ~900 ms y el overlay se va.
+ *
+ * Reglas de seguridad, en orden de importancia:
+ *
+ * 1. El overlay nace con `hidden` y sólo un script lo muestra. Si el
+ *    JavaScript falla o está desactivado, nunca aparece — jamás puede
+ *    dejar el sitio en blanco. Es al revés de como se suele hacer, y es
+ *    a propósito.
+ * 2. Se auto-descarta a los 1.5 s pase lo que pase, con un temporizador
+ *    independiente del de la animación.
+ * 3. Una vez por sesión (`sessionStorage`), no en cada navegación.
+ * 4. Con `prefers-reduced-motion` no se muestra nunca.
+ * 5. El contenido del sitio ya está en el DOM detrás: el overlay no
+ *    retrasa el LCP ni impide leer.
+ */
+---
+
+<div id="concha" class="concha" hidden aria-hidden="true">
+  <svg class="concha__dibujo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="conchaPan">
+        <circle cx="50" cy="50" r="40" />
+      </clipPath>
+    </defs>
+
+    <!-- el pan -->
+    <circle class="t t1" cx="50" cy="50" r="40" stroke="var(--color-cobre)" stroke-width="3" />
+
+    <!-- El azúcar, con el patrón de concha de verdad: un abanico que radia
+         desde abajo, cruzado por arcos concéntricos. Todo recortado al pan.
+         Los rayos salen del punto (50,90) hacia la orilla del círculo. -->
+    <g clip-path="url(#conchaPan)" stroke="var(--color-cobre)" stroke-width="2.5" stroke-linecap="round">
+      <path class="t t2" d="M50 90 L10 50" />
+      <path class="t t3" d="M50 90 L17 27" />
+      <path class="t t4" d="M50 90 L36 12" />
+      <path class="t t5" d="M50 90 L64 12" />
+      <path class="t t6" d="M50 90 L83 27" />
+      <path class="t t7" d="M50 90 L90 50" />
+      <!-- arcos concéntricos centrados en el mismo punto -->
+      <path class="t t8" d="M22 90 A28 28 0 0 1 78 90" />
+      <path class="t t9" d="M6 90 A44 44 0 0 1 94 90" />
+    </g>
+  </svg>
+
+  <p class="label concha__texto">Revolution</p>
+</div>
+
+<style>
+  .concha {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--color-cal);
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1.5rem;
+    transition: opacity 0.35s ease;
+  }
+  .concha[hidden] {
+    display: none;
+  }
+  .concha.se-va {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .concha__dibujo {
+    width: clamp(88px, 18vw, 132px);
+    height: auto;
+  }
+
+  .concha__texto {
+    color: var(--color-tinta-2);
+    letter-spacing: 0.3em;
+    /* se desvanece hacia adentro después de que el pan está dibujado */
+    opacity: 0;
+    animation: aparece 0.4s ease 0.7s forwards;
+  }
+
+  /* Cada trazo se dibuja solo. 320 cubre de sobra el largo de cualquiera
+     de estos paths, así que sirve el mismo valor para todos. */
+  .t {
+    stroke-dasharray: 320;
+    stroke-dashoffset: 320;
+    animation: dibuja 0.75s ease-out forwards;
+  }
+  .t1 {
+    animation-duration: 0.6s;
+  }
+  /* Los rayos aparecen en abanico, de izquierda a derecha, y los arcos
+     al final: se siente como si alguien lo estuviera marcando con el molde. */
+  .t2 {
+    animation-delay: 0.16s;
+  }
+  .t3 {
+    animation-delay: 0.21s;
+  }
+  .t4 {
+    animation-delay: 0.26s;
+  }
+  .t5 {
+    animation-delay: 0.31s;
+  }
+  .t6 {
+    animation-delay: 0.36s;
+  }
+  .t7 {
+    animation-delay: 0.41s;
+  }
+  .t8 {
+    animation-delay: 0.46s;
+  }
+  .t9 {
+    animation-delay: 0.52s;
+  }
+
+  @keyframes dibuja {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes aparece {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Si alguien pidió menos movimiento y aun así llegara a mostrarse,
+     que no se mueva nada. */
+  @media (prefers-reduced-motion: reduce) {
+    .concha {
+      display: none !important;
+    }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const overlay = document.getElementById('concha');
+    if (!overlay) return;
+
+    const quiereCalma = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let yaLaVio = false;
+    try {
+      yaLaVio = sessionStorage.getItem('concha') === '1';
+    } catch {
+      // Modo incógnito bloquea sessionStorage: se trata como "ya la vio"
+      // para no repetir la animación en cada navegación.
+      yaLaVio = true;
+    }
+
+    if (quiereCalma || yaLaVio) return;
+
+    try {
+      sessionStorage.setItem('concha', '1');
+    } catch {
+      /* si no se puede guardar, ni modo */
+    }
+
+    overlay.hidden = false;
+
+    const quitar = () => {
+      if (overlay.hidden) return;
+      overlay.classList.add('se-va');
+      setTimeout(() => {
+        overlay.hidden = true;
+      }, 350);
+    };
+
+    // Salida normal, una vez terminados los trazos.
+    setTimeout(quitar, 1150);
+    // Red de seguridad: pase lo que pase, a los 1.5 s se va.
+    setTimeout(quitar, 1500);
+    // Y si el usuario hace cualquier cosa, se va antes.
+    addEventListener('pointerdown', quitar, { once: true });
+    addEventListener('keydown', quitar, { once: true });
+    addEventListener('wheel', quitar, { once: true, passive: true });
+  })();
+</script>

@@ -1,0 +1,1 @@
+Logos de patrocinadores confirmados. El nombre del archivo va en src/data/sponsors.ts

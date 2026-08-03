@@ -1,0 +1,114 @@
+---
+import Section from './Section.astro';
+import { queEs } from '../data/evento';
+---
+
+<Section
+  id="que-es"
+  etiqueta="El evento"
+  titulo="¿Qué es Revolution?"
+  entradilla={queEs.entradilla}
+>
+  <div class="que">
+    <div class="que__texto">
+      {queEs.parrafos.map((p) => <p>{p}</p>)}
+    </div>
+
+    <aside class="que__reto">
+      <p class="label que__reto-etiqueta">{queEs.reto.etiqueta}</p>
+      <p class="display que__reto-pregunta">{queEs.reto.pregunta}</p>
+      <p class="que__reto-explicacion">{queEs.reto.explicacion}</p>
+    </aside>
+  </div>
+
+  <ul class="que__puntos">
+    {
+      queEs.puntos.map((p) => (
+        <li class="que__punto">
+          <h3 class="display que__punto-titulo">{p.titulo}</h3>
+          <p>{p.texto}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Section>
+
+<style>
+  .que {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .que__texto p {
+    font-size: var(--text-lg);
+    color: var(--color-tinta-2);
+    margin-bottom: 1.1rem;
+  }
+  .que__texto p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* El reto va en un recuadro tipo cartel: es el corazón del tema. */
+  .que__reto {
+    background: var(--color-tinta);
+    color: var(--color-cal);
+    border-radius: 2px;
+    padding: 1.75rem;
+    box-shadow: 6px 6px 0 var(--color-cobre);
+  }
+
+  .que__reto-etiqueta {
+    /* etiqueta de 12px sobre tinta: necesita el cobre claro */
+    color: var(--color-cobre-claro);
+    margin-bottom: 0.9rem;
+  }
+
+  .que__reto-pregunta {
+    font-size: var(--text-2xl);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    text-transform: none;
+  }
+
+  .que__reto-explicacion {
+    font-size: var(--text-base);
+    color: color-mix(in srgb, var(--color-cal) 72%, transparent);
+    line-height: 1.6;
+  }
+
+  /* ── Los tres puntos ─────────────────────────────── */
+  .que__puntos {
+    list-style: none;
+    padding: 0;
+    margin: 3rem 0 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .que__punto {
+    border-top: 2px solid var(--color-tinta);
+    padding-top: 1.1rem;
+  }
+
+  .que__punto-titulo {
+    font-size: var(--text-xl);
+    margin-bottom: 0.5rem;
+    color: var(--color-tinta);
+  }
+
+  .que__punto p {
+    color: var(--color-tinta-2);
+  }
+
+  @media (min-width: 880px) {
+    .que {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 3.5rem;
+    }
+    .que__puntos {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+</style>

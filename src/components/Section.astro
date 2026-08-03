@@ -1,0 +1,127 @@
+---
+/**
+ * SECTION — envoltorio de todas las secciones del sitio.
+ *
+ * Centraliza el ancho, el espaciado vertical, el encabezado (etiqueta +
+ * título + entradilla) y las esquinas de PCB. Si el ritmo del sitio necesita
+ * ajustarse, se ajusta aquí una vez y no en nueve lugares.
+ */
+import PcbCorners from './deco/PcbCorners.astro';
+
+interface Props {
+  id?: string;
+  /** La etiqueta chiquita en mono que va arriba del título. */
+  etiqueta?: string;
+  titulo?: string;
+  entradilla?: string;
+  /** Fondo alterno, para dar ritmo entre secciones. */
+  fondo?: 'cal' | 'cal2' | 'tinta';
+  /** Ancho del contenido. */
+  ancho?: 'normal' | 'angosto' | 'amplio';
+  pcb?: boolean;
+  /** Nivel del encabezado. El h1 se reserva para el hero. */
+  nivel?: 2 | 3;
+  class?: string;
+}
+
+const {
+  id,
+  etiqueta,
+  titulo,
+  entradilla,
+  fondo = 'cal',
+  ancho = 'normal',
+  pcb = true,
+  nivel = 2,
+  class: klass = '',
+} = Astro.props;
+
+const Titulo = `h${nivel}` as 'h2' | 'h3';
+---
+
+<section id={id} class:list={['seccion', `seccion--${fondo}`, klass]}>
+  {pcb && <PcbCorners esquinas={['si', 'id']} />}
+
+  <div class:list={['seccion__caja', `seccion__caja--${ancho}`]}>
+    {
+      (etiqueta || titulo || entradilla) && (
+        <header class="seccion__encabezado">
+          {etiqueta && <p class="label seccion__etiqueta">{etiqueta}</p>}
+          {titulo && <Titulo class="display seccion__titulo">{titulo}</Titulo>}
+          {entradilla && <p class="seccion__entradilla">{entradilla}</p>}
+        </header>
+      )
+    }
+    <slot />
+  </div>
+</section>
+
+<style>
+  .seccion {
+    position: relative;
+    padding-block: clamp(3.5rem, 7vw, 6.5rem);
+    overflow: hidden;
+  }
+
+  .seccion--cal2 {
+    background: var(--color-cal-2);
+    border-block: 1px solid var(--color-cal-3);
+  }
+  .seccion--tinta {
+    background: var(--color-tinta);
+    color: var(--color-cal);
+  }
+  .seccion--tinta .seccion__etiqueta {
+    /* La etiqueta es texto de 12px: sobre tinta necesita el cobre claro
+       para llegar a AA. El cobre normal se queda en 3.85:1. */
+    color: var(--color-cobre-claro);
+  }
+  .seccion--tinta .seccion__entradilla {
+    color: color-mix(in srgb, var(--color-cal) 75%, transparent);
+  }
+
+  .seccion__caja {
+    position: relative;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+    max-width: 72rem;
+  }
+  .seccion__caja--angosto {
+    max-width: 52rem;
+  }
+  .seccion__caja--amplio {
+    max-width: 84rem;
+  }
+
+  .seccion__encabezado {
+    margin-bottom: clamp(2rem, 3.5vw, 3rem);
+    max-width: 46rem;
+  }
+
+  .seccion__etiqueta {
+    color: var(--color-cobre-2);
+    margin-bottom: 0.75rem;
+    /* guioncito antes de la etiqueta, como marca de párrafo de cartel */
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .seccion__etiqueta::before {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    background: currentColor;
+    flex: 0 0 auto;
+  }
+
+  .seccion__titulo {
+    font-size: var(--text-4xl);
+  }
+
+  .seccion__entradilla {
+    margin-top: 1.1rem;
+    font-size: var(--text-lg);
+    color: var(--color-tinta-2);
+    max-width: 60ch;
+  }
+</style>

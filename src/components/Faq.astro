@@ -1,0 +1,205 @@
+---
+import PapelPicado from './deco/PapelPicado.astro';
+import { faq } from '../data/faq';
+import { expandirEnlaces } from '../lib/enlaces';
+import { divisor } from '../lib/papel';
+
+const tiraPicada = divisor();
+---
+
+<section id="faq" class="faq">
+  <PapelPicado lado="arriba" alto={62} />
+
+  <div class="faq__caja">
+    <header class="faq__encabezado">
+      <p class="label faq__etiqueta">Dudas</p>
+      <h2 class="display faq__titulo">Preguntas frecuentes</h2>
+    </header>
+
+    <div class="faq__lista" style={`--tira: url("${tiraPicada}")`}>
+      {
+        faq.map((p) => (
+          <details class="pregunta" open={p.abierta}>
+            <summary class="pregunta__titulo">
+              <span>{p.pregunta}</span>
+              <span class="pregunta__signo" aria-hidden="true" />
+            </summary>
+            <div class="pregunta__respuesta">
+              <p set:html={expandirEnlaces(p.respuesta)} />
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+
+  <PapelPicado lado="abajo" alto={62} />
+</section>
+
+<style>
+  .faq {
+    background: var(--color-cal-2);
+    border-block: 1px solid var(--color-cal-3);
+    padding-block: 0;
+  }
+
+  .faq__caja {
+    max-width: 52rem;
+    margin-inline: auto;
+    padding: clamp(2.5rem, 5vw, 4rem) 1.25rem;
+  }
+
+  .faq__encabezado {
+    margin-bottom: 2.25rem;
+  }
+
+  .faq__etiqueta {
+    color: var(--color-cobre-2);
+    margin-bottom: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .faq__etiqueta::before {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    background: currentColor;
+  }
+
+  .faq__titulo {
+    font-size: var(--text-4xl);
+  }
+
+  /* ── Preguntas ───────────────────────────────────── */
+  .faq__lista {
+    border-top: 2px solid var(--color-tinta);
+  }
+
+  /* Cada pregunta se separa de la siguiente con una tira de papel recortado
+     en vez de una línea. Va como background del propio <details>, así que no
+     mete markup extra ni un elemento más que leer por lector de pantalla. */
+  .pregunta {
+    background-image: var(--tira);
+    background-repeat: repeat-x;
+    background-position: bottom center;
+    background-size: auto 20px;
+    /* espacio para que la tira no se encime con la respuesta */
+    padding-bottom: 20px;
+  }
+
+  /* La última no lleva tira: el marco de banderines ya cierra la sección. */
+  .pregunta:last-child {
+    background-image: none;
+    padding-bottom: 0;
+  }
+
+  /* Despliegue suave de la respuesta, sin una línea de JavaScript.
+     `interpolate-size` permite animar hacia `auto`, y `allow-discrete` deja
+     que `content-visibility` espere a que termine la transición en vez de
+     cortarla en seco.
+     Donde el navegador no lo soporte todavía, el <details> abre de golpe
+     como siempre: se pierde la animación, nunca el contenido. */
+  @supports (interpolate-size: allow-keywords) {
+    .faq__lista {
+      interpolate-size: allow-keywords;
+    }
+
+    .pregunta::details-content {
+      block-size: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        block-size 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+        opacity 0.24s ease,
+        content-visibility 0.3s allow-discrete;
+    }
+
+    .pregunta[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+
+  .pregunta__titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 1.15rem 0.25rem;
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-tinta);
+  }
+  .pregunta__titulo:hover {
+    color: var(--color-cobre-2);
+  }
+
+  /* Signo +/− dibujado con dos barras: sin iconos, sin dependencias.
+     Al abrir da media vuelta mientras la barra vertical se recoge, así el
+     paso de + a − se lee como un movimiento y no como un parpadeo. */
+  .pregunta__signo {
+    position: relative;
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .pregunta__signo::before,
+  .pregunta__signo::after {
+    content: '';
+    position: absolute;
+    background: var(--color-cobre);
+    inset: 0;
+    margin: auto;
+  }
+  .pregunta__signo::before {
+    width: 16px;
+    height: 2px;
+  }
+  .pregunta__signo::after {
+    width: 2px;
+    height: 16px;
+    /* se recoge desde el centro, un pelo antes de terminar el giro */
+    transition: transform 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .pregunta[open] .pregunta__signo {
+    transform: rotate(180deg);
+  }
+  .pregunta[open] .pregunta__signo::after {
+    transform: scaleY(0);
+  }
+  /* al pasar el mouse por la pregunta, el signo se anima un poco */
+  .pregunta__titulo:hover .pregunta__signo {
+    transform: scale(1.15);
+  }
+  .pregunta[open] .pregunta__titulo:hover .pregunta__signo {
+    transform: rotate(180deg) scale(1.15);
+  }
+
+  .pregunta__respuesta {
+    /* menos aire abajo que antes: la tira picada ya aporta 17px */
+    padding: 0 2.5rem 0.9rem 0.25rem;
+  }
+  .pregunta__respuesta p {
+    color: var(--color-tinta-2);
+    font-size: var(--text-base);
+    line-height: 1.7;
+  }
+  .pregunta__respuesta :global(strong) {
+    color: var(--color-tinta);
+    font-weight: 600;
+  }
+  .pregunta__respuesta :global(a) {
+    color: var(--color-cobre-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  /* Lo que todavía no existe se ve distinto de un link de verdad. */
+  .pregunta__respuesta :global(.enlace-pendiente) {
+    color: var(--color-tinta-2);
+    border-bottom: 1px dashed var(--color-tinta-2);
+    font-style: italic;
+  }
+</style>

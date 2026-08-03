@@ -1,0 +1,156 @@
+---
+import Wordmark from './Wordmark.astro';
+import Greca from './deco/Greca.astro';
+import { site, disponible } from '../data/site';
+
+const anio = new Date().getFullYear();
+
+const redes = [
+  { texto: 'Instagram', link: site.links.instagram },
+  { texto: 'Instagram · High Coders', link: site.links.instagramHighCoders },
+  { texto: 'Grupo de WhatsApp', link: site.links.whatsapp },
+];
+---
+
+<footer class="pie">
+  <Greca alto={22} variante="tres" />
+
+  <div class="pie__caja">
+    <div class="pie__marca">
+      <Wordmark tam="footer" href="/" />
+      <p class="pie__lema">
+        Hackathon de hardware gratuito para preparatoria.<br />
+        {site.fechas.etiquetaLarga} · Monterrey.
+      </p>
+    </div>
+
+    <nav class="pie__columna" aria-label="Secciones">
+      <h2 class="label pie__titulo">El evento</h2>
+      <a href="/#que-es">¿Qué es REVOLUTION?</a>
+      <a href="/#horario">Horario</a>
+      <a href="/#talleres">Talleres previos</a>
+      <a href="/#faq">Preguntas frecuentes</a>
+      <a href="/#equipo">Equipo</a>
+    </nav>
+
+    <nav class="pie__columna" aria-label="Redes y contacto">
+      <h2 class="label pie__titulo">Síguenos</h2>
+      {
+        redes.map((r) =>
+          disponible(r.link) ? (
+            <a href={r.link.url} target="_blank" rel="noopener noreferrer">
+              {r.texto}
+            </a>
+          ) : (
+            <span class="pie__proximo">{r.texto} · pronto</span>
+          )
+        )
+      }
+      <a href={`mailto:${site.contacto.email}`}>{site.contacto.email}</a>
+    </nav>
+
+    <nav class="pie__columna" aria-label="Información adicional">
+      <h2 class="label pie__titulo">Más</h2>
+      <a href="/sponsors">Patrocina el evento</a>
+      <a href="/legal">Información legal</a>
+      <a href="/legal#padres">Para padres y tutores</a>
+    </nav>
+  </div>
+
+  <div class="pie__base">
+    <p>
+      Organizado por <a href={site.links.hackClub.url} target="_blank" rel="noopener noreferrer">{site.organizacion}</a>
+      · {anio}
+    </p>
+    <p class="pie__nota">Hecho por adolescentes, para adolescentes.</p>
+  </div>
+</footer>
+
+<style>
+  .pie {
+    background: var(--color-cal-2);
+    border-top: 2px solid var(--color-tinta);
+    margin-top: 0;
+  }
+
+  .pie__caja {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: clamp(2.5rem, 5vw, 4rem) 1.25rem 2.5rem;
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  .pie__marca {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+
+  .pie__lema {
+    font-size: var(--text-sm);
+    color: var(--color-tinta-2);
+    line-height: 1.6;
+  }
+
+  .pie__columna {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+
+  .pie__titulo {
+    color: var(--color-cobre-2);
+    margin-bottom: 0.25rem;
+  }
+
+  .pie__columna a {
+    color: var(--color-tinta);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    width: fit-content;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.12s ease;
+  }
+  .pie__columna a:hover {
+    border-bottom-color: var(--color-cobre);
+  }
+
+  .pie__proximo {
+    font-size: var(--text-sm);
+    color: var(--color-tinta-2);
+    font-style: italic;
+  }
+
+  .pie__base {
+    border-top: 1px solid var(--color-cal-3);
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: 1.5rem 1.25rem 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    color: var(--color-tinta-2);
+  }
+  .pie__base a {
+    color: var(--color-cobre-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .pie__nota {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 720px) {
+    .pie__caja {
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,316 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import { documentos, politicaMenores } from '../data/legal';
+import { site } from '../data/site';
+
+const etiquetaPara: Record<string, string> = {
+  padres: 'Para padres y tutores',
+  participantes: 'Para participantes',
+  staff: 'Para staff',
+};
+---
+
+<Base
+  titulo="Información legal"
+  pagina="legal"
+  descripcion="Permisos, cartas responsivas, reglamento y política de menores de REVOLUTION. Información para padres y tutores de los participantes."
+>
+  <Section
+    etiqueta="Información legal"
+    titulo="Permisos, reglas y responsabilidades"
+    entradilla="REVOLUTION es un evento con menores de edad que se quedan a dormir en la sede. Esta página existe para que cualquier padre o tutor pueda revisar exactamente en qué está inscribiendo a su hijo antes de firmar nada."
+    nivel={2}
+    ancho="angosto"
+  >
+    <div class="aviso">
+      <p class="label aviso__etiqueta">Estado de los documentos</p>
+      <p>
+        Los documentos de esta página están <strong>en borrador</strong>. Antes de que se los pidamos
+        a nadie, los va a revisar un adulto responsable de la sede. Publicamos aquí la estructura
+        completa para que sepas desde ahora qué se te va a pedir y qué cubre cada papel.
+      </p>
+    </div>
+  </Section>
+
+  <!-- ── Política de menores ─────────────────────────── -->
+  <Section
+    id="padres"
+    fondo="cal2"
+    etiqueta="Para padres y tutores"
+    titulo="Cómo cuidamos a los participantes"
+    entradilla="Lo que aplica durante las 24 horas del evento, independientemente de lo que diga cada documento."
+  >
+    <ul class="politica">
+      {
+        politicaMenores.map((p, i) => (
+          <li class="politica__punto">
+            <p class="label politica__numero">{String(i + 1).padStart(2, '0')}</p>
+            <div>
+              <h3 class="display politica__titulo">{p.titulo}</h3>
+              <p class="politica__texto">{p.texto}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="junta">
+      <div>
+        <h3 class="display junta__titulo">Junta para padres antes del evento</h3>
+        <p class="junta__texto">
+          Organizamos una videollamada abierta donde nos conoces, ves la sede y preguntas lo que
+          quieras. La fecha la anunciamos junto con la apertura del registro. Si no puedes entrar,
+          escríbenos y lo resolvemos por correo o por teléfono.
+        </p>
+      </div>
+      <a href={`mailto:${site.contacto.emailPadres}`} class="btn btn-activo junta__cta">
+        Escribirnos
+      </a>
+    </div>
+  </Section>
+
+  <!-- ── Documentos ──────────────────────────────────── -->
+  <Section
+    id="documentos"
+    etiqueta="Papeles"
+    titulo="Los documentos"
+    entradilla="Cada documento lista los puntos que cubre. Si algo que te importa no está en la lista, dínoslo y lo agregamos."
+  >
+    <ul class="docs">
+      {
+        documentos.map((d) => (
+          <li class="doc" id={d.slug}>
+            <header class="doc__cabeza">
+              <div>
+                <p class="label doc__para">{etiquetaPara[d.para]}</p>
+                <h3 class="display doc__titulo">{d.titulo}</h3>
+              </div>
+              {d.estado === 'borrador' ? (
+                <span class="pendiente doc__estado">Borrador</span>
+              ) : d.archivo ? (
+                <a href={d.archivo} class="btn btn-activo doc__descarga" download>
+                  Descargar PDF
+                </a>
+              ) : (
+                <span class="pendiente doc__estado">Pronto</span>
+              )}
+            </header>
+
+            <p class="doc__descripcion">{d.descripcion}</p>
+
+            <details class="doc__detalle">
+              <summary class="doc__resumen">Qué cubre este documento</summary>
+              <ul class="doc__cubre">
+                {d.cubre.map((c) => (
+                  <li>{c}</li>
+                ))}
+              </ul>
+            </details>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <!-- ── Contacto ────────────────────────────────────── -->
+  <Section fondo="cal2" ancho="angosto" pcb={false}>
+    <div class="contacto">
+      <h2 class="display contacto__titulo">¿Dudas sobre cualquiera de esto?</h2>
+      <p class="contacto__texto">
+        Escríbenos. Preferimos contestar cien preguntas antes del evento que una sola durante.
+      </p>
+      <a href={`mailto:${site.contacto.emailPadres}`} class="btn btn-activo contacto__cta">
+        {site.contacto.emailPadres}
+      </a>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  /* ── Aviso de estado ─────────────────────────────── */
+  .aviso {
+    border: 2px dashed var(--color-cobre);
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--color-cobre) 6%, var(--color-cal));
+    padding: 1.5rem;
+  }
+  .aviso__etiqueta {
+    color: var(--color-cobre-2);
+    margin-bottom: 0.7rem;
+  }
+  .aviso p:not(.aviso__etiqueta) {
+    color: var(--color-tinta-2);
+    font-size: var(--text-lg);
+  }
+  .aviso strong {
+    color: var(--color-tinta);
+    font-weight: 600;
+  }
+
+  /* ── Política ────────────────────────────────────── */
+  .politica {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 2rem;
+  }
+  .politica__punto {
+    display: grid;
+    grid-template-columns: 2.75rem 1fr;
+    gap: 1rem;
+    border-top: 2px solid var(--color-tinta);
+    padding-top: 1.1rem;
+  }
+  .politica__numero {
+    color: var(--color-cobre-2);
+    font-size: var(--text-base);
+  }
+  .politica__titulo {
+    font-size: var(--text-xl);
+    margin-bottom: 0.5rem;
+  }
+  .politica__texto {
+    color: var(--color-tinta-2);
+  }
+
+  /* ── Junta ───────────────────────────────────────── */
+  .junta {
+    margin-top: 3rem;
+    background: var(--color-cal);
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    padding: 1.75rem;
+    display: grid;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  .junta__titulo {
+    font-size: var(--text-xl);
+    margin-bottom: 0.5rem;
+  }
+  .junta__texto {
+    color: var(--color-tinta-2);
+    max-width: 60ch;
+  }
+  .junta__cta {
+    background: var(--color-cal-2);
+    color: var(--color-tinta);
+    justify-self: start;
+  }
+
+  /* ── Documentos ──────────────────────────────────── */
+  .docs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .doc {
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    background: var(--color-cal);
+    padding: 1.6rem;
+    /* El ancla del footer (#permiso-padres) no debe quedar bajo el nav. */
+    scroll-margin-top: 7rem;
+  }
+  .doc__cabeza {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .doc__para {
+    color: var(--color-cobre-2);
+    margin-bottom: 0.4rem;
+  }
+  .doc__titulo {
+    font-size: var(--text-xl);
+  }
+  .doc__estado,
+  .doc__descarga {
+    flex: 0 0 auto;
+  }
+  .doc__descripcion {
+    margin-top: 0.9rem;
+    color: var(--color-tinta-2);
+    max-width: 64ch;
+  }
+
+  .doc__detalle {
+    margin-top: 1.1rem;
+    border-top: 1px solid var(--color-cal-3);
+    padding-top: 0.9rem;
+  }
+  .doc__resumen {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-cobre-2);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  /* Flechita que gira al abrir. */
+  .doc__resumen::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 6px solid currentColor;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transition: transform 0.15s ease;
+  }
+  .doc__detalle[open] .doc__resumen::before {
+    transform: rotate(90deg);
+  }
+  .doc__cubre {
+    margin: 1rem 0 0;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .doc__cubre li {
+    color: var(--color-tinta-2);
+    font-size: var(--text-base);
+  }
+  .doc__cubre li::marker {
+    color: var(--color-cobre);
+  }
+
+  /* ── Contacto ────────────────────────────────────── */
+  .contacto {
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+  }
+  .contacto__titulo {
+    font-size: var(--text-3xl);
+  }
+  .contacto__texto {
+    color: var(--color-tinta-2);
+    font-size: var(--text-lg);
+    max-width: 50ch;
+  }
+  .contacto__cta {
+    margin-top: 0.5rem;
+    background: var(--color-cal);
+    color: var(--color-tinta);
+    text-transform: none;
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 880px) {
+    .junta {
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+    }
+  }
+</style>

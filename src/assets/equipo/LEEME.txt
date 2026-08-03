@@ -1,0 +1,1 @@
+Coloca aqui los retratos del equipo. Cuadrados, minimo 320x320. Astro los optimiza solo al compilar (los convierte a webp y los reescala), asi que no te preocupes por el peso del archivo original. El nombre del archivo va en src/data/equipo.ts

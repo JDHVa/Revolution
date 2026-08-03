@@ -1,0 +1,21 @@
+# build
+dist/
+.astro/
+
+# deps
+node_modules/
+
+# entorno
+.env
+.env.production
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+
+# vercel
+.vercel

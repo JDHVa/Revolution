@@ -1,0 +1,121 @@
+---
+import Section from './Section.astro';
+import { workshops } from '../data/workshops';
+---
+
+<Section
+  id="talleres"
+  etiqueta="Antes del evento"
+  titulo="Tres talleres gratuitos"
+  entradilla="El mes anterior damos tres talleres abiertos para que llegues en noviembre sabiendo qué hacer. Son gratis y no necesitas estar registrado en el hackathon para ir."
+>
+  <ol class="talleres">
+    {
+      workshops.map((w) => (
+        <li class="taller">
+          <p class="label taller__numero">Taller {String(w.numero).padStart(2, '0')}</p>
+
+          <h3 class="display taller__titulo">{w.titulo}</h3>
+          <p class="taller__descripcion">{w.descripcion}</p>
+
+          <dl class="taller__datos">
+            <div>
+              <dt class="label">Cuándo</dt>
+              <dd>{w.fecha ?? <span class="taller__pendiente">{w.cuando}</span>}</dd>
+            </div>
+            <div>
+              <dt class="label">Dónde</dt>
+              <dd>{w.sede ?? <span class="taller__pendiente">Por confirmar</span>}</dd>
+            </div>
+            <div>
+              <dt class="label">Imparten</dt>
+              <dd>{w.imparten.join(' y ')}</dd>
+            </div>
+          </dl>
+
+          {w.registro ? (
+            <a href={w.registro} class="btn btn-activo taller__cta">
+              Apartar lugar
+            </a>
+          ) : (
+            <p class="pendiente taller__cta">Registro pronto</p>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</Section>
+
+<style>
+  .talleres {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .taller {
+    background: var(--color-cal);
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    /* Empuja el CTA al fondo para que las tres tarjetas alineen abajo. */
+    gap: 0.75rem;
+  }
+
+  .taller__numero {
+    color: var(--color-cobre-2);
+  }
+
+  .taller__titulo {
+    font-size: var(--text-xl);
+    line-height: 1.1;
+  }
+
+  .taller__descripcion {
+    color: var(--color-tinta-2);
+    font-size: var(--text-base);
+  }
+
+  .taller__datos {
+    margin-top: auto;
+    padding-top: 1rem;
+    display: grid;
+    gap: 0.7rem;
+    border-top: 1px solid var(--color-cal-3);
+  }
+  .taller__datos dt {
+    color: var(--color-tinta-2);
+    margin-bottom: 0.15rem;
+  }
+  .taller__datos dd {
+    margin: 0;
+    font-size: var(--text-base);
+    color: var(--color-tinta);
+  }
+
+  .taller__pendiente {
+    color: var(--color-tinta-2);
+    font-style: italic;
+  }
+
+  .taller__cta {
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
+  }
+  a.taller__cta {
+    background: var(--color-cal);
+    color: var(--color-tinta);
+  }
+
+  @media (min-width: 880px) {
+    .talleres {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,141 @@
+---
+/**
+ * WORDMARK — cartel de lotería.
+ *
+ * Tipografía condensada pesada, plana, dentro de un marco de doble línea,
+ * con una viga de greca debajo. Sin 3D, sin degradado, sin sombra apilada:
+ * eso es justo lo que delataba al logo anterior como plantilla.
+ *
+ * Es texto real, no un SVG con paths. Se puede seleccionar, lo lee un lector
+ * de pantalla, y escala perfecto sin pesar un kilobyte extra.
+ */
+import Greca from './deco/Greca.astro';
+
+interface Props {
+  tam?: 'hero' | 'nav' | 'footer';
+  /** Envuelve el logo en un link a la portada. */
+  href?: string;
+  class?: string;
+}
+
+const { tam = 'hero', href, class: klass = '' } = Astro.props;
+
+const esHero = tam === 'hero';
+const Etiqueta = href ? 'a' : 'div';
+---
+
+<Etiqueta
+  href={href}
+  class:list={['marca', `marca--${tam}`, klass]}
+  aria-label={href ? 'REVOLUTION — ir al inicio' : undefined}
+>
+  <div class="marca__cuadro">
+    <span class="marca__texto display-cartel">Revolution</span>
+    {/* Por debajo de ~18px el escalón de la greca se vuelve ilegible y
+        se lee como ruido, así que aquí no se achica más. */}
+    {esHero && <Greca alto={18} variante="tres" class="marca__greca" />}
+  </div>
+  {
+    esHero && (
+      <span class="marca__bajada label">Hackathon de hardware · Monterrey</span>
+    )
+  }
+</Etiqueta>
+
+<style>
+  .marca {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: inherit;
+    /* Red de seguridad: el logo nunca puede ensanchar a su contenedor,
+       pase lo que pase con la escala tipográfica. */
+    max-width: 100%;
+  }
+  .marca__cuadro {
+    max-width: 100%;
+  }
+
+  /* Marco de doble línea: el borde es la línea exterior,
+     el ::after dibuja la interior. */
+  .marca__cuadro {
+    position: relative;
+    border: 3px solid var(--color-tinta);
+    border-radius: 2px;
+    padding: 0.5em 0.55em 0.35em;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.28em;
+  }
+  .marca__cuadro::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--color-tinta);
+    border-radius: 1px;
+    pointer-events: none;
+  }
+
+  .marca__texto {
+    color: var(--color-cobre);
+    display: block;
+    /* El tracking abierto es lo que le da el aire de cartel impreso. */
+    letter-spacing: 0.02em;
+    padding-inline: 0.1em;
+  }
+
+  .marca__greca {
+    /* la greca no debe tocar el marco interior */
+    margin-inline: 0.1em;
+  }
+
+  .marca__bajada {
+    color: var(--color-tinta-2);
+    text-align: center;
+    letter-spacing: 0.22em;
+  }
+
+  /* ── Tamaños ────────────────────────────────────────── */
+
+  .marca--hero .marca__texto {
+    font-size: var(--text-6xl);
+  }
+  .marca--hero .marca__cuadro {
+    padding: 0.34em 0.4em 0.26em;
+  }
+
+  .marca--nav .marca__texto {
+    /* En chico, el cobre no da contraste suficiente: va en tinta. */
+    color: var(--color-tinta);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+  }
+  .marca--nav .marca__cuadro {
+    border-width: 2px;
+    padding: 0.2em 0.42em 0.16em;
+  }
+  .marca--nav .marca__cuadro::after {
+    inset: 3px;
+  }
+
+  .marca--footer .marca__texto {
+    color: var(--color-cobre);
+    font-size: var(--text-2xl);
+    letter-spacing: 0.03em;
+  }
+  .marca--footer .marca__cuadro {
+    padding: 0.28em 0.42em 0.2em;
+  }
+
+  /* El link del nav responde al hover con un desplazamiento mínimo. */
+  a.marca__cuadro,
+  a.marca .marca__cuadro {
+    transition: transform 0.12s ease;
+  }
+  a.marca:hover .marca__cuadro {
+    transform: translate(-1px, -1px);
+  }
+</style>
