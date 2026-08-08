@@ -1,12 +1,14 @@
 ---
 import Section from './Section.astro';
-import { queEs } from '../data/evento';
+import { textos } from '../i18n';
+
+const queEs = textos(Astro.url).queEs;
 ---
 
 <Section
   id="que-es"
-  etiqueta="El evento"
-  titulo="¿Qué es Revolution?"
+  etiqueta={queEs.etiqueta}
+  titulo={queEs.titulo}
   entradilla={queEs.entradilla}
 >
   <div class="que">

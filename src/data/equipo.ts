@@ -1,6 +1,11 @@
 /**
  * EQUIPO ORGANIZADOR
  *
+ * Aquí va lo que no se traduce: nombre, escuela, correo y foto. El rol y las
+ * áreas de cada quien están en `equipo.personas` de src/i18n/es.ts y en.ts,
+ * buscados por el `id` de abajo — si agregas a alguien aquí, agrégale su
+ * entrada en los dos idiomas.
+ *
  * `foto`: nombre del archivo dentro de src/assets/equipo/.
  *   Son retratos de cara, se recortan en círculo. Cuadrados, mínimo 320×320.
  *   No te preocupes por el peso: Astro los reescala y los convierte a webp al
@@ -12,11 +17,10 @@
  */
 
 export type Persona = {
+  /** La llave para buscar su rol y sus áreas en los archivos de idioma. */
+  id: string;
   nombre: string;
-  rol: string;
   escuela: string;
-  /** Máximo 3. Se muestran como etiquetas. */
-  areas: string[];
   email: string | null;
   foto: string | null;
   /**
@@ -38,20 +42,18 @@ export type Persona = {
 
 export const equipo: Persona[] = [
   {
+    id: 'jesus',
     nombre: 'Jesús',
-    rol: 'Organizador',
     escuela: 'Escuela Industrial Álvaro Obregón',
-    areas: ['IA', 'Software', 'Hardware'],
     email: 'jdhva.dev@gmail.com',
     foto: 'jesus.jpg',
     // La cara queda arriba a la derecha y lejos: acercamos y recentramos.
     encuadre: { x: 59, y: 44, zoom: 1.8 },
   },
   {
+    id: 'emilio',
     nombre: 'Emilio',
-    rol: 'Organizador',
     escuela: 'Escuela Industrial Álvaro Obregón',
-    areas: ['Visión computacional', 'Software'],
     email: null,
     foto: 'emilio.jpg',
     // ⚠️ Foto de cuerpo entero en la playa: la cara ocupa como el 13% del
@@ -60,10 +62,9 @@ export const equipo: Persona[] = [
     encuadre: { x: 68, y: 42, zoom: 4.2 },
   },
   {
+    id: 'alonso',
     nombre: 'Alonso',
-    rol: 'Organizador',
     escuela: 'Escuela Industrial Álvaro Obregón',
-    areas: ['Hardware', 'Mecatrónica'],
     email: 'alonsobandarico@gmail.com',
     foto: 'alonso.jpg',
     // La foto venía de lado; `girar` la endereza. x/y ya están medidos
@@ -71,10 +72,9 @@ export const equipo: Persona[] = [
     encuadre: { girar: 90, x: 55, y: 52, zoom: 1.6 },
   },
   {
+    id: 'anna',
     nombre: 'Anna Antúnez',
-    rol: 'Organizadora',
     escuela: 'Tecnológico de Monterrey',
-    areas: ['Hardware', 'Electrónica'],
     email: 'annaastrs@gmail.com',
     foto: 'ana.jpg',
     // ⚠️ Es una foto personal, no un retrato para una página pública.

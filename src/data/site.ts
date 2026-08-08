@@ -1,8 +1,9 @@
 /**
  * CONFIGURACIÓN GLOBAL DEL SITIO
  *
- * Este es el archivo que más vas a editar. Todo lo que cambie de aquí a
- * noviembre (sede, link del formulario, redes, correos) vive aquí.
+ * Aquí vive lo que NO cambia entre español e inglés: links, correos, fechas
+ * en formato máquina, números. Todo el texto que se lee en la página está en
+ * src/i18n/es.ts y src/i18n/en.ts.
  *
  * Los campos con `pendiente: true` hacen que el sitio muestre un estado
  * honesto ("Registro abre pronto", "Sede por confirmar") en vez de un link
@@ -17,35 +18,23 @@ export type Link = {
 
 export const site = {
   nombre: 'REVOLUTION',
-  tagline: 'Hackathon de hardware · Monterrey',
-  descripcion:
-    'Hackathon de hardware gratuito para estudiantes de preparatoria en Monterrey. 24 horas, 14 y 15 de noviembre. Componentes, comida y mentores incluidos. Sin experiencia previa.',
 
   fechas: {
-    inicio: '2026-11-14T08:30:00-06:00',
-    fin: '2026-11-15T17:30:00-06:00',
-    etiqueta: '14 y 15 de noviembre',
-    etiquetaLarga: 'Sábado 14 y domingo 15 de noviembre de 2026',
+    inicio: '2026-12-05T08:30:00-06:00',
+    fin: '2026-12-06T17:30:00-06:00',
     anio: 2026,
   },
 
-  duracion: '24 horas',
-
-  /** Datos duros del hero. Cámbialos cuando cambien los números. */
-  cifras: [
-    { valor: '100%', etiqueta: 'gratis' },
-    { valor: '70', etiqueta: 'lugares' },
-    { valor: '24', etiqueta: 'horas' },
-    { valor: '15–18', etiqueta: 'años' },
-  ],
+  /**
+   * Los números del hero. Las etiquetas de abajo ("gratis", "lugares"…) están
+   * traducidas en `hero.cifras` de cada idioma, en el mismo orden.
+   */
+  cifras: ['100%', '70', '24', '15–18'],
 
   venue: {
-    nombre: 'Por confirmar',
-    ciudad: 'Monterrey, Nuevo León',
     direccion: null as string | null,
     mapa: null as string | null,
     confirmado: false,
-    nota: 'Estamos cerrando la sede. En cuanto quede confirmada la publicamos aquí y la anunciamos en Instagram.',
   },
 
   links: {

@@ -1,38 +1,52 @@
 ---
 import Wordmark from './Wordmark.astro';
 import { site, disponible } from '../data/site';
+import { idiomaDe, otroIdioma, ruta, rutaEnIdioma, textos } from '../i18n';
 
 interface Props {
   pagina?: 'inicio' | 'sponsors' | 'legal';
 }
 const { pagina = 'inicio' } = Astro.props;
 
-/* Desde /sponsors o /legal, las anclas tienen que apuntar a la portada. */
-const base = pagina === 'inicio' ? '' : '/';
+const t = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const inicio = ruta('/', idioma);
+const paginaSponsors = ruta('/sponsors', idioma);
+const paginaLegal = ruta('/legal', idioma);
+
+/* Desde /sponsors o /legal, las anclas tienen que apuntar a la portada —
+   la del idioma en el que estás, no la de la raíz. */
+const base = pagina === 'inicio' ? '' : inicio;
 
 const enlaces = [
-  { texto: '¿Qué es?', href: `${base}#que-es` },
-  { texto: 'Horario', href: `${base}#horario` },
-  { texto: 'Talleres', href: `${base}#talleres` },
-  { texto: 'FAQ', href: `${base}#faq` },
-  { texto: 'Equipo', href: `${base}#equipo` },
-  { texto: 'Patrocinio', href: '/sponsors' },
+  { texto: t.nav.queEs, href: `${base}#que-es` },
+  { texto: t.nav.horario, href: `${base}#horario` },
+  { texto: t.nav.talleres, href: `${base}#talleres` },
+  { texto: t.nav.faq, href: `${base}#faq` },
+  { texto: t.nav.equipo, href: `${base}#equipo` },
+  { texto: t.nav.patrocinio, href: paginaSponsors },
 ];
 
 const registroListo = disponible(site.links.registro);
+
+/* El cambio de idioma es un link a esta misma página del otro lado, no un
+   botón con JavaScript: funciona sin JS, se puede compartir y abrir en otra
+   pestaña, y Google lo sigue. */
+const otro = otroIdioma(idioma);
+const idiomaHref = rutaEnIdioma(Astro.url, otro);
 ---
 
 <header class="nav">
   <div class="nav__barra">
-    <Wordmark tam="nav" href="/" />
+    <Wordmark tam="nav" href={inicio} />
 
-    <nav class="nav__enlaces" aria-label="Navegación principal">
+    <nav class="nav__enlaces" aria-label={t.ui.navPrincipal}>
       {
         enlaces.map((e) => (
           <a
             href={e.href}
             class="nav__enlace"
-            aria-current={pagina === 'sponsors' && e.href === '/sponsors' ? 'page' : undefined}
+            aria-current={pagina === 'sponsors' && e.href === paginaSponsors ? 'page' : undefined}
           >
             {e.texto}
           </a>
@@ -41,14 +55,25 @@ const registroListo = disponible(site.links.registro);
     </nav>
 
     <div class="nav__acciones">
+      <a
+        href={idiomaHref}
+        class="label nav__idioma"
+        lang={otro}
+        hreflang={otro}
+        aria-label={t.ui.idioma.aria}
+      >
+        <span aria-hidden="true">🌐</span>
+        {t.ui.idioma.codigo}
+      </a>
+
       {
         registroListo ? (
           <a href={site.links.registro.url} class="btn btn-activo nav__cta">
-            Registrarme
+            {t.ui.registrarme}
           </a>
         ) : (
-          <span class="nav__cta-pendiente label" title="Todavía no abre el registro">
-            Registro pronto
+          <span class="nav__cta-pendiente label" title={t.ui.registroTitulo}>
+            {t.ui.registroPronto}
           </span>
         )
       }
@@ -59,8 +84,10 @@ const registroListo = disponible(site.links.registro);
         id="navToggle"
         aria-expanded="false"
         aria-controls="navMenu"
+        data-abrir={t.ui.abrirMenu}
+        data-cerrar={t.ui.cerrarMenu}
       >
-        <span class="sr-only">Abrir menú</span>
+        <span class="sr-only">{t.ui.abrirMenu}</span>
         <span class="nav__barritas" aria-hidden="true">
           <span></span><span></span><span></span>
         </span>
@@ -70,17 +97,17 @@ const registroListo = disponible(site.links.registro);
 
   <!-- Menú móvil -->
   <div class="nav__menu" id="navMenu" hidden>
-    <nav aria-label="Navegación móvil">
+    <nav aria-label={t.ui.navMovil}>
       {enlaces.map((e) => <a href={e.href} class="nav__menu-enlace">{e.texto}</a>)}
-      <a href="/legal" class="nav__menu-enlace">Información legal</a>
+      <a href={paginaLegal} class="nav__menu-enlace">{t.nav.legal}</a>
     </nav>
     {
       registroListo ? (
         <a href={site.links.registro.url} class="btn btn-activo nav__menu-cta">
-          Registrarme
+          {t.ui.registrarme}
         </a>
       ) : (
-        <span class="pendiente nav__menu-cta">El registro abre pronto</span>
+        <span class="pendiente nav__menu-cta">{t.ui.registroAbrePronto}</span>
       )
     }
   </div>
@@ -149,6 +176,29 @@ const registroListo = disponible(site.links.registro);
     padding: 0.6rem 1.1rem;
     font-size: 0.78rem;
     box-shadow: 3px 3px 0 var(--color-tinta);
+  }
+
+  /* ── Cambio de idioma ────────────────────────────── */
+  /* Va en la barra fija, no en el menú móvil: así está a un toque en
+     cualquier tamaño de pantalla y no se duplica el mismo control. */
+  .nav__idioma {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-tinta);
+    text-decoration: none;
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    padding: 0.5rem 0.7rem;
+    line-height: 1;
+    background: var(--color-cal);
+    transition:
+      background-color 0.12s ease,
+      color 0.12s ease;
+  }
+  .nav__idioma:hover {
+    background: var(--color-tinta);
+    color: var(--color-cal);
   }
 
   .nav__cta-pendiente {
@@ -261,16 +311,23 @@ const registroListo = disponible(site.links.registro);
   const menu = document.getElementById('navMenu');
 
   if (toggle && menu) {
+    // Los dos rótulos vienen del servidor en data-*, ya traducidos: el script
+    // no tiene que saber en qué idioma está la página.
+    const rotulo = {
+      abrir: toggle.dataset.abrir ?? '',
+      cerrar: toggle.dataset.cerrar ?? '',
+    };
+
     const abrir = () => {
       menu.hidden = false;
       toggle.setAttribute('aria-expanded', 'true');
-      toggle.querySelector('.sr-only')!.textContent = 'Cerrar menú';
+      toggle.querySelector('.sr-only')!.textContent = rotulo.cerrar;
     };
 
     const cerrar = ({ devolverFoco = false } = {}) => {
       menu.hidden = true;
       toggle.setAttribute('aria-expanded', 'false');
-      toggle.querySelector('.sr-only')!.textContent = 'Abrir menú';
+      toggle.querySelector('.sr-only')!.textContent = rotulo.abrir;
       if (devolverFoco) toggle.focus();
     };
 

@@ -5,24 +5,49 @@ import '../styles/global.css';
 // cambiar — un salto de layout justo en lo más grande de la página.
 import archivoUrl from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
 import { site } from '../data/site';
+import { idiomaDe, idiomas, rutaBase, ruta, textos } from '../i18n';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Concha from '../components/Concha.astro';
 
 interface Props {
-  titulo: string;
-  descripcion?: string;
-  /** Marca la sección activa en el nav. */
+  /** Marca la sección activa en el nav y elige el título y la descripción. */
   pagina?: 'inicio' | 'sponsors' | 'legal';
 }
 
-const { titulo, descripcion = site.descripcion, pagina = 'inicio' } = Astro.props;
+const { pagina = 'inicio' } = Astro.props;
+
+const t = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+
+const titulos = {
+  inicio: t.meta.tituloInicio,
+  sponsors: t.meta.tituloSponsors,
+  legal: t.meta.tituloLegal,
+};
+const descripciones = {
+  inicio: t.meta.descripcion,
+  sponsors: t.meta.descripcionSponsors,
+  legal: t.meta.descripcionLegal,
+};
+
+const descripcion = descripciones[pagina];
 
 const tituloCompleto =
-  pagina === 'inicio' ? `${site.nombre} — ${site.tagline}` : `${titulo} · ${site.nombre}`;
+  pagina === 'inicio'
+    ? `${site.nombre} — ${t.meta.tagline}`
+    : `${titulos[pagina]} · ${site.nombre}`;
 
 const url = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL('/media/og.png', Astro.site).href;
+
+/* La misma página en los dos idiomas, para los hreflang. Sin esto, Google
+   trata la versión en español como contenido duplicado de la inglesa. */
+const base = rutaBase(Astro.url);
+const alternas = idiomas.map((l) => ({
+  idioma: l,
+  href: new URL(ruta(base, l), Astro.site).href,
+}));
 
 // Datos estructurados: ayudan a que Google muestre el evento con fecha y
 // lugar en los resultados. El precio 0 es literal — es gratis.
@@ -30,14 +55,15 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Event',
   name: 'REVOLUTION',
-  description: site.descripcion,
+  description: t.meta.descripcion,
+  inLanguage: idioma,
   startDate: site.fechas.inicio,
   endDate: site.fechas.fin,
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
   location: {
     '@type': 'Place',
-    name: site.venue.confirmado ? site.venue.nombre : 'Monterrey, Nuevo León',
+    name: site.venue.confirmado ? t.sede.nombre : t.sede.ciudad,
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Monterrey',
@@ -62,7 +88,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={t.meta.htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -71,6 +97,13 @@ const jsonLd = {
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={url} />
+
+    {alternas.map((a) => <link rel="alternate" hreflang={a.idioma} href={a.href} />)}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={alternas.find((a) => a.idioma === 'en')!.href}
+    />
 
     <link
       rel="preload"
@@ -88,7 +121,7 @@ const jsonLd = {
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:url" content={url} />
-    <meta property="og:locale" content="es_MX" />
+    <meta property="og:locale" content={t.meta.ogLocale} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
 
@@ -100,7 +133,7 @@ const jsonLd = {
   </head>
 
   <body>
-    <a href="#contenido" class="salto">Saltar al contenido</a>
+    <a href="#contenido" class="salto">{t.ui.saltar}</a>
 
     <Concha />
 

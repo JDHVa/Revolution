@@ -1,9 +1,10 @@
 ---
 import PapelPicado from './deco/PapelPicado.astro';
-import { faq } from '../data/faq';
+import { textos } from '../i18n';
 import { expandirEnlaces } from '../lib/enlaces';
 import { divisor } from '../lib/papel';
 
+const t = textos(Astro.url).faq;
 const tiraPicada = divisor();
 ---
 
@@ -12,20 +13,20 @@ const tiraPicada = divisor();
 
   <div class="faq__caja">
     <header class="faq__encabezado">
-      <p class="label faq__etiqueta">Dudas</p>
-      <h2 class="display faq__titulo">Preguntas frecuentes</h2>
+      <p class="label faq__etiqueta">{t.etiqueta}</p>
+      <h2 class="display faq__titulo">{t.titulo}</h2>
     </header>
 
     <div class="faq__lista" style={`--tira: url("${tiraPicada}")`}>
       {
-        faq.map((p) => (
+        t.preguntas.map((p) => (
           <details class="pregunta" open={p.abierta}>
             <summary class="pregunta__titulo">
               <span>{p.pregunta}</span>
               <span class="pregunta__signo" aria-hidden="true" />
             </summary>
             <div class="pregunta__respuesta">
-              <p set:html={expandirEnlaces(p.respuesta)} />
+              <p set:html={expandirEnlaces(p.respuesta, Astro.url)} />
             </div>
           </details>
         ))

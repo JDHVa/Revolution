@@ -1,25 +1,27 @@
 ---
 import Section from './Section.astro';
 import { site } from '../data/site';
+import { textos } from '../i18n';
 
 const { venue } = site;
+const t = textos(Astro.url).sede;
 ---
 
 <Section
   id="sede"
   fondo="cal2"
-  etiqueta="Dónde"
-  titulo="La sede"
-  entradilla={venue.confirmado ? undefined : venue.nota}
+  etiqueta={t.etiqueta}
+  titulo={t.titulo}
+  entradilla={venue.confirmado ? undefined : t.nota}
 >
   <div class="sede">
     <div class="sede__datos">
       {
         venue.confirmado ? (
           <>
-            <h3 class="display sede__nombre">{venue.nombre}</h3>
+            <h3 class="display sede__nombre">{t.nombre}</h3>
             {venue.direccion && <p class="sede__direccion">{venue.direccion}</p>}
-            <p class="sede__ciudad label">{venue.ciudad}</p>
+            <p class="sede__ciudad label">{t.ciudad}</p>
             {venue.mapa && (
               <a
                 href={venue.mapa}
@@ -27,40 +29,31 @@ const { venue } = site;
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Ver en el mapa
+                {t.verMapa}
               </a>
             )}
           </>
         ) : (
           <>
-            <p class="pendiente">Sede por confirmar</p>
-            <h3 class="display sede__nombre">{venue.ciudad}</h3>
-            <p class="sede__texto">
-              Estamos cerrando la sede con las opciones que tenemos en la ciudad. En cuanto quede
-              firmada, la publicamos aquí con dirección y mapa, y la anunciamos en nuestras redes.
-            </p>
-            <p class="sede__texto">
-              Lo que sí está definido: es un espacio cerrado en Monterrey, con área de trabajo, área
-              de descanso separada y staff adulto presente toda la noche.
-            </p>
+            <p class="pendiente">{t.pendiente}</p>
+            <h3 class="display sede__nombre">{t.ciudad}</h3>
+            {t.textos.map((texto) => (
+              <p class="sede__texto">{texto}</p>
+            ))}
           </>
         )
       }
     </div>
 
     <ul class="sede__incluye">
-      <li>
-        <h4 class="display">Mesa y herramienta</h4>
-        <p>Espacio de trabajo por equipo, con corriente, cautines y multímetros compartidos.</p>
-      </li>
-      <li>
-        <h4 class="display">Comida incluida</h4>
-        <p>Comida, cena y desayuno para todos los participantes. Avísanos de tus alergias al registrarte.</p>
-      </li>
-      <li>
-        <h4 class="display">Dónde dormir</h4>
-        <p>Área de descanso separada y supervisada. Trae tu saco de dormir si puedes.</p>
-      </li>
+      {
+        t.incluye.map((i) => (
+          <li>
+            <h4 class="display">{i.titulo}</h4>
+            <p>{i.texto}</p>
+          </li>
+        ))
+      }
     </ul>
   </div>
 </Section>

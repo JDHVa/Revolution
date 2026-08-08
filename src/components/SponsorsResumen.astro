@@ -2,22 +2,31 @@
 import Section from './Section.astro';
 import { tiers, confirmados } from '../data/sponsors';
 import { site } from '../data/site';
+import { idiomaDe, ruta, textos } from '../i18n';
+
+const txt = textos(Astro.url);
+const t = txt.sponsorsResumen;
+
+/* El color de cada nivel está en sponsors.ts y su texto en los archivos de
+   idioma, en el mismo orden. */
+const niveles = tiers.map((tier, i) => ({ ...tier, ...txt.tiers[i] }));
+const paginaSponsors = ruta('/sponsors', idiomaDe(Astro.url));
 ---
 
 <Section
   id="sponsors"
   fondo="tinta"
-  etiqueta="Patrocinio"
-  titulo="Sé parte de esto"
-  entradilla="No estamos pidiendo caridad: estamos ofreciendo el primer contacto con la siguiente generación de ingenieros de Monterrey. Hay cuatro formas de sumarse."
+  etiqueta={t.etiqueta}
+  titulo={t.titulo}
+  entradilla={t.entradilla}
   pcb={false}
 >
   <ul class="tiers">
     {
-      tiers.map((t) => (
-        <li class:list={['tier', `tier--${t.color}`]}>
-          <h3 class="display tier__nombre">{t.nombre}</h3>
-          <p class="tier__resumen">{t.resumen}</p>
+      niveles.map((n) => (
+        <li class:list={['tier', `tier--${n.color}`]}>
+          <h3 class="display tier__nombre">{n.nombre}</h3>
+          <p class="tier__resumen">{n.resumen}</p>
         </li>
       ))
     }
@@ -25,14 +34,12 @@ import { site } from '../data/site';
 
   <div class="sponsors__cierre">
     <p class="sponsors__pitch">
-      Aceptamos dinero, componentes, comida o espacio. <strong
-        >No necesitas patrocinar todo</strong
-      > — una ayuda chica también cambia el evento.
+      {t.pitchInicio}<strong>{t.pitchFuerte}</strong>{t.pitchFin}
     </p>
     <div class="sponsors__acciones">
-      <a href="/sponsors" class="btn btn-activo sponsors__cta">Ver el dossier completo</a>
+      <a href={paginaSponsors} class="btn btn-activo sponsors__cta">{t.cta}</a>
       <a href={`mailto:${site.contacto.emailSponsors}`} class="btn btn-activo sponsors__cta-2">
-        Escríbenos
+        {t.cta2}
       </a>
     </div>
   </div>
@@ -40,7 +47,7 @@ import { site } from '../data/site';
   {
     confirmados.length > 0 && (
       <div class="sponsors__confirmados">
-        <p class="label sponsors__confirmados-titulo">Ya nos apoyan</p>
+        <p class="label sponsors__confirmados-titulo">{t.confirmados}</p>
         <ul>
           {confirmados.map((c) => (
             <li>

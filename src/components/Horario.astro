@@ -1,15 +1,17 @@
 ---
 import Section from './Section.astro';
-import { horario } from '../data/horario';
-import { site } from '../data/site';
+import { textos } from '../i18n';
+
+const t = textos(Astro.url).horario;
+const horario = t.dias;
 ---
 
 <Section
   id="horario"
   fondo="cal2"
-  etiqueta="Programa"
-  titulo="24 horas, hora por hora"
-  entradilla={`Así se ve el ${site.fechas.etiquetaLarga.toLowerCase()}. Los horarios pueden moverse un poco, pero el arranque y el cierre son fijos.`}
+  etiqueta={t.etiqueta}
+  titulo={t.titulo}
+  entradilla={t.entradilla}
 >
   <div class="horario">
     {

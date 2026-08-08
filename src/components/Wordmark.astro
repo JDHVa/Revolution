@@ -10,6 +10,9 @@
  * de pantalla, y escala perfecto sin pesar un kilobyte extra.
  */
 import Greca from './deco/Greca.astro';
+import { textos } from '../i18n';
+
+const t = textos(Astro.url);
 
 interface Props {
   tam?: 'hero' | 'nav' | 'footer';
@@ -27,7 +30,7 @@ const Etiqueta = href ? 'a' : 'div';
 <Etiqueta
   href={href}
   class:list={['marca', `marca--${tam}`, klass]}
-  aria-label={href ? 'REVOLUTION — ir al inicio' : undefined}
+  aria-label={href ? t.ui.irAlInicio : undefined}
 >
   <div class="marca__cuadro">
     <span class="marca__texto display-cartel">Revolution</span>
@@ -37,7 +40,7 @@ const Etiqueta = href ? 'a' : 'div';
   </div>
   {
     esHero && (
-      <span class="marca__bajada label">Hackathon de hardware · Monterrey</span>
+      <span class="marca__bajada label">{t.wordmark.bajada}</span>
     )
   }
 </Etiqueta>

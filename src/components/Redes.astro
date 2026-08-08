@@ -1,34 +1,22 @@
 ---
 import Section from './Section.astro';
 import { site, disponible } from '../data/site';
+import { textos } from '../i18n';
 
-const canales = [
-  {
-    titulo: 'Instagram de Revolution',
-    texto: 'Los anuncios oficiales: fechas, sede, apertura de registro y todo lo del evento.',
-    link: site.links.instagram,
-    etiqueta: 'Seguir',
-  },
-  {
-    titulo: 'Instagram de High Coders',
-    texto: 'La comunidad detrás del evento. Ahí vive lo que hacemos el resto del año.',
-    link: site.links.instagramHighCoders,
-    etiqueta: 'Seguir',
-  },
-  {
-    titulo: 'Grupo de WhatsApp',
-    texto: 'Para dudas rápidas, avisos del día del evento y organizarte con otros participantes.',
-    link: site.links.whatsapp,
-    etiqueta: 'Entrar al grupo',
-  },
-];
+const txt = textos(Astro.url);
+const t = txt.redes;
+
+/* El texto de cada canal está en los archivos de idioma y el link en site.ts.
+   El orden de los dos tiene que coincidir. */
+const links = [site.links.instagram, site.links.instagramHighCoders, site.links.whatsapp];
+const canales = t.canales.map((canal, i) => ({ ...canal, link: links[i] }));
 ---
 
 <Section
   id="contacto"
-  etiqueta="Mantente al tanto"
-  titulo="Dónde encontrarnos"
-  entradilla="Todo lo importante lo publicamos en los tres lados. Si tienes una duda que no está en las preguntas frecuentes, escríbenos directo."
+  etiqueta={t.etiqueta}
+  titulo={t.titulo}
+  entradilla={t.entradilla}
 >
   <ul class="canales">
     {
@@ -46,7 +34,7 @@ const canales = [
               {c.etiqueta} <span aria-hidden="true">→</span>
             </a>
           ) : (
-            <p class="pendiente canal__pendiente">Disponible pronto</p>
+            <p class="pendiente canal__pendiente">{txt.ui.disponiblePronto}</p>
           )}
         </li>
       ))
@@ -55,10 +43,8 @@ const canales = [
 
   <div class="correo">
     <div>
-      <h3 class="display correo__titulo">¿Otra pregunta?</h3>
-      <p class="correo__texto">
-        Escríbenos por correo. Contesta una persona real, normalmente el mismo día.
-      </p>
+      <h3 class="display correo__titulo">{t.correo.titulo}</h3>
+      <p class="correo__texto">{t.correo.texto}</p>
     </div>
     <a href={`mailto:${site.contacto.email}`} class="btn btn-activo correo__cta">
       {site.contacto.email}

@@ -3,6 +3,9 @@ import Section from './Section.astro';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { equipo } from '../data/equipo';
+import { textos } from '../i18n';
+
+const t = textos(Astro.url).equipo;
 
 /**
  * Los retratos viven en src/assets/equipo/ (no en public/) precisamente para
@@ -30,16 +33,13 @@ const iniciales = (nombre: string) =>
     .toUpperCase();
 ---
 
-<Section
-  id="equipo"
-  etiqueta="Quiénes somos"
-  titulo="El equipo organizador"
-  entradilla="Somos estudiantes de prepa y universidad de Monterrey. Ninguno ha organizado un hackathon antes — lo estamos aprendiendo en el camino, igual que tú vas a aprender a soldar."
->
+<Section id="equipo" etiqueta={t.etiqueta} titulo={t.titulo} entradilla={t.entradilla}>
   <ul class="equipo">
     {
       equipo.map((p) => {
         const foto = buscarFoto(p.foto);
+        // Rol y áreas viven en los archivos de idioma, buscados por id.
+        const { rol, areas } = t.personas[p.id];
         // Encuadre: escalamos alrededor del centro y luego corregimos para
         // que el punto donde está la cara quede justo en medio del círculo.
         const e = p.encuadre ?? {};
@@ -64,7 +64,7 @@ const iniciales = (nombre: string) =>
             {foto ? (
               <Image
                 src={foto}
-                alt={`Retrato de ${p.nombre}`}
+                alt={`${t.retrato} ${p.nombre}`}
                 width={lado}
                 height={lado}
                 densities={[1, 2]}
@@ -81,11 +81,11 @@ const iniciales = (nombre: string) =>
 
           <div class="persona__datos">
             <h3 class="display persona__nombre">{p.nombre}</h3>
-            <p class="label persona__rol">{p.rol}</p>
+            <p class="label persona__rol">{rol}</p>
             <p class="persona__escuela">{p.escuela}</p>
 
             <ul class="persona__areas">
-              {p.areas.map((a) => (
+              {areas.map((a) => (
                 <li class="label persona__area">{a}</li>
               ))}
             </ul>

@@ -1,7 +1,7 @@
 # REVOLUTION
 
 Sitio del hackathon de hardware de [Hack Club Monterrey](https://hackclub.com).
-14 y 15 de noviembre de 2026 · gratis · para preparatoria.
+5 y 6 de diciembre de 2026 · gratis · para preparatoria.
 
 Astro + Tailwind. Estático, sin backend, sin base de datos.
 
@@ -25,21 +25,50 @@ npm run dev      # http://localhost:4321
 
 ## Cambiar el contenido
 
-**Casi nunca necesitas tocar un componente.** Todo el texto y los datos viven
-en `src/data/`:
+**Casi nunca necesitas tocar un componente.** El contenido está partido en dos:
+
+**El texto** — todo lo que se lee en la página — vive en `src/i18n/`:
 
 | Archivo | Qué contiene |
 |---|---|
-| `site.ts` | **Empieza aquí.** Fechas, sede, links de registro/redes, correos |
-| `evento.ts` | El texto de "¿Qué es REVOLUTION?" y el reto |
-| `faq.ts` | Las preguntas frecuentes |
-| `horario.ts` | El programa del sábado y el domingo |
-| `workshops.ts` | Los tres talleres previos |
-| `equipo.ts` | Los organizadores |
-| `sponsors.ts` | Niveles de patrocinio y el argumento de venta |
-| `legal.ts` | Documentos legales y política de menores |
+| `es.ts` | **Todos los textos en español.** Manda la forma de los dos idiomas |
+| `en.ts` | Los mismos textos en inglés, con exactamente las mismas llaves |
+
+**Los datos que no se traducen** (links, correos, fechas, fotos) viven en
+`src/data/`:
+
+| Archivo | Qué contiene |
+|---|---|
+| `site.ts` | **Empieza aquí.** Fechas, links de registro/redes, correos |
+| `workshops.ts` | Quién imparte cada taller y su link de registro |
+| `equipo.ts` | Los organizadores: nombre, escuela, correo, foto |
+| `sponsors.ts` | El color de cada nivel y los patrocinadores confirmados |
+| `legal.ts` | Estado y PDF de cada documento legal |
 
 Cada archivo trae comentarios explicando qué hace cada campo.
+
+### Los dos idiomas
+
+El sitio se publica en inglés y en español, con una url para cada uno:
+
+```
+inglés (por defecto)   /            /sponsors        /legal
+español                /es/         /es/sponsors     /es/legal
+```
+
+El botón 🌐 del nav es un link a la misma página del otro lado — no hay
+JavaScript de por medio, así que la url se puede compartir y Google indexa las
+dos versiones.
+
+**Regla de oro: `es.ts` y `en.ts` se editan juntos.** El tipo de `en.ts` sale
+de `es.ts`, así que si agregas algo en uno y se te olvida el otro,
+`npm run check` truena y te dice qué falta.
+
+Las listas que se reparten entre `src/data/` y `src/i18n/` (talleres, niveles
+de patrocinio, documentos legales) se emparejan **por orden**: el primer taller
+de `workshops.ts` es el primero de `talleres.lista`. Si mueves uno, muévelo en
+los tres archivos. El equipo es la excepción: se empareja por el `id` de cada
+persona.
 
 ### Cosas que están pendientes
 
@@ -52,7 +81,9 @@ registro: { url: '#', pendiente: true }
 registro: { url: 'https://forms.gle/...' }   // quita `pendiente`
 ```
 
-Igual con la sede: pon los datos y cambia `confirmado: false` a `true`.
+Igual con la sede: la dirección y el mapa van en `site.ts`, el nombre del lugar
+en `es.ts` / `en.ts` (`sede.nombre`), y luego cambias `confirmado: false` a
+`true`.
 
 **Falta por llenar:** sede, link del formulario, grupo de WhatsApp, correo de
 Emilio, fotos del equipo, fechas y sedes de los talleres, logos de
@@ -60,7 +91,8 @@ patrocinadores, y la imagen de Open Graph (`public/media/og.png`).
 
 ### Links dentro de las respuestas del FAQ
 
-En `faq.ts` escribes un token y el sitio lo convierte en el link correcto:
+En las respuestas del FAQ (dentro de `es.ts` y `en.ts`) escribes un token y el
+sitio lo convierte en el link correcto:
 
 ```
 {registro}  {instagram}  {highcoders}  {whatsapp}  {email}  {horario}
@@ -120,6 +152,8 @@ extra. Cada push a la rama principal republica el sitio.
 
 - Navega con **Tab** de arriba a abajo: el foco siempre tiene que verse.
 - Revísalo en el celular, no sólo en la compu.
+- Míralo en los **dos idiomas**: `/` y `/es/`. Un texto nuevo sin traducir se
+  nota luego luego.
 - `npm run build` tiene que terminar sin advertencias.
 
 ---

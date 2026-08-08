@@ -2,13 +2,20 @@
 import Wordmark from './Wordmark.astro';
 import Greca from './deco/Greca.astro';
 import { site, disponible } from '../data/site';
+import { idiomaDe, ruta, textos } from '../i18n';
 
 const anio = new Date().getFullYear();
 
+const txt = textos(Astro.url);
+const t = txt.footer;
+const idioma = idiomaDe(Astro.url);
+/* Todos los links del pie se quedan dentro del idioma en el que estás. */
+const a = (destino: string) => ruta(destino, idioma);
+
 const redes = [
-  { texto: 'Instagram', link: site.links.instagram },
-  { texto: 'Instagram · High Coders', link: site.links.instagramHighCoders },
-  { texto: 'Grupo de WhatsApp', link: site.links.whatsapp },
+  { texto: t.instagram, link: site.links.instagram },
+  { texto: t.instagramHighCoders, link: site.links.instagramHighCoders },
+  { texto: t.whatsapp, link: site.links.whatsapp },
 ];
 ---
 
@@ -17,24 +24,24 @@ const redes = [
 
   <div class="pie__caja">
     <div class="pie__marca">
-      <Wordmark tam="footer" href="/" />
+      <Wordmark tam="footer" href={a('/')} />
       <p class="pie__lema">
-        Hackathon de hardware gratuito para preparatoria.<br />
-        {site.fechas.etiquetaLarga} · Monterrey.
+        {t.lema1}<br />
+        {txt.fechas.etiquetaLarga} · {t.lema2}
       </p>
     </div>
 
-    <nav class="pie__columna" aria-label="Secciones">
-      <h2 class="label pie__titulo">El evento</h2>
-      <a href="/#que-es">¿Qué es REVOLUTION?</a>
-      <a href="/#horario">Horario</a>
-      <a href="/#talleres">Talleres previos</a>
-      <a href="/#faq">Preguntas frecuentes</a>
-      <a href="/#equipo">Equipo</a>
+    <nav class="pie__columna" aria-label={t.secciones}>
+      <h2 class="label pie__titulo">{t.tituloEvento}</h2>
+      <a href={`${a('/')}#que-es`}>{t.queEs}</a>
+      <a href={`${a('/')}#horario`}>{t.horario}</a>
+      <a href={`${a('/')}#talleres`}>{t.talleres}</a>
+      <a href={`${a('/')}#faq`}>{t.faq}</a>
+      <a href={`${a('/')}#equipo`}>{t.equipo}</a>
     </nav>
 
-    <nav class="pie__columna" aria-label="Redes y contacto">
-      <h2 class="label pie__titulo">Síguenos</h2>
+    <nav class="pie__columna" aria-label={t.redesContacto}>
+      <h2 class="label pie__titulo">{t.tituloSiguenos}</h2>
       {
         redes.map((r) =>
           disponible(r.link) ? (
@@ -42,27 +49,27 @@ const redes = [
               {r.texto}
             </a>
           ) : (
-            <span class="pie__proximo">{r.texto} · pronto</span>
+            <span class="pie__proximo">{r.texto} {t.proximo}</span>
           )
         )
       }
       <a href={`mailto:${site.contacto.email}`}>{site.contacto.email}</a>
     </nav>
 
-    <nav class="pie__columna" aria-label="Información adicional">
-      <h2 class="label pie__titulo">Más</h2>
-      <a href="/sponsors">Patrocina el evento</a>
-      <a href="/legal">Información legal</a>
-      <a href="/legal#padres">Para padres y tutores</a>
+    <nav class="pie__columna" aria-label={t.infoAdicional}>
+      <h2 class="label pie__titulo">{t.tituloMas}</h2>
+      <a href={a('/sponsors')}>{t.patrocina}</a>
+      <a href={a('/legal')}>{t.legal}</a>
+      <a href={`${a('/legal')}#padres`}>{t.padres}</a>
     </nav>
   </div>
 
   <div class="pie__base">
     <p>
-      Organizado por <a href={site.links.hackClub.url} target="_blank" rel="noopener noreferrer">{site.organizacion}</a>
+      {t.organizadoPor} <a href={site.links.hackClub.url} target="_blank" rel="noopener noreferrer">{site.organizacion}</a>
       · {anio}
     </p>
-    <p class="pie__nota">Hecho por adolescentes, para adolescentes.</p>
+    <p class="pie__nota">{t.nota}</p>
   </div>
 </footer>
 

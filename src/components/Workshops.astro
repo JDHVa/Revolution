@@ -1,44 +1,54 @@
 ---
 import Section from './Section.astro';
 import { workshops } from '../data/workshops';
+import { textos } from '../i18n';
+
+const c = textos(Astro.url);
+const t = c.talleres;
+
+/* Los datos duros están en workshops.ts y el texto en los archivos de idioma,
+   en el mismo orden. Aquí se juntan. */
+const talleres = workshops.map((w, i) => ({ ...w, ...t.lista[i] }));
 ---
 
 <Section
   id="talleres"
-  etiqueta="Antes del evento"
-  titulo="Tres talleres gratuitos"
-  entradilla="El mes anterior damos tres talleres abiertos para que llegues en noviembre sabiendo qué hacer. Son gratis y no necesitas estar registrado en el hackathon para ir."
+  etiqueta={t.etiqueta}
+  titulo={t.titulo}
+  entradilla={t.entradilla}
 >
   <ol class="talleres">
     {
-      workshops.map((w) => (
+      talleres.map((w) => (
         <li class="taller">
-          <p class="label taller__numero">Taller {String(w.numero).padStart(2, '0')}</p>
+          <p class="label taller__numero">
+            {t.numero} {String(w.numero).padStart(2, '0')}
+          </p>
 
           <h3 class="display taller__titulo">{w.titulo}</h3>
           <p class="taller__descripcion">{w.descripcion}</p>
 
           <dl class="taller__datos">
             <div>
-              <dt class="label">Cuándo</dt>
+              <dt class="label">{t.cuando}</dt>
               <dd>{w.fecha ?? <span class="taller__pendiente">{w.cuando}</span>}</dd>
             </div>
             <div>
-              <dt class="label">Dónde</dt>
-              <dd>{w.sede ?? <span class="taller__pendiente">Por confirmar</span>}</dd>
+              <dt class="label">{t.donde}</dt>
+              <dd>{w.sede ?? <span class="taller__pendiente">{c.ui.porConfirmar}</span>}</dd>
             </div>
             <div>
-              <dt class="label">Imparten</dt>
-              <dd>{w.imparten.join(' y ')}</dd>
+              <dt class="label">{t.imparten}</dt>
+              <dd>{w.imparten.join(t.unirNombres)}</dd>
             </div>
           </dl>
 
           {w.registro ? (
             <a href={w.registro} class="btn btn-activo taller__cta">
-              Apartar lugar
+              {t.apartar}
             </a>
           ) : (
-            <p class="pendiente taller__cta">Registro pronto</p>
+            <p class="pendiente taller__cta">{c.ui.registroPronto}</p>
           )}
         </li>
       ))

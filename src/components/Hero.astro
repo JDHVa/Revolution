@@ -3,42 +3,48 @@ import Wordmark from './Wordmark.astro';
 import PcbCorners from './deco/PcbCorners.astro';
 import Banqueta from './deco/Banqueta.astro';
 import { site, disponible } from '../data/site';
+import { textos } from '../i18n';
 
+const t = textos(Astro.url);
 const registroListo = disponible(site.links.registro);
+
+/* Los números viven en site.ts y sus etiquetas en los archivos de idioma,
+   en el mismo orden. Se juntan aquí para no repetir los números por idioma. */
+const cifras = site.cifras.map((valor, i) => ({ valor, etiqueta: t.hero.cifras[i] }));
 ---
 
 <section class="hero">
   <PcbCorners esquinas={['si', 'sd', 'ii', 'id']} tam={190} opacidad={0.45} />
 
   <div class="hero__caja">
-    <p class="label hero__ubicacion">Monterrey, Nuevo León · {site.fechas.anio}</p>
+    <p class="label hero__ubicacion">{t.hero.ubicacion} · {site.fechas.anio}</p>
 
     <h1 class="hero__titulo">
-      <span class="sr-only">REVOLUTION — hackathon de hardware en Monterrey</span>
+      <span class="sr-only">{t.hero.sr}</span>
       <Wordmark tam="hero" />
     </h1>
 
     <p class="hero__lema">
-      24 horas para construir algo que funcione.<br />
-      <strong>Gratis, para prepa, sin experiencia previa.</strong>
+      {t.hero.lema}<br />
+      <strong>{t.hero.lemaFuerte}</strong>
     </p>
 
     <div class="hero__acciones">
       {
         registroListo ? (
           <a href={site.links.registro.url} class="btn btn-activo hero__cta">
-            Registrarme
+            {t.ui.registrarme}
           </a>
         ) : (
-          <span class="pendiente hero__pendiente">El registro abre pronto</span>
+          <span class="pendiente hero__pendiente">{t.ui.registroAbrePronto}</span>
         )
       }
-      <a href="#que-es" class="btn btn-activo hero__cta-2">Qué es esto</a>
+      <a href="#que-es" class="btn btn-activo hero__cta-2">{t.hero.cta2}</a>
     </div>
 
     <dl class="hero__cifras">
       {
-        site.cifras.map((c) => (
+        cifras.map((c) => (
           <div class="hero__cifra">
             <dt class="display hero__cifra-valor">{c.valor}</dt>
             <dd class="label hero__cifra-etiqueta">{c.etiqueta}</dd>
@@ -48,7 +54,7 @@ const registroListo = disponible(site.links.registro);
     </dl>
 
     <p class="hero__fecha label">
-      {site.fechas.etiquetaLarga}
+      {t.fechas.etiquetaLarga}
     </p>
   </div>
 
