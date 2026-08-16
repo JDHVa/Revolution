@@ -13,9 +13,11 @@ import Concha from '../components/Concha.astro';
 interface Props {
   /** Marca la sección activa en el nav y elige el título y la descripción. */
   pagina?: 'inicio' | 'sponsors' | 'legal';
+  /** Paleta de la barra superior. 'noche' es para heros oscuros. */
+  tema?: 'dia' | 'noche';
 }
 
-const { pagina = 'inicio' } = Astro.props;
+const { pagina = 'inicio', tema = 'dia' } = Astro.props;
 
 const t = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
@@ -137,7 +139,7 @@ const jsonLd = {
 
     <Concha />
 
-    <Nav pagina={pagina} />
+    <Nav pagina={pagina} tema={tema} />
 
     <main id="contenido">
       <slot />

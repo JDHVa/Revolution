@@ -1,1 +1,24 @@
 Coloca aqui los retratos del equipo. Cuadrados, minimo 320x320. Astro los optimiza solo al compilar (los convierte a webp y los reescala), asi que no te preocupes por el peso del archivo original. El nombre del archivo va en src/data/equipo.ts
+
+
+ORPHEUS
+
+orpheus-recorte.png es el que se usa en el hero de /idea-home. Es el unico
+que sirve sobre fondo oscuro, y conviene saber por que antes de reemplazarlo:
+
+  orpheus-jpg.jpg            original, fondo blanco solido
+  orpheus-jpg-removebg.png   PNG de quitafondos generico - NO USAR
+  orpheus-recorte.png        el bueno
+
+Orpheus es un dibujo BLANCO con contorno negro. Su cara y su torso son del
+mismo blanco que el fondo. Por eso todo lo que borra "lo blanco" mirando el
+color de cada pixel por separado - un quitafondos generico, o un filtro SVG
+que saque el alfa de la luminancia - se come tambien el cuerpo y lo deja como
+una silueta negra flotando.
+
+orpheus-recorte.png se genero con scripts/recortar-fondo.mjs, que rellena por
+inundacion desde los bordes de la imagen: solo cae el blanco CONECTADO con el
+borde. El blanco de adentro sobrevive porque lo encierra el contorno negro del
+dibujo. Para regenerarlo:
+
+  node scripts/recortar-fondo.mjs

@@ -5,8 +5,15 @@ import { idiomaDe, otroIdioma, ruta, rutaEnIdioma, textos } from '../i18n';
 
 interface Props {
   pagina?: 'inicio' | 'sponsors' | 'legal';
+  /**
+   * 'noche' pasa la barra a la paleta oscura para las páginas cuyo hero es
+   * la escena nocturna. No cambia el marcado: sólo redefine los tokens de
+   * color, que es de lo que ya colgaba todo el nav. Por defecto 'dia', así
+   * que el resto del sitio queda exactamente igual.
+   */
+  tema?: 'dia' | 'noche';
 }
-const { pagina = 'inicio' } = Astro.props;
+const { pagina = 'inicio', tema = 'dia' } = Astro.props;
 
 const t = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
@@ -36,7 +43,7 @@ const otro = otroIdioma(idioma);
 const idiomaHref = rutaEnIdioma(Astro.url, otro);
 ---
 
-<header class="nav">
+<header class:list={['nav', tema === 'noche' && 'nav--noche']}>
   <div class="nav__barra">
     <Wordmark tam="nav" href={inicio} />
 
@@ -124,6 +131,26 @@ const idiomaHref = rutaEnIdioma(Astro.url, otro);
        no aportaba nada visualmente sobre un fondo claro y plano. */
     background: var(--color-cal);
     border-bottom: 2px solid var(--color-tinta);
+  }
+
+  /* ── Tema nocturno ───────────────────────────────── */
+  /* Sólo se cambian los tokens: cada regla de abajo ya los usa, así que la
+     barra entera —incluido el wordmark, que también cuelga de ellos— se pasa
+     a la paleta de la calle de noche sin duplicar una sola regla. */
+  .nav--noche {
+    --color-cal: #1a1140; /* superficie: el mismo cielo del hero */
+    --color-cal-2: #241a52;
+    --color-cal-3: #3a2d6b; /* separadores */
+    --color-tinta: #f5ede0; /* texto principal — 13.8:1 sobre el cielo */
+    --color-tinta-2: #b9b0d8; /* secundario — 6.9:1 */
+    --color-cobre: #f2c14e; /* el ámbar de las ventanas encendidas */
+  }
+  /* Única excepción: el CTA no invierte. Su fondo rosa no cambia, así que el
+     texto tiene que seguir siendo claro; con el token volteado quedaría tinta
+     oscura sobre rosa y se cae el contraste. */
+  .nav--noche .nav__cta,
+  .nav--noche a.nav__menu-cta {
+    color: #fff;
   }
 
   .nav__barra {

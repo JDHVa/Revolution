@@ -1,0 +1,741 @@
+---
+/**
+ * IDEA — hero "calle de noche" en pixel art (16 bits, JRPG retro).
+ *
+ * Esto NO reemplaza a Hero.astro: vive sólo en /idea-home. Sigue la referencia
+ * de home.idea.jpg: skyline denso en marcha, tiendas a piso, y encima capas
+ * modernas —el panorámico curvo, la letra a mano, la flecha garabateada— que
+ * rompen el pixel a propósito. Ese choque es todo el estilo.
+ *
+ * SISTEMA DE COORDENADAS
+ * La escena se dibuja en una cuadrícula de 320x168 con shape-rendering
+ * crispEdges: cada unidad es un "pixel" del arte. Pero no se muestra entera:
+ * VENTANA recorta la parte que se ve, porque el cielo de arriba sobraba y
+ * hacía el banner tan alto que no cabía en pantalla de una sola vez.
+ *
+ * Las capas de encima van en HTML y se posicionan con `sitio()`, que traduce
+ * coordenadas de la escena a % de la ventana. Así se ponen donde se dibujó la
+ * cosa, sin números mágicos: si mañana cambia el recorte, todo sigue cuadrado.
+ */
+import { Image } from 'astro:assets';
+/* Recorte hecho por inundación desde los bordes del jpg original (ver
+   LEEME.txt). Ni el jpg ni el PNG de quitafondos sirven aquí: Orpheus es
+   blanco con contorno negro, así que borrar "lo blanco" por color le come la
+   cara y el torso y lo deja como silueta negra. */
+import orpheus from '../../assets/equipo/orpheus-recorte.png';
+
+/** Recorte visible dentro de la cuadrícula de 320x168. */
+const VENTANA = { x: 0, y: 24, w: 320, h: 126 };
+/** Base de los edificios dentro de la cuadrícula. */
+const HORIZONTE = 104;
+/** El primer plano sube: si no, las vitrinas quedan cortadas por abajo. */
+const SUBE = -18;
+
+/** Coordenada de escena → % de la ventana, para las capas de HTML. */
+const izq = (x: number) => ((x - VENTANA.x) / VENTANA.w) * 100;
+const arr = (y: number) => ((y - VENTANA.y) / VENTANA.h) * 100;
+const ancho = (w: number) => (w / VENTANA.w) * 100;
+/** Los elementos del primer plano cargan el mismo desplazamiento que el SVG. */
+const arrFg = (y: number) => arr(y + SUBE);
+
+/* Un solo generador con semilla fija para estrellas y ventanas. Con semilla
+   fija el dibujo es idéntico en cada build (nada de "hoy salió distinto"). */
+let semilla = 20261;
+const azar = () => (semilla = (semilla * 1103515245 + 12345) % 2147483648) / 2147483648;
+
+/* ── Cielo ───────────────────────────────────────────────── */
+/* Las estrellas sólo se siembran dentro de la ventana: fuera no se ven. */
+const estrellas = Array.from({ length: 80 }, () => ({
+  x: Math.floor(azar() * 320),
+  y: VENTANA.y + Math.floor(azar() * 70),
+  g: azar() > 0.86,
+}));
+/* Los destellos de 4 puntas son los que dan el aire de JRPG. */
+const destellos = [
+  [46, 38], [128, 30], [196, 46], [243, 33], [292, 52], [86, 60], [161, 68],
+];
+/* Bandas de nube: rectángulos largos y bajos, apenas más claros que el cielo. */
+const nubes = [
+  [0, 30, 120, 4], [140, 27, 90, 3], [246, 34, 74, 4], [30, 44, 150, 3],
+  [200, 40, 120, 4], [0, 56, 96, 3], [118, 60, 118, 3], [252, 52, 68, 3],
+  [64, 70, 130, 3], [212, 74, 108, 3], [0, 84, 70, 3], [150, 88, 96, 3],
+];
+
+/* ── Skyline ─────────────────────────────────────────────── */
+/* [x, ancho, alto, ¿antena?] — el alto se mide hacia arriba desde HORIZONTE.
+   Ninguna torre pasa de 64: con antena, la punta queda justo dentro de la
+   ventana. Más alta y el edificio aparecería decapitado. */
+const torres: [number, number, number, boolean][] = [
+  [-4, 20, 34, false], [14, 12, 52, false], [24, 26, 30, false],
+  [48, 16, 60, true], [62, 22, 40, false], [82, 14, 26, false],
+  [94, 28, 64, true], [120, 18, 36, false], [136, 24, 50, false],
+  [158, 14, 28, false], [170, 30, 56, true], [198, 16, 34, false],
+  [212, 22, 46, false], [232, 14, 62, false], [244, 28, 38, false],
+  [270, 18, 54, true], [286, 24, 30, false], [306, 20, 48, false],
+];
+/* Ventanas encendidas, derivadas de las torres para no escribir 300 rects a
+   mano. Se saltan algunas a propósito: en cuadrícula perfecta se ve muerto. */
+const ventanas: { x: number; y: number; on: boolean }[] = [];
+for (const [tx, tw, th] of torres) {
+  /* Las ventanas siguen al cuerpo hasta abajo, no hasta el horizonte. */
+  for (let y = HORIZONTE - th + 4; y < 144; y += 5) {
+    for (let x = tx + 3; x < tx + tw - 3; x += 4) {
+      const r = azar();
+      if (r > 0.82) continue;
+      ventanas.push({ x, y, on: r > 0.42 });
+    }
+  }
+}
+
+/* ── Anclas del primer plano ─────────────────────────────── */
+/* Cada vitrina es un módulo del aparador: marco, luz y estantería adentro. */
+const vitrinas = [4, 32, 60, 88, 116];
+/* En x=60 no va vitrina: ahí está la puerta de la tienda. */
+const PUERTA = 60;
+/** Altura de cada repisa dentro del aparador. */
+const ESTANTES = [140, 153, 166];
+
+/* Surtido de la tienda. Se genera con el mismo azar de semilla fija en vez de
+   escribirse a mano: son ~200 rects y lo que importa es que se vean
+   irregulares, no cuáles son. Cada producto lleva una franja de etiqueta más
+   clara a media altura — a este tamaño es lo único que lo hace leer como
+   producto y no como barra de color. */
+const COLORES_PRODUCTO = [
+  '#c42d5c', '#2b5fa8', '#2f7d62', '#e88b2a',
+  '#f2c14e', '#c4622d', '#8f4bb8', '#d8442f',
+];
+type Producto = { x: number; y: number; w: number; h: number; color: string };
+const productos: Producto[] = [];
+for (const vx of vitrinas) {
+  if (vx === PUERTA) continue;
+  /* La primera vitrina es el refrigerador: envases altos y angostos. */
+  const nevera = vx === vitrinas[0];
+  for (const sy of ESTANTES) {
+    let x = vx + 2;
+    while (x < vx + 22) {
+      const w = nevera ? 3 : 3 + Math.floor(azar() * 2);
+      if (x + w > vx + 22) break;
+      const h = nevera ? 9 : 6 + Math.floor(azar() * 3);
+      productos.push({
+        x,
+        y: sy - h,
+        w,
+        h,
+        color: COLORES_PRODUCTO[Math.floor(azar() * COLORES_PRODUCTO.length)],
+      });
+      x += w + 1;
+    }
+  }
+}
+
+/* Panadería: los mismos anaqueles pero con masa. Los tonos son todos de
+   horno, así que el aparador se lee como pan aunque cada pieza mida 5px. */
+const COLORES_PAN = ['#c4622d', '#e0864a', '#d9a05b', '#b06a2c', '#e8c07a', '#a85a3c'];
+/* Los dos aparadores dejan justo el hueco de la puerta entre ellos (292–299). */
+const APARADORES = [268, 300];
+const REPISAS_PAN = [152, 164];
+const panes: Producto[] = [];
+for (const ax of APARADORES) {
+  for (const sy of REPISAS_PAN) {
+    let x = ax + 2;
+    while (x < ax + 22) {
+      const w = 4 + Math.floor(azar() * 2);
+      if (x + w > ax + 22) break;
+      panes.push({
+        x,
+        y: sy - 4,
+        w,
+        h: 4,
+        color: COLORES_PAN[Math.floor(azar() * COLORES_PAN.length)],
+      });
+      x += w + 1;
+    }
+  }
+}
+
+/** Tapa del contenedor: sobre esta línea se para Orpheus. */
+const TAPA = 142;
+/* Árboles de banqueta, delante de todo. Son siluetas oscuras y sólo asoman por
+   el filo inferior: no compiten con nada, sólo dan una capa más de fondo. */
+const ARBOLES = [18, 102, 240, 262];
+/** Borde izquierdo del contenedor. Orpheus se para encima, centrado en él. */
+const BASURA = 160;
+---
+
+<section class="idea">
+  <div class="idea__banner" style={`aspect-ratio:${VENTANA.w} / ${VENTANA.h}`}>
+    <svg
+      class="idea__escena"
+      viewBox={`${VENTANA.x} ${VENTANA.y} ${VENTANA.w} ${VENTANA.h}`}
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="Calle de ciudad de noche en pixel art: tienda de conveniencia iluminada a la izquierda, poste con anuncios y contenedor de basura al centro, panadería a la derecha, y un skyline de rascacielos encendidos al fondo"
+    >
+      <defs>
+        <linearGradient id="hp-cielo" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1a1140" />
+          <stop offset="0.55" stop-color="#241a52" />
+          <stop offset="1" stop-color="#38265f" />
+        </linearGradient>
+        <linearGradient id="hp-halo" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffd89a" stop-opacity="0.28" />
+          <stop offset="1" stop-color="#ffd89a" stop-opacity="0" />
+        </linearGradient>
+
+        {/* Nubes y skyline viven aquí como piezas reutilizables: cada una se
+            pinta DOS veces, una pegada a la otra, y el par entero se desplaza
+            un ancho completo en bucle. Al llegar al final la copia de atrás
+            está exactamente donde arrancó la de adelante, así que el ciclo no
+            tiene costura. Distinta velocidad por capa = profundidad: las
+            nubes, que están más lejos, van más lento. */}
+        <g id="hp-nubes">
+          {nubes.map(([x, y, w, h]) => <rect x={x} y={y} width={w} height={h} fill="#33245c" />)}
+          {
+            nubes.map(([x, y, w]) => (
+              <rect x={x + 6} y={y - 2} width={Math.max(w - 20, 8)} height="2" fill="#2c1f52" />
+            ))
+          }
+        </g>
+
+        <g id="hp-skyline">
+          {
+            torres.map(([x, w, h, antena], i) => (
+              <>
+                {/* El cuerpo no para en el horizonte: baja hasta el filo de la
+                    cuadrícula. Si parara, el hueco entre la tienda y la
+                    panadería enseñaría el degradado del cielo a la altura de
+                    la calle — un vacío morado donde debería haber ciudad. */}
+                <rect x={x} y={HORIZONTE - h} width={w} height={168 - (HORIZONTE - h)} fill={i % 2 ? '#221a4a' : '#1b1440'} />
+                <rect x={x} y={HORIZONTE - h} width={w} height="1" fill="#33285f" />
+                <rect x={x + w - 1} y={HORIZONTE - h} width="1" height={168 - (HORIZONTE - h)} fill="#150f33" />
+                {antena && (
+                  <>
+                    <rect x={x + Math.floor(w / 2)} y={HORIZONTE - h - 9} width="1" height="9" fill="#2e2458" />
+                    <rect x={x + Math.floor(w / 2) - 1} y={HORIZONTE - h - 10} width="3" height="2" fill="#c42d5c" />
+                  </>
+                )}
+              </>
+            ))
+          }
+          {
+            ventanas.map((v) => (
+              <rect x={v.x} y={v.y} width="2" height="3" fill={v.on ? '#ffd98a' : '#141039'} />
+            ))
+          }
+          {/* Torre de telecomunicaciones: la silueta que ancla el fondo. */}
+          <rect x="151" y="44" width="1" height="60" fill="#2b2154" />
+          <rect x="147" y="58" width="9" height="1" fill="#2b2154" />
+          <rect x="145" y="70" width="13" height="1" fill="#2b2154" />
+          <rect x="143" y="84" width="17" height="1" fill="#2b2154" />
+          <rect x="151" y="41" width="1" height="3" fill="#c42d5c" />
+        </g>
+      </defs>
+
+      <g shape-rendering="crispEdges">
+        <!-- ══ CIELO ══════════════════════════════════════ -->
+        <rect x="0" y="0" width="320" height="168" fill="url(#hp-cielo)" />
+        <g class="hp-deriva hp-deriva--nubes">
+          <use href="#hp-nubes" x="0" />
+          <use href="#hp-nubes" x="320" />
+        </g>
+        {
+          estrellas.map((e, i) => (
+            <rect
+              x={e.x}
+              y={e.y}
+              width={e.g ? 2 : 1}
+              height={e.g ? 2 : 1}
+              fill="#fdf6e3"
+              opacity={e.g ? 1 : 0.66}
+              class:list={['estrella', e.g && 'estrella--viva']}
+              style={`--retraso:${(i % 9) * 0.35}s`}
+            />
+          ))
+        }
+        {
+          /* Destello de 4 puntas: una cruz de rects, nada de paths. */
+          destellos.map(([x, y], i) => (
+            <g class="estrella estrella--viva" style={`--retraso:${i * 0.5}s`}>
+              <rect x={x - 4} y={y} width="9" height="1" fill="#fffbe8" />
+              <rect x={x} y={y - 4} width="1" height="9" fill="#fffbe8" />
+              <rect x={x - 1} y={y - 1} width="3" height="3" fill="#fffbe8" />
+            </g>
+          ))
+        }
+
+        <!-- ══ SKYLINE (en marcha) ════════════════════════ -->
+        <g class="hp-deriva hp-deriva--skyline">
+          <use href="#hp-skyline" x="0" />
+          <use href="#hp-skyline" x="320" />
+        </g>
+
+        <!-- ══ CALLE ══════════════════════════════════════ -->
+        <!-- Va fija, no a la deriva: es el suelo donde estamos parados, y si
+             se moviera con los edificios se notaría el truco. Cierra el pie de
+             la ciudad en el hueco entre la tienda y la panadería. -->
+        <rect x="0" y="138" width="320" height="30" fill="#191233" />
+        <rect x="0" y="138" width="320" height="2" fill="#2a2050" />
+        <rect x="0" y="146" width="320" height="1" fill="#221a44" />
+
+        <!-- ══ PRIMER PLANO ═══════════════════════════════ -->
+        <g transform={`translate(0 ${SUBE})`}>
+          <!-- ── Tienda de conveniencia (izquierda) ──────── -->
+          <rect x="-2" y="100" width="156" height="76" fill="#3a2a22" />
+          <rect x="-2" y="100" width="156" height="4" fill="#523b2e" />
+          <rect x="-2" y="104" width="156" height="1" fill="#241813" />
+          <!-- banda de rayas del rótulo -->
+          <rect x="-2" y="108" width="156" height="15" fill="#f0e9dc" />
+          <rect x="-2" y="108" width="80" height="5" fill="#2f7d62" />
+          <rect x="-2" y="113" width="80" height="5" fill="#d8442f" />
+          <rect x="-2" y="118" width="80" height="5" fill="#e88b2a" />
+          <rect x="-2" y="123" width="156" height="2" fill="#241813" />
+          <!-- aparador: marco oscuro y vitrinas encendidas -->
+          <rect x="-2" y="125" width="156" height="51" fill="#191228" />
+          {
+            vitrinas.map((x, i) => (
+              <>
+                {/* La primera vitrina es el refri: luz fría en vez de cálida. */}
+                <rect x={x} y="128" width="24" height="48" fill={i === 0 ? '#dfeaf3' : '#f7efd2'} />
+                <rect x={x} y="128" width="24" height="2" fill="#fffbe8" />
+                {/* poste entre vitrinas */}
+                <rect x={x + 24} y="125" width="4" height="51" fill="#241813" />
+              </>
+            ))
+          }
+          {/* repisas */}
+          {
+            ESTANTES.map((sy) =>
+              vitrinas
+                .filter((vx) => vx !== PUERTA)
+                .map((vx) => <rect x={vx + 1} y={sy} width="22" height="2" fill="#b99a5e" />)
+            )
+          }
+          {/* producto en los anaqueles */}
+          {
+            productos.map((p) => (
+              <>
+                <rect x={p.x} y={p.y} width={p.w} height={p.h} fill={p.color} />
+                <rect x={p.x} y={p.y + Math.floor(p.h / 2) - 1} width={p.w} height="2" fill="#f7efd2" />
+                <rect x={p.x} y={p.y} width={p.w} height="1" fill="#ffffff" opacity="0.35" />
+              </>
+            ))
+          }
+          <!-- puerta de entrada -->
+          <rect x="60" y="128" width="24" height="48" fill="#efe6c6" />
+          <rect x="71" y="128" width="2" height="48" fill="#8e8467" />
+          <rect x="66" y="150" width="3" height="3" fill="#5c5340" />
+          <rect x="75" y="150" width="3" height="3" fill="#5c5340" />
+          <!-- cartelito de 20% pegado en el vidrio -->
+          <rect x="36" y="134" width="16" height="12" fill="#f2c14e" />
+          <rect x="36" y="134" width="16" height="2" fill="#d8a12f" />
+          <text x="44" y="143.5" class="px-txt px-txt--mini" fill="#2a211c">20%</text>
+
+          <!-- ── Poste y anuncios (centro) ───────────────── -->
+          <rect x="236" y="40" width="5" height="136" fill="#14121f" />
+          <rect x="236" y="40" width="1" height="136" fill="#2b2740" />
+          <!-- rótulo alto, tipo taco -->
+          <rect x="212" y="40" width="34" height="36" fill="#2f7d62" />
+          <rect x="215" y="43" width="28" height="30" fill="#f7efd2" />
+          <rect x="221" y="52" width="16" height="4" fill="#e88b2a" />
+          <rect x="219" y="56" width="20" height="6" fill="#f2c14e" />
+          <rect x="221" y="62" width="16" height="3" fill="#c4622d" />
+          <rect x="212" y="40" width="34" height="2" fill="#43a37f" />
+          <!-- anuncio de oferta colgado del poste -->
+          <rect x="204" y="112" width="30" height="34" fill="#1c1836" />
+          <rect x="206" y="114" width="26" height="14" fill="#2b5fa8" />
+          <rect x="206" y="128" width="26" height="16" fill="#e88b2a" />
+          <text x="219" y="123" class="px-txt px-txt--mini" fill="#f7efd2">Shopp</text>
+          <text x="219" y="137" class="px-txt" fill="#2a211c">SALE</text>
+          <text x="219" y="143" class="px-txt px-txt--mini" fill="#2a211c">20%</text>
+
+          <!-- ── Contenedor de basura ────────────────────── -->
+          <!-- Va en el hueco entre la tienda y el poste: si se pega al poste,
+               Orpheus tapa el anuncio de oferta. -->
+          <rect x={BASURA} y={TAPA + 4} width="46" height="32" fill="#2f7d62" />
+          <rect x={BASURA} y={TAPA + 4} width="46" height="3" fill="#43a37f" />
+          <rect x={BASURA - 3} y={TAPA} width="52" height="5" fill="#256a52" />
+          <rect x={BASURA - 3} y={TAPA} width="52" height="1" fill="#4f9c7e" />
+          <rect x={BASURA} y={TAPA + 14} width="46" height="1" fill="#1b4d3c" />
+          <!-- bolsas asomando por el borde -->
+          <rect x={BASURA + 30} y={TAPA - 5} width="10" height="6" fill="#3b3266" />
+          <rect x={BASURA + 4} y={TAPA - 4} width="8" height="5" fill="#4a3f7a" />
+
+          <!-- ── Arbustos ────────────────────────────────── -->
+          {
+            [214, 226, 250, 262].map((x, i) => (
+              <>
+                <rect x={x} y={158 - (i % 2) * 2} width="12" height={18 + (i % 2) * 2} fill="#1e5b46" />
+                <rect x={x + 2} y={156 - (i % 2) * 2} width="8" height="3" fill="#2a7a5e" />
+              </>
+            ))
+          }
+
+          <!-- ── Panadería (derecha) ─────────────────────── -->
+          <rect x="266" y="104" width="56" height="72" fill="#5a3128" />
+          <rect x="266" y="104" width="56" height="3" fill="#7a4536" />
+          {
+            Array.from({ length: 9 }, (_, r) => (
+              <rect x="266" y={110 + r * 7} width="56" height="1" fill="#4a271f" />
+            ))
+          }
+          <!-- rótulo rojo -->
+          <rect x="268" y="112" width="52" height="14" fill="#b8322c" />
+          <rect x="270" y="114" width="48" height="10" fill="#8f221f" />
+          <rect x="268" y="112" width="52" height="2" fill="#d8534a" />
+          <text x="294" y="122" class="px-txt px-txt--mini" fill="#f7efd2">PAN de MANILA</text>
+          <!-- aparadores de pan -->
+          {
+            APARADORES.map((x) => (
+              <>
+                {/* marco de madera y vidrio encendido */}
+                <rect x={x - 2} y="138" width="28" height="38" fill="#3d2117" />
+                <rect x={x} y="140" width="24" height="36" fill="#f7efd2" />
+                <rect x={x} y="140" width="24" height="2" fill="#fffbe8" />
+                {/* el arco de arriba, a escalones */}
+                <rect x={x + 3} y="137" width="18" height="2" fill="#3d2117" />
+                <rect x={x + 7} y="135" width="10" height="2" fill="#3d2117" />
+                {/* repisas */}
+                {REPISAS_PAN.map((sy) => (
+                  <rect x={x + 1} y={sy} width="22" height="2" fill="#b99a5e" />
+                ))}
+              </>
+            ))
+          }
+          {/* pan en los aparadores: la mancha oscura de abajo es la sombra que
+              lo asienta en la repisa, si no flota */}
+          {
+            panes.map((p) => (
+              <>
+                <rect x={p.x} y={p.y} width={p.w} height={p.h} fill={p.color} />
+                <rect x={p.x + 1} y={p.y - 1} width={p.w - 2} height="1" fill={p.color} />
+                <rect x={p.x + 1} y={p.y} width={p.w - 2} height="1" fill="#ffffff" opacity="0.3" />
+                <rect x={p.x} y={p.y + p.h} width={p.w} height="1" fill="#8a5a33" opacity="0.5" />
+              </>
+            ))
+          }
+          {/* puerta entre los dos aparadores */}
+          <rect x="292" y="140" width="7" height="36" fill="#6b4526" />
+          <rect x="293" y="146" width="5" height="12" fill="#f7efd2" />
+          <rect x="294" y="164" width="2" height="2" fill="#d9a05b" />
+          <rect x="264" y="132" width="60" height="4" fill="#7a4536" />
+          <rect x="264" y="136" width="60" height="1" fill="#3d2117" />
+
+          <!-- luz que escapa de la tienda a la banqueta -->
+          <rect x="-2" y="164" width="156" height="12" fill="url(#hp-halo)" shape-rendering="auto" />
+
+          <!-- ── Árboles de banqueta ─────────────────────── -->
+          <!-- Van hasta el final, delante de todo, y salen cortados por el filo
+               inferior. Esa es la gracia: al estar más cerca que las tiendas
+               dan una capa más de profundidad sin robar atención, porque son
+               casi silueta contra los aparadores encendidos. -->
+          {
+            ARBOLES.map((x) => (
+              <>
+                <rect x={x + 7} y="158" width="4" height="18" fill="#241813" />
+                <rect x={x + 7} y="158" width="1" height="18" fill="#3a2a1d" />
+                <rect x={x + 5} y="144" width="8" height="4" fill="#123322" />
+                <rect x={x + 2} y="148" width="14" height="5" fill="#123322" />
+                <rect x={x} y="153" width="18" height="5" fill="#123322" />
+                <rect x={x + 3} y="158" width="12" height="4" fill="#123322" />
+                {/* dos toques más claros donde pegaría la luz de la tienda */}
+                <rect x={x + 4} y="146" width="5" height="2" fill="#1c4a31" />
+                <rect x={x + 2} y="154" width="6" height="2" fill="#1c4a31" />
+              </>
+            ))
+          }
+        </g>
+      </g>
+    </svg>
+
+    <!-- ══ CAPAS MODERNAS ENCIMA DEL PIXEL ════════════════ -->
+
+    <!-- Panorámico curvo con el wordmark. Sustituye al trazo de pincel: mismo
+         lugar, pero ahora es el logo de la casa (Archivo condensada en cobre,
+         doble marco) montado en una valla de la calle. La curva la da un
+         textPath sobre un arco, no una deformación: así el texto sigue siendo
+         texto y se lee nítido a cualquier tamaño. -->
+    <div
+      class="idea__panoramico"
+      style={`left:${izq(18)}%; top:${arrFg(80)}%; width:${ancho(110)}%`}
+    >
+      <svg viewBox="0 0 280 112" role="img" aria-label="REVOLUTION">
+        <!-- patas de la valla -->
+        <rect x="54" y="58" width="8" height="54" fill="#14121f" />
+        <rect x="212" y="58" width="8" height="54" fill="#14121f" />
+        <rect x="54" y="58" width="2" height="54" fill="#2b2740" />
+        <rect x="212" y="58" width="2" height="54" fill="#2b2740" />
+        <!-- panel -->
+        <path
+          d="M6 34 C 92 2, 188 2, 274 34 L274 78 C 188 46, 92 46, 6 78 Z"
+          fill="#f5ede0"
+          stroke="#231a15"
+          stroke-width="4"
+          stroke-linejoin="round"
+        />
+        <!-- marco interior: la doble línea del wordmark, siguiendo la curva -->
+        <path
+          d="M14 41 C 94 12, 186 12, 266 41 L266 71 C 186 42, 94 42, 14 71 Z"
+          fill="none"
+          stroke="#231a15"
+          stroke-width="1.5"
+        />
+        <!-- riel invisible por donde corre el texto -->
+        <path id="hp-arco" d="M22 65 C 96 32, 184 32, 258 65" fill="none" />
+        <text class="hp-marca" fill="#c4622d">
+          <textPath href="#hp-arco" startOffset="50%" text-anchor="middle">REVOLUTION</textPath>
+        </text>
+      </svg>
+    </div>
+
+    <!-- Letra a mano + flecha garabateada hacia Orpheus -->
+    <span class="idea__mano" style={`left:${izq(178)}%; top:${arrFg(56)}%`}>Orpheus</span>
+    <svg
+      class="idea__flecha"
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+      style={`left:${izq(152)}%; top:${arrFg(72)}%; width:${ancho(46)}%`}
+    >
+      <path
+        d="M88 8 C 62 6, 52 22, 66 34 C 78 45, 70 58, 56 56 C 44 54, 46 44, 58 46 C 70 48, 74 62, 62 74"
+        fill="none"
+        stroke="#f0b429"
+        stroke-width="3.5"
+        stroke-linecap="round"
+      />
+      <path
+        d="M52 62 L62 78 L74 64"
+        fill="none"
+        stroke="#f0b429"
+        stroke-width="3.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+
+    <!-- Orpheus, parado sobre la tapa del contenedor -->
+    <div
+      class="idea__orpheus"
+      style={`left:${izq(BASURA + 12)}%; bottom:${100 - arrFg(TAPA + 5)}%; width:${ancho(22)}%`}
+    >
+      <Image src={orpheus} alt="Orpheus, la mascota mariachi" widths={[180, 360]} loading="eager" />
+    </div>
+  </div>
+
+  <!-- ══ TEXTO DEBAJO DEL BANNER ══════════════════════════ -->
+  <div class="idea__texto">
+    <p class="idea__kicker">Monterrey, MX · 2026 · idea de home</p>
+    <h1 class="idea__titulo">La calle no duerme.<br /><strong>Nosotros tampoco.</strong></h1>
+    <p class="idea__lema">
+      36 horas construyendo lo que se te ocurra, con el 24/7 de la esquina como
+      único patrocinador de la madrugada.
+    </p>
+    <div class="idea__acciones">
+      <a class="idea__btn idea__btn--cta" href="#">Registrarme</a>
+      <a class="idea__btn" href="#">Qué es</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .idea {
+    background: #1a1140;
+    color: #f2ece0;
+  }
+
+  .idea__banner {
+    position: relative;
+    width: 100%;
+    /* El aspecto lo pone el inline style, calculado desde VENTANA. Está
+       clavado a propósito: si cambiara, el SVG se centraría con bandas y las
+       capas en % dejarían de caer sobre el pixel que les toca. */
+    overflow: hidden;
+  }
+
+  .idea__escena {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Los rótulos de dentro de la escena: van centrados en su x. */
+  .idea__escena :global(.px-txt) {
+    font-family: var(--font-mono);
+    font-size: 6px;
+    font-weight: 700;
+    text-anchor: middle;
+    letter-spacing: 0.04em;
+    /* El grupo va en crispEdges; en el texto eso lo vuelve ilegible. */
+    shape-rendering: auto;
+  }
+  .idea__escena :global(.px-txt--mini) {
+    font-size: 4.4px;
+  }
+
+  /* ── Deriva del fondo ─────────────────────────────────── */
+  /* Cada capa recorre exactamente un ancho de cuadrícula (320) y vuelve a
+     cero. Como la segunda copia va pegada a 320, en ese instante ocupa el
+     lugar exacto de la primera y el salto es invisible. */
+  .hp-deriva {
+    animation: deriva linear infinite;
+    will-change: transform;
+  }
+  .hp-deriva--nubes {
+    animation-duration: 240s;
+  }
+  .hp-deriva--skyline {
+    animation-duration: 110s;
+  }
+  @keyframes deriva {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-320px);
+    }
+  }
+
+  .estrella--viva {
+    animation: titilar 3.4s steps(2, end) infinite;
+    animation-delay: var(--retraso, 0s);
+  }
+  @keyframes titilar {
+    0%,
+    72%,
+    100% {
+      opacity: 1;
+    }
+    82% {
+      opacity: 0.2;
+    }
+  }
+
+  /* ── Panorámico ───────────────────────────────────────── */
+  .idea__panoramico {
+    position: absolute;
+    filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.5));
+  }
+  .idea__panoramico svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .hp-marca {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    /* El eje de ancho de Archivo: es lo que le da el aire de cartel. */
+    font-stretch: 86%;
+    letter-spacing: 2px;
+  }
+
+  /* ── Letra a mano ─────────────────────────────────────── */
+  .idea__mano {
+    position: absolute;
+    /* Sin fuente manuscrita propia en el proyecto: por ahora se apoya en las
+       del sistema. Si la idea se aprueba, aquí va un SVG con el trazo real. */
+    font-family: 'Segoe Script', 'Bradley Hand', 'Brush Script MT', cursive;
+    font-size: clamp(0.7rem, 2.4vw, 2.2rem);
+    color: #f0b429;
+    transform: rotate(-8deg);
+    text-shadow: 0 2px 6px rgb(0 0 0 / 0.6);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ── Flecha ───────────────────────────────────────────── */
+  .idea__flecha {
+    position: absolute;
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 5px rgb(0 0 0 / 0.55));
+  }
+
+  /* ── Orpheus recortado, parado en el contenedor ───────── */
+  .idea__orpheus {
+    position: absolute;
+    pointer-events: none;
+  }
+  /* Un resplandor cálido detrás lo despega del cielo sin encerrarlo en una
+     caja: es luz, no marco. */
+  .idea__orpheus::before {
+    content: '';
+    position: absolute;
+    inset: -20% -40%;
+    background: radial-gradient(ellipse at 50% 60%, rgb(255 216 154 / 0.28), transparent 68%);
+    z-index: -1;
+  }
+  .idea__orpheus img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* Sombra proyectada, no contorno: su cuerpo ya es claro y contrasta solo
+       contra el cielo. Lo único que le faltaba era peso para no verse pegado
+       con recorte de tijera sobre la escena. */
+    filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.45));
+  }
+
+  /* ── Texto ────────────────────────────────────────────── */
+  .idea__texto {
+    max-width: 62rem;
+    margin-inline: auto;
+    padding: clamp(2rem, 5vw, 3.5rem) 1.25rem clamp(3rem, 6vw, 4.5rem);
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  .idea__kicker {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #b9b0d8;
+    margin: 0;
+  }
+  .idea__titulo {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    font-stretch: 90%;
+    line-height: 1.05;
+    margin: 0;
+  }
+  .idea__titulo strong {
+    color: #f2c14e;
+  }
+  .idea__lema {
+    max-width: 46ch;
+    color: #c9c3dd;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .idea__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    justify-content: center;
+  }
+  .idea__btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3.1rem;
+    padding: 0 1.5rem;
+    border: 2px solid #f2ece0;
+    border-radius: 2px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #f2ece0;
+  }
+  .idea__btn--cta {
+    background: var(--color-rosa);
+    border-color: var(--color-rosa);
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .estrella--viva,
+    .hp-deriva {
+      animation: none;
+    }
+  }
+</style>
