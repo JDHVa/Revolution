@@ -23,6 +23,18 @@ import { Image } from 'astro:assets';
    blanco con contorno negro, así que borrar "lo blanco" por color le come la
    cara y el torso y lo deja como silueta negra. */
 import orpheus from '../../assets/equipo/orpheus-recorte.png';
+/* Logos de sponsors confirmados para las carteleras del skyline. Viven en
+   assets/equipo/ porque ahí los dejaron, pero lo correcto a la larga es
+   moverlos a public/media/sponsors/ y darlos de alta en data/sponsors.ts
+   (confirmados) para que también aparezcan en /sponsors — ahorita sólo se
+   usan aquí, en la maqueta de /idea-home. */
+import logoHorno3 from '../../assets/equipo/horno3logo.png';
+import logoTecnolochicas from '../../assets/equipo/tecnolochicas.png';
+import logoTacosElAmigo from '../../assets/equipo/tacoselamigo.png';
+import logoSteren from '../../assets/equipo/steren.png';
+import logoI2T2 from '../../assets/equipo/i2t2.png';
+import logoIgualdad from '../../assets/equipo/secretariaigualdad.jpg';
+import logoMovimientoStem from '../../assets/equipo/movimientostem.png';
 
 /** Recorte visible dentro de la cuadrícula de 320x168. */
 const VENTANA = { x: 0, y: 24, w: 320, h: 126 };
@@ -160,6 +172,28 @@ const TAPA = 142;
 const ARBOLES = [18, 102, 240, 262];
 /** Borde izquierdo del contenedor. Orpheus se para encima, centrado en él. */
 const BASURA = 160;
+
+/* ── Carteleras de sponsors sobre las azoteas ────────────────
+   Van DENTRO de #hp-skyline (no en HTML aparte) para heredar la misma
+   deriva que el resto del fondo: si vivieran fuera, se quedarían fijas
+   mientras los edificios se mueven debajo y el paralaje se rompería.
+   Cada una se monta sobre una torre distinta de `torres`, elegida por
+   ser lo bastante alta como para que la cartelera no quede tapada por
+   las tiendas del primer plano.
+
+   Sponsors confirmados — logos reales que puso Jesús en assets/equipo/.
+   El alto de cada logo se fija igual para todos; el ancho sale de su
+   proporción real (`img.width / img.height`) para no deformarlo. */
+const TIERES = ['#c4622d', '#58b494', '#7ba7e0', '#ef6f95'];
+const carteleras: { torre: number; nombre: string; img: { src: string; width: number; height: number } }[] = [
+  { torre: 1, nombre: 'Horno3', img: logoHorno3 },
+  { torre: 4, nombre: 'Tecnolochicas México', img: logoTecnolochicas },
+  { torre: 7, nombre: 'Tacos El Amigo', img: logoTacosElAmigo },
+  { torre: 8, nombre: 'i2t2', img: logoI2T2 },
+  { torre: 11, nombre: 'Steren', img: logoSteren },
+  { torre: 14, nombre: 'Igualdad e Inclusión NL', img: logoIgualdad },
+  { torre: 17, nombre: 'Movimiento STEM', img: logoMovimientoStem },
+];
 ---
 
 <section class="idea">
@@ -228,6 +262,49 @@ const BASURA = 160;
           <rect x="145" y="70" width="13" height="1" fill="#2b2154" />
           <rect x="143" y="84" width="17" height="1" fill="#2b2154" />
           <rect x="151" y="41" width="1" height="3" fill="#c42d5c" />
+
+          {/* Carteleras de sponsors, una por azotea. Cada panel es más
+              ancho que el edificio que la carga — como una valla real,
+              que siempre vuela por fuera del borde del techo. */}
+          {
+            carteleras.map((c, i) => {
+              const [tx, tw, th] = torres[c.torre];
+              const cx = tx + tw / 2;
+              /* Alto fijo para todos los logos; el ancho respeta su
+                 proporción real para no estirarlos ni aplastarlos. Con dos
+                 azoteas a sólo 19 unidades entre sí (torres 7 y 8), este
+                 tamaño es el que evita que sus paneles se encimen. */
+              const altoImg = 10;
+              const anchoImg = Math.min(48, Math.max(16, (c.img.width / c.img.height) * altoImg));
+              const ancho = anchoImg + 6;
+              const mitad = ancho / 2;
+              const techo = HORIZONTE - th;
+              const patasArriba = techo - 6;
+              const panelAlto = altoImg + 5;
+              const panelArriba = patasArriba - panelAlto;
+              const color = TIERES[i % TIERES.length];
+              return (
+                <>
+                  {/* patas */}
+                  <rect x={cx - mitad + 3} y={patasArriba} width="2" height={techo - patasArriba} fill="#14121f" />
+                  <rect x={cx + mitad - 5} y={patasArriba} width="2" height={techo - patasArriba} fill="#14121f" />
+                  {/* panel: marco oscuro + cara clara + franja de acento */}
+                  <rect x={cx - mitad - 1} y={panelArriba - 1} width={ancho + 2} height={panelAlto + 2} fill="#231a15" />
+                  <rect x={cx - mitad} y={panelArriba} width={ancho} height={panelAlto} fill="#f5ede0" />
+                  <rect x={cx - mitad} y={panelArriba} width={ancho} height="2" fill={color} />
+                  {/* logo del sponsor, centrado bajo la franja de acento */}
+                  <image
+                    href={c.img.src}
+                    x={cx - anchoImg / 2}
+                    y={panelArriba + 3}
+                    width={anchoImg}
+                    height={altoImg}
+                    preserveAspectRatio="xMidYMid meet"
+                  />
+                </>
+              );
+            })
+          }
         </g>
       </defs>
 

@@ -54,7 +54,7 @@ export const equipo: Persona[] = [
     id: 'emilio',
     nombre: 'Emilio',
     escuela: 'Escuela Industrial Álvaro Obregón',
-    email: null,
+    email: 'pikachumilo52@gmail.com',
     foto: 'emilio.jpg',
     // ⚠️ Foto de cuerpo entero en la playa: la cara ocupa como el 13% del
     // encuadre. Con este acercamiento se centra, pero se ve suave porque
@@ -81,5 +81,33 @@ export const equipo: Persona[] = [
     // El acercamiento deja sólo la cara, que es lo mejor que se puede hacer
     // sin cambiarla — pero lo que corresponde es que Anna elija otra.
     encuadre: { x: 55, y: 33, zoom: 2.4 },
+  },
+  {
+    id: 'julio',
+    nombre: 'Julio "Kayko"',
+    escuela: 'Escuela Industrial Álvaro Obregón',
+    email: 'alexander16esquivel@gmail.com',
+    foto: 'julio.webp',
+    encuadre: { x: 48, y: 52, zoom: 1.9 },
+  },
+  {
+    id: 'samanta',
+    nombre: 'Samanta',
+    escuela: 'Escuela Industrial Álvaro Obregón',
+    email: 'samysacuedog@gmail.com',
+    foto: 'samanta.jpg',
+    // Selfie horizontal con la cara arriba a la izquierda: hay que acercar
+    // bastante para que llene el círculo.
+    encuadre: { x: 41, y: 29, zoom: 2.3 },
+  },
+  {
+    id: 'edson',
+    nombre: 'Edson',
+    escuela: 'PrepaTec',
+    email: 'edcaslop09@gmail.com',
+    foto: 'edson.jpg',
+    // Selfie de cuerpo entero frente al espejo: la cara ocupa poco del
+    // encuadre, se necesita bastante acercamiento.
+    encuadre: { x: 47, y: 23, zoom: 2.9 },
   },
 ];

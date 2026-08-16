@@ -298,6 +298,9 @@ const en: Contenido = {
       emilio: { rol: 'Organizer', areas: ['Computer vision', 'Software'] },
       alonso: { rol: 'Organizer', areas: ['Hardware', 'Mechatronics'] },
       anna: { rol: 'Organizer', areas: ['Hardware', 'Electronics'] },
+      julio: { rol: 'Organizer', areas: ['Marketing', 'Design'] },
+      samanta: { rol: 'Organizer', areas: ['Marketing', 'Design'] },
+      edson: { rol: 'Organizer', areas: ['Partnerships'] },
     },
   },
 

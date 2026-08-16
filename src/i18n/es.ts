@@ -318,6 +318,9 @@ const es = {
       emilio: { rol: 'Organizador', areas: ['Visión computacional', 'Software'] },
       alonso: { rol: 'Organizador', areas: ['Hardware', 'Mecatrónica'] },
       anna: { rol: 'Organizadora', areas: ['Hardware', 'Electrónica'] },
+      julio: { rol: 'Organizador', areas: ['Marketing', 'Diseño'] },
+      samanta: { rol: 'Organizadora', areas: ['Marketing', 'Diseño'] },
+      edson: { rol: 'Organizador', areas: ['Relaciones'] },
     } as Record<string, { rol: string; areas: string[] }>,
   },
 
