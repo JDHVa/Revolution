@@ -110,4 +110,11 @@ export const equipo: Persona[] = [
     // encuadre, se necesita bastante acercamiento.
     encuadre: { x: 47, y: 23, zoom: 2.9 },
   },
+  {
+    id: 'monica',
+    nombre: 'Mónica',
+    escuela: 'Escuela Industrial Álvaro Obregón',
+    email: 'Nissiedenissee@gmail.com',
+    foto: 'monica.jpg',
+  },
 ];

@@ -321,6 +321,7 @@ const es = {
       julio: { rol: 'Organizador', areas: ['Marketing', 'Diseño'] },
       samanta: { rol: 'Organizadora', areas: ['Marketing', 'Diseño'] },
       edson: { rol: 'Organizador', areas: ['Relaciones'] },
+      monica: { rol: 'Organizadora', areas: ['Marketing', 'Diseño'] },
     } as Record<string, { rol: string; areas: string[] }>,
   },
 

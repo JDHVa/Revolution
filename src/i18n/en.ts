@@ -301,6 +301,7 @@ const en: Contenido = {
       julio: { rol: 'Organizer', areas: ['Marketing', 'Design'] },
       samanta: { rol: 'Organizer', areas: ['Marketing', 'Design'] },
       edson: { rol: 'Organizer', areas: ['Partnerships'] },
+      monica: { rol: 'Organizer', areas: ['Marketing', 'Design'] },
     },
   },
 
