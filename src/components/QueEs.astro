@@ -1,6 +1,7 @@
 ---
 import Section from './Section.astro';
 import { textos } from '../i18n';
+import videoQueEs from '../assets/que-es-hackclub.mov';
 
 const queEs = textos(Astro.url).queEs;
 ---
@@ -22,6 +23,17 @@ const queEs = textos(Astro.url).queEs;
       <p class="que__reto-explicacion">{queEs.reto.explicacion}</p>
     </aside>
   </div>
+
+  <figure class="que__video">
+    <video
+      class="que__video-el"
+      src={videoQueEs}
+      controls
+      playsinline
+      preload="metadata"
+    >
+    </video>
+  </figure>
 
   <ul class="que__puntos">
     {
@@ -77,6 +89,20 @@ const queEs = textos(Astro.url).queEs;
     font-size: var(--text-base);
     color: color-mix(in srgb, var(--color-cal) 72%, transparent);
     line-height: 1.6;
+  }
+
+  /* El video "¿Qué es Hack Club?" va a todo lo ancho, debajo del texto. */
+  .que__video {
+    margin: 3rem 0 0;
+  }
+
+  .que__video-el {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 2px;
+    background: var(--color-tinta);
+    box-shadow: 6px 6px 0 var(--color-cobre);
   }
 
   /* ── Los tres puntos ─────────────────────────────── */

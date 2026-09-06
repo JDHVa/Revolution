@@ -1,0 +1,143 @@
+---
+import Section from './Section.astro';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { textos } from '../i18n';
+
+const t = textos(Astro.url).eventosHackClub;
+
+/**
+ * Las portadas de cada evento viven en src/assets/ para que Astro las procese
+ * (reescala y convierte a webp). El glob deja que los textos guarden sólo el
+ * `id` y aquí lo empatamos con el archivo.
+ */
+const imagenes = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/{daydream,campfire,bobadrop}.{jpg,jpeg,png,webp}',
+  { eager: true }
+);
+
+/** Cada evento apunta a su archivo por `id` (el de boba se llama bobadrop). */
+const archivoDe: Record<string, string> = {
+  daydream: 'daydream.png',
+  campfire: 'campfire.png',
+  boba: 'bobadrop.jpg',
+};
+
+const buscarImagen = (id: string) =>
+  imagenes[`../assets/${archivoDe[id]}`]?.default;
+
+/** Al hacer clic, cada tarjeta lleva a esta presentación de Hack Club. */
+const enlace = 'https://canva.link/2p4schdg3uce4ak';
+---
+
+<Section id="eventos-hackclub" etiqueta={t.etiqueta} titulo={t.titulo} entradilla={t.entradilla}>
+  <ul class="eventos">
+    {
+      t.eventos.map((e) => {
+        const img = buscarImagen(e.id);
+        return (
+          <li class="evento">
+            <a class="evento__link" href={enlace} target="_blank" rel="noopener noreferrer">
+              {img && (
+                <div class="evento__media">
+                  <Image
+                    src={img}
+                    alt={e.nombre}
+                    widths={[320, 640]}
+                    sizes="(min-width: 880px) 30vw, 90vw"
+                    class="evento__img"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              <div class="evento__cuerpo">
+                <h3 class="display evento__nombre">{e.nombre}</h3>
+                <p class="evento__texto">{e.texto}</p>
+              </div>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</Section>
+
+<style>
+  .eventos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .evento {
+    display: flex;
+    border: 2px solid var(--color-tinta);
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--color-cal);
+    box-shadow: 6px 6px 0 var(--color-cobre);
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  /* Toda la tarjeta es el área de clic. */
+  .evento__link {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .evento:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--color-cobre);
+  }
+  .evento:active {
+    transform: translate(0, 0);
+    box-shadow: 4px 4px 0 var(--color-cobre);
+  }
+  .evento:focus-within {
+    outline: 3px solid var(--color-cobre);
+    outline-offset: 2px;
+  }
+
+  .evento__media {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-bottom: 2px solid var(--color-tinta);
+  }
+
+  .evento__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .evento__cuerpo {
+    padding: 1.4rem;
+  }
+
+  .evento__nombre {
+    font-size: var(--text-xl);
+    color: var(--color-tinta);
+    margin-bottom: 0.6rem;
+  }
+
+  .evento__texto {
+    color: var(--color-tinta-2);
+    font-size: var(--text-base);
+    line-height: 1.6;
+  }
+
+  @media (min-width: 880px) {
+    .eventos {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+</style>

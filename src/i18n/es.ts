@@ -91,8 +91,7 @@ const es = {
     entradilla:
       'REVOLUTION es un hackathon de hardware gratuito para estudiantes de preparatoria en Monterrey. Veinticuatro horas para construir un prototipo que funcione, aunque nunca hayas tocado un protoboard.',
     parrafos: [
-      'Lo estamos organizando un grupo de adolescentes de Hack Club Monterrey, porque es el evento que nos hubiera gustado tener a nosotros. En esta ciudad el talento sobra, pero casi todos los eventos de tecnología son para universitarios o para quien ya puede pagarse los componentes. Los que quieren aprender electrónica y robótica desde la prepa se quedan fuera.',
-      'Así que decidimos hacerlo nosotros. Todo lo que necesitas para construir lo ponemos nosotros: hardware, comida, mentores y un lugar donde trabajar. Tú pones las ganas.',
+      'Lo organizamos un grupo de adolescentes de Hack Club Monterrey, porque es el evento que nos hubiera gustado tener. Todo lo que necesitas para construir lo ponemos nosotros: hardware, comida, mentores y un lugar donde trabajar. Tú pones las ganas.',
     ],
     reto: {
       etiqueta: 'El reto',
@@ -121,77 +120,18 @@ const es = {
 
   horario: {
     etiqueta: 'Programa',
-    titulo: '24 horas, hora por hora',
+    titulo: 'El horario',
     entradilla:
-      'Así se ve el sábado 5 y domingo 6 de diciembre de 2026. Los horarios pueden moverse un poco, pero el arranque y el cierre son fijos.',
+      'Estamos afinando el programa completo hora por hora. Lo publicamos aquí en cuanto quede listo.',
     dias: ([
       {
-        etiqueta: 'Sábado',
-        fecha: '5 de diciembre',
+        etiqueta: 'Sábado y domingo',
+        fecha: '5 y 6 de diciembre',
         bloques: [
           {
-            hora: '8:30',
-            titulo: 'Check-in',
-            detalle:
-              'Registro, gafete y kit de componentes. Trae tu credencial y tu permiso firmado.',
+            hora: '24 h',
+            titulo: 'Elaboración de hackathon',
             destacado: true,
-          },
-          {
-            hora: '9:00',
-            titulo: 'Apertura',
-            detalle:
-              'Te presentamos el evento, el reto, a los mentores y a nosotros. Dinámicas para formar equipo si llegaste solo.',
-          },
-          {
-            hora: '9:30',
-            titulo: 'Arranca el hackathon',
-            detalle:
-              'Seis horas de construir. Los mentores andan dando vueltas todo el tiempo: úsalos.',
-          },
-          { hora: '16:00', titulo: 'Comida' },
-          { hora: '18:30', titulo: 'Todos de regreso en la sede' },
-          {
-            hora: '20:00',
-            titulo: 'Demo abierta',
-            detalle: 'Enseña en qué vas, aunque esté a medias. Especialmente si está a medias.',
-          },
-          { hora: '20:40', titulo: 'Cena' },
-          {
-            hora: '21:30',
-            titulo: 'Actividad de la noche',
-            detalle:
-              'Karaoke, Just Dance o lo que salga. Obligatorio despegarse del protoboard un rato.',
-          },
-          {
-            hora: '23:30',
-            titulo: 'Quiet hours',
-            detalle: 'Se bajan las luces y el volumen. Puedes seguir trabajando, pero en silencio.',
-          },
-        ],
-      },
-      {
-        etiqueta: 'Domingo',
-        fecha: '6 de diciembre',
-        bloques: [
-          { hora: '8:00', titulo: 'Desayuno' },
-          {
-            hora: '9:00',
-            titulo: 'Recta final',
-            detalle:
-              'Seis horas para cerrar. A las 15:00 se cierran las manos y no se toca más el proyecto.',
-          },
-          {
-            hora: '15:00',
-            titulo: 'Exposición',
-            detalle: 'Cada equipo presenta su prototipo frente a todos.',
-            destacado: true,
-          },
-          { hora: '16:00', titulo: 'Votaciones' },
-          { hora: '17:00', titulo: 'Premiación', destacado: true },
-          {
-            hora: '17:30',
-            titulo: 'Fotos y despedida',
-            detalle: 'Foto grupal en el atardecer. Golden hour, no se negocia.',
           },
         ],
       },
@@ -403,6 +343,33 @@ const es = {
     cta: 'Ver el dossier completo',
     cta2: 'Escríbenos',
     confirmados: 'Ya nos apoyan',
+  },
+
+  eventosHackClub: {
+    etiqueta: 'De dónde venimos',
+    titulo: 'Otros eventos de Hack Club',
+    entradilla:
+      'REVOLUTION nace de Hack Club, una comunidad mundial de adolescentes que construyen cosas. Estos son algunos de los eventos que organizan alrededor del mundo.',
+    eventos: [
+      {
+        id: 'daydream',
+        nombre: 'Daydream',
+        texto:
+          'El game jam de prepa más grande del mundo: adolescentes de más de 100 ciudades construyen un videojuego en un fin de semana, con talleres, comida y premios.',
+      },
+      {
+        id: 'campfire',
+        nombre: 'Campfire',
+        texto:
+          'El game jam insignia de Hack Club. En equipos diseñas, construyes y presentas un juego jugable desde cero — creatividad y comunidad por encima de todo.',
+      },
+      {
+        id: 'boba',
+        nombre: 'Boba Drops',
+        texto:
+          'Construye tu primera página web personal con HTML y CSS, súbela a internet y Hack Club te manda dinero para un boba. Sin experiencia previa.',
+      },
+    ] as { id: string; nombre: string; texto: string }[],
   },
 
   redes: {

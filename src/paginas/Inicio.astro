@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Hero from '../components/Hero.astro';
+import HeroPixel from '../components/ideas/HeroPixel.astro';
 import QueEs from '../components/QueEs.astro';
 import Horario from '../components/Horario.astro';
 import Workshops from '../components/Workshops.astro';
@@ -8,12 +8,13 @@ import Faq from '../components/Faq.astro';
 import Equipo from '../components/Equipo.astro';
 import Sede from '../components/Sede.astro';
 import SponsorsResumen from '../components/SponsorsResumen.astro';
+import EventosHackClub from '../components/EventosHackClub.astro';
 import Redes from '../components/Redes.astro';
 import Banqueta from '../components/deco/Banqueta.astro';
 ---
 
-<Base pagina="inicio">
-  <Hero />
+<Base pagina="inicio" tema="noche">
+  <HeroPixel />
   <QueEs />
   <Horario />
   <Workshops />
@@ -22,5 +23,6 @@ import Banqueta from '../components/deco/Banqueta.astro';
   <Sede />
   <Banqueta />
   <SponsorsResumen />
+  <EventosHackClub />
   <Redes />
 </Base>

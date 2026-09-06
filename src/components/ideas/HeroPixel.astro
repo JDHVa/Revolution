@@ -18,6 +18,11 @@
  * cosa, sin números mágicos: si mañana cambia el recorte, todo sigue cuadrado.
  */
 import { Image } from 'astro:assets';
+import { site, disponible } from '../../data/site';
+import { textos } from '../../i18n';
+
+const t = textos(Astro.url);
+const registroListo = disponible(site.links.registro);
 /* Recorte hecho por inundación desde los bordes del jpg original (ver
    LEEME.txt). Ni el jpg ni el PNG de quitafondos sirven aquí: Orpheus es
    blanco con contorno negro, así que borrar "lo blanco" por color le come la
@@ -600,15 +605,22 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
 
   <!-- ══ TEXTO DEBAJO DEL BANNER ══════════════════════════ -->
   <div class="idea__texto">
-    <p class="idea__kicker">Monterrey, MX · 2026 · idea de home</p>
-    <h1 class="idea__titulo">La calle no duerme.<br /><strong>Nosotros tampoco.</strong></h1>
-    <p class="idea__lema">
-      36 horas construyendo lo que se te ocurra, con el 24/7 de la esquina como
-      único patrocinador de la madrugada.
-    </p>
+    <p class="idea__kicker">{t.hero.ubicacion} · {site.fechas.anio}</p>
+    <h1 class="idea__titulo">
+      <span class="sr-only">{t.hero.sr}</span>
+      {t.hero.lema}<br /><strong>{t.hero.lemaFuerte}</strong>
+    </h1>
     <div class="idea__acciones">
-      <a class="idea__btn idea__btn--cta" href="#">Registrarme</a>
-      <a class="idea__btn" href="#">Qué es</a>
+      {
+        registroListo ? (
+          <a class="idea__btn idea__btn--cta" href={site.links.registro.url}>
+            {t.ui.registrarme}
+          </a>
+        ) : (
+          <span class="idea__btn idea__btn--pendiente">{t.ui.registroAbrePronto}</span>
+        )
+      }
+      <a class="idea__btn" href="#que-es">{t.hero.cta2}</a>
     </div>
   </div>
 </section>
@@ -807,6 +819,24 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
     background: var(--color-rosa);
     border-color: var(--color-rosa);
     color: #fff;
+  }
+  /* Registro aún no abre: mismo tamaño que un botón, pero apagado. */
+  .idea__btn--pendiente {
+    border-style: dashed;
+    color: #c9c3dd;
+    border-color: #6a6194;
+    cursor: default;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   @media (prefers-reduced-motion: reduce) {

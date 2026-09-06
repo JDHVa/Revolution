@@ -75,8 +75,7 @@ const en: Contenido = {
     entradilla:
       'REVOLUTION is a free hardware hackathon for high school students in Monterrey. Twenty-four hours to build a working prototype, even if you have never touched a breadboard.',
     parrafos: [
-      'It is being put together by a group of teenagers from Hack Club Monterrey, because it is the event we wish we had. This city has talent to spare, but almost every tech event here is for university students or for whoever can already afford the components. Anyone who wants to learn electronics and robotics while still in high school gets left out.',
-      'So we decided to do it ourselves. Everything you need to build, we bring: hardware, food, mentors and a place to work. You bring the drive.',
+      'It is put together by a group of teenagers from Hack Club Monterrey, because it is the event we wish we had. Everything you need to build, we bring: hardware, food, mentors and a place to work. You bring the drive.',
     ],
     reto: {
       etiqueta: 'The challenge',
@@ -105,78 +104,18 @@ const en: Contenido = {
 
   horario: {
     etiqueta: 'Program',
-    titulo: '24 hours, hour by hour',
+    titulo: 'The schedule',
     entradilla:
-      'This is how Saturday, December 5 and Sunday, December 6, 2026 look. Times may shift a little, but the start and the finish are fixed.',
+      'We are still fine-tuning the full hour-by-hour program. We will publish it here as soon as it is ready.',
     dias: [
       {
-        etiqueta: 'Saturday',
-        fecha: 'December 5',
+        etiqueta: 'Saturday and Sunday',
+        fecha: 'December 5 and 6',
         bloques: [
           {
-            hora: '8:30',
-            titulo: 'Check-in',
-            detalle:
-              'Registration, badge and component kit. Bring your school ID and your signed permission slip.',
+            hora: '24 h',
+            titulo: 'Building the hackathon',
             destacado: true,
-          },
-          {
-            hora: '9:00',
-            titulo: 'Opening',
-            detalle:
-              'We introduce the event, the challenge, the mentors and ourselves. Icebreakers to form teams if you came alone.',
-          },
-          {
-            hora: '9:30',
-            titulo: 'The hackathon starts',
-            detalle:
-              'Six hours of building. Mentors are walking around the whole time: use them.',
-          },
-          { hora: '16:00', titulo: 'Lunch' },
-          { hora: '18:30', titulo: 'Everyone back at the venue' },
-          {
-            hora: '20:00',
-            titulo: 'Open demo',
-            detalle:
-              'Show what you have, even if it is half finished. Especially if it is half finished.',
-          },
-          { hora: '20:40', titulo: 'Dinner' },
-          {
-            hora: '21:30',
-            titulo: 'Night activity',
-            detalle:
-              'Karaoke, Just Dance or whatever comes up. Stepping away from the breadboard for a while is mandatory.',
-          },
-          {
-            hora: '23:30',
-            titulo: 'Quiet hours',
-            detalle: 'Lights and volume go down. You can keep working, but quietly.',
-          },
-        ],
-      },
-      {
-        etiqueta: 'Sunday',
-        fecha: 'December 6',
-        bloques: [
-          { hora: '8:00', titulo: 'Breakfast' },
-          {
-            hora: '9:00',
-            titulo: 'Final stretch',
-            detalle:
-              'Six hours to wrap up. At 15:00 hands off — nobody touches their project after that.',
-          },
-          {
-            hora: '15:00',
-            titulo: 'Showcase',
-            detalle: 'Every team presents its prototype in front of everyone.',
-            destacado: true,
-          },
-          { hora: '16:00', titulo: 'Voting' },
-          { hora: '17:00', titulo: 'Awards', destacado: true },
-          {
-            hora: '17:30',
-            titulo: 'Photos and goodbyes',
-            detalle: 'Group photo at sunset. Golden hour, non-negotiable.',
           },
         ],
       },
@@ -382,6 +321,33 @@ const en: Contenido = {
     cta: 'See the full dossier',
     cta2: 'Write to us',
     confirmados: 'Already supporting us',
+  },
+
+  eventosHackClub: {
+    etiqueta: 'Where we come from',
+    titulo: 'Other Hack Club events',
+    entradilla:
+      'REVOLUTION is born out of Hack Club, a worldwide community of teenagers who build things. These are some of the events they run around the world.',
+    eventos: [
+      {
+        id: 'daydream',
+        nombre: 'Daydream',
+        texto:
+          "The world's largest high school game jam: teenagers in 100+ cities build a video game over a single weekend, with workshops, food and prizes.",
+      },
+      {
+        id: 'campfire',
+        nombre: 'Campfire',
+        texto:
+          'Hack Club’s flagship game jam. In teams you design, build and present a playable game from scratch — creativity and community above all.',
+      },
+      {
+        id: 'boba',
+        nombre: 'Boba Drops',
+        texto:
+          'Build your first personal website with HTML and CSS, put it online and Hack Club sends you money for a boba. No experience needed.',
+      },
+    ] as { id: string; nombre: string; texto: string }[],
   },
 
   redes: {
