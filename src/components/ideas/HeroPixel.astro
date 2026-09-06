@@ -34,11 +34,6 @@ import orpheus from '../../assets/equipo/orpheus-recorte.png';
    (confirmados) para que también aparezcan en /sponsors — ahorita sólo se
    usan aquí, en la maqueta de /idea-home. */
 import logoHorno3 from '../../assets/equipo/horno3logo.png';
-import logoTecnolochicas from '../../assets/equipo/tecnolochicas.png';
-import logoTacosElAmigo from '../../assets/equipo/tacoselamigo.png';
-import logoSteren from '../../assets/equipo/steren.png';
-import logoI2T2 from '../../assets/equipo/i2t2.png';
-import logoIgualdad from '../../assets/equipo/secretariaigualdad.jpg';
 import logoMovimientoStem from '../../assets/equipo/movimientostem.png';
 
 /** Recorte visible dentro de la cuadrícula de 320x168. */
@@ -190,13 +185,20 @@ const BASURA = 160;
    El alto de cada logo se fija igual para todos; el ancho sale de su
    proporción real (`img.width / img.height`) para no deformarlo. */
 const TIERES = ['#c4622d', '#58b494', '#7ba7e0', '#ef6f95'];
-const carteleras: { torre: number; nombre: string; img: { src: string; width: number; height: number } }[] = [
+/* Sólo Horno3 y Movimiento STEM llevan logo real; los demás son placeholders
+   "Sponsor N" que se dibujan como texto en el panel (sin `img`). */
+type Cartelera = {
+  torre: number;
+  nombre: string;
+  img?: { src: string; width: number; height: number };
+};
+const carteleras: Cartelera[] = [
   { torre: 1, nombre: 'Horno3', img: logoHorno3 },
-  { torre: 4, nombre: 'Tecnolochicas México', img: logoTecnolochicas },
-  { torre: 7, nombre: 'Tacos El Amigo', img: logoTacosElAmigo },
-  { torre: 8, nombre: 'i2t2', img: logoI2T2 },
-  { torre: 11, nombre: 'Steren', img: logoSteren },
-  { torre: 14, nombre: 'Igualdad e Inclusión NL', img: logoIgualdad },
+  { torre: 4, nombre: 'Sponsor 1' },
+  { torre: 7, nombre: 'Sponsor 2' },
+  { torre: 8, nombre: 'Sponsor 3' },
+  { torre: 11, nombre: 'Sponsor 4' },
+  { torre: 14, nombre: 'Sponsor 5' },
   { torre: 17, nombre: 'Movimiento STEM', img: logoMovimientoStem },
 ];
 ---
@@ -280,7 +282,9 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
                  azoteas a sólo 19 unidades entre sí (torres 7 y 8), este
                  tamaño es el que evita que sus paneles se encimen. */
               const altoImg = 10;
-              const anchoImg = Math.min(48, Math.max(16, (c.img.width / c.img.height) * altoImg));
+              const anchoImg = c.img
+                ? Math.min(48, Math.max(16, (c.img.width / c.img.height) * altoImg))
+                : 34;
               const ancho = anchoImg + 6;
               const mitad = ancho / 2;
               const techo = HORIZONTE - th;
@@ -297,15 +301,33 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
                   <rect x={cx - mitad - 1} y={panelArriba - 1} width={ancho + 2} height={panelAlto + 2} fill="#231a15" />
                   <rect x={cx - mitad} y={panelArriba} width={ancho} height={panelAlto} fill="#f5ede0" />
                   <rect x={cx - mitad} y={panelArriba} width={ancho} height="2" fill={color} />
-                  {/* logo del sponsor, centrado bajo la franja de acento */}
-                  <image
-                    href={c.img.src}
-                    x={cx - anchoImg / 2}
-                    y={panelArriba + 3}
-                    width={anchoImg}
-                    height={altoImg}
-                    preserveAspectRatio="xMidYMid meet"
-                  />
+                  {/* logo real, o placeholder de texto para los "Sponsor N".
+                      El texto vive dentro de <use>, donde las clases CSS no
+                      cruzan al shadow tree: los atributos de presentación sí. */}
+                  {c.img ? (
+                    <image
+                      href={c.img.src}
+                      x={cx - anchoImg / 2}
+                      y={panelArriba + 3}
+                      width={anchoImg}
+                      height={altoImg}
+                      preserveAspectRatio="xMidYMid meet"
+                    />
+                  ) : (
+                    <text
+                      x={cx}
+                      y={panelArriba + panelAlto / 2 + 1}
+                      fill="#2a211c"
+                      font-family="'IBM Plex Mono', ui-monospace, monospace"
+                      font-size="4.5"
+                      font-weight="700"
+                      letter-spacing="0.02"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                    >
+                      {c.nombre}
+                    </text>
+                  )}
                 </>
               );
             })
@@ -365,11 +387,11 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
           <rect x="-2" y="100" width="156" height="76" fill="#3a2a22" />
           <rect x="-2" y="100" width="156" height="4" fill="#523b2e" />
           <rect x="-2" y="104" width="156" height="1" fill="#241813" />
-          <!-- banda de rayas del rótulo -->
+          <!-- banda de rayas del rótulo: cubren todo el ancho del toldo -->
           <rect x="-2" y="108" width="156" height="15" fill="#f0e9dc" />
-          <rect x="-2" y="108" width="80" height="5" fill="#2f7d62" />
-          <rect x="-2" y="113" width="80" height="5" fill="#d8442f" />
-          <rect x="-2" y="118" width="80" height="5" fill="#e88b2a" />
+          <rect x="-2" y="108" width="156" height="5" fill="#2f7d62" />
+          <rect x="-2" y="113" width="156" height="5" fill="#d8442f" />
+          <rect x="-2" y="118" width="156" height="5" fill="#e88b2a" />
           <rect x="-2" y="123" width="156" height="2" fill="#241813" />
           <!-- aparador: marco oscuro y vitrinas encendidas -->
           <rect x="-2" y="125" width="156" height="51" fill="#191228" />
@@ -422,13 +444,8 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
           <rect x="219" y="56" width="20" height="6" fill="#f2c14e" />
           <rect x="221" y="62" width="16" height="3" fill="#c4622d" />
           <rect x="212" y="40" width="34" height="2" fill="#43a37f" />
-          <!-- anuncio de oferta colgado del poste -->
-          <rect x="204" y="112" width="30" height="34" fill="#1c1836" />
-          <rect x="206" y="114" width="26" height="14" fill="#2b5fa8" />
-          <rect x="206" y="128" width="26" height="16" fill="#e88b2a" />
-          <text x="219" y="123" class="px-txt px-txt--mini" fill="#f7efd2">Shopp</text>
-          <text x="219" y="137" class="px-txt" fill="#2a211c">SALE</text>
-          <text x="219" y="143" class="px-txt px-txt--mini" fill="#2a211c">20%</text>
+          {/* Aquí colgaba el anuncio "Shopp / SALE 20%". Se quitó a propósito:
+              en su lugar van los botones del hero, como capa de HTML encima. */}
 
           <!-- ── Contenedor de basura ────────────────────── -->
           <!-- Va en el hueco entre la tienda y el poste: si se pega al poste,
@@ -537,10 +554,10 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
          textPath sobre un arco, no una deformación: así el texto sigue siendo
          texto y se lee nítido a cualquier tamaño. -->
     <div
-      class="idea__panoramico"
+      class="idea__portada"
       style={`left:${izq(18)}%; top:${arrFg(80)}%; width:${ancho(110)}%`}
     >
-      <svg viewBox="0 0 280 112" role="img" aria-label="REVOLUTION">
+      <svg class="idea__marca-svg" viewBox="0 0 280 112" role="img" aria-label="REVOLUTION">
         <!-- patas de la valla -->
         <rect x="54" y="58" width="8" height="54" fill="#14121f" />
         <rect x="212" y="58" width="8" height="54" fill="#14121f" />
@@ -601,26 +618,31 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
     >
       <Image src={orpheus} alt="Orpheus, la mascota mariachi" widths={[180, 360]} loading="eager" />
     </div>
-  </div>
 
-  <!-- ══ TEXTO DEBAJO DEL BANNER ══════════════════════════ -->
-  <div class="idea__texto">
-    <p class="idea__kicker">{t.hero.ubicacion} · {site.fechas.anio}</p>
-    <h1 class="idea__titulo">
-      <span class="sr-only">{t.hero.sr}</span>
-      {t.hero.lema}<br /><strong>{t.hero.lemaFuerte}</strong>
-    </h1>
-    <div class="idea__acciones">
-      {
-        registroListo ? (
-          <a class="idea__btn idea__btn--cta" href={site.links.registro.url}>
-            {t.ui.registrarme}
-          </a>
-        ) : (
-          <span class="idea__btn idea__btn--pendiente">{t.ui.registroAbrePronto}</span>
-        )
-      }
-      <a class="idea__btn" href="#que-es">{t.hero.cta2}</a>
+    <!-- Lema + botones, centrados, donde estaba el letrero "SALE" -->
+    <div
+      class="idea__cta-grupo"
+      style={`left:${izq(150)}%; top:${arrFg(74)}%; width:${ancho(150)}%`}
+    >
+      <div class="idea__lema-panel">
+        <p class="idea__kicker-b">{t.hero.ubicacion} · {site.fechas.anio}</p>
+        <h1 class="idea__lema-b">
+          <span class="sr-only">{t.hero.sr}</span>
+          {t.hero.lema} <strong>{t.hero.lemaFuerte}</strong>
+        </h1>
+      </div>
+      <div class="idea__acciones idea__acciones--poste">
+        {
+          registroListo ? (
+            <a class="idea__btn idea__btn--cta" href={site.links.registro.url}>
+              {t.ui.registrarme}
+            </a>
+          ) : (
+            <span class="idea__btn idea__btn--pendiente">{t.ui.registroAbrePronto}</span>
+          )
+        }
+        <a class="idea__btn" href="#que-es">{t.hero.cta2}</a>
+      </div>
     </div>
   </div>
 </section>
@@ -699,15 +721,50 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
   }
 
   /* ── Panorámico ───────────────────────────────────────── */
-  .idea__panoramico {
+  .idea__portada {
     position: absolute;
-    filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.5));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .idea__panoramico svg {
+  .idea__marca-svg {
     display: block;
     width: 100%;
     height: auto;
     overflow: visible;
+    filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.5));
+  }
+  /* Panel translúcido justo debajo de REVOLUTION: hace legible el lema sobre
+     la escena y lo enmarca como un cartel. Vuela un poco más ancho que la
+     valla y va centrado bajo ella. */
+  .idea__portada-txt {
+    width: 150%;
+    max-width: 90vw;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+  .idea__kicker-b {
+    font-family: var(--font-mono);
+    font-size: clamp(0.5rem, 1vw, 0.8rem);
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #f2c14e;
+    margin: 0;
+    text-shadow: 0 2px 6px rgb(0 0 0 / 0.9);
+  }
+  .idea__lema-b {
+    font-family: var(--font-display);
+    font-stretch: 90%;
+    font-weight: 800;
+    font-size: clamp(0.95rem, 2.1vw, 1.7rem);
+    line-height: 1.12;
+    color: #f5ede0;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .idea__lema-b strong {
+    color: #f2c14e;
+    font-weight: 800;
   }
   .hp-marca {
     font-family: var(--font-display);
@@ -803,6 +860,52 @@ const carteleras: { torre: number; nombre: string; img: { src: string; width: nu
     flex-wrap: wrap;
     gap: 0.85rem;
     justify-content: center;
+  }
+  /* Lema + botones, centrados en la escena donde estaba el letrero "SALE". */
+  .idea__cta-grupo {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    text-align: center;
+    z-index: 5;
+  }
+  /* Panel con kicker + lema, sobre los botones. */
+  .idea__lema-panel {
+    max-width: min(90vw, 27rem);
+    text-align: center;
+    background: rgb(18 12 38 / 0.74);
+    border: 1px solid rgb(245 237 224 / 0.14);
+    border-radius: 12px;
+    padding: 0.75rem 1.1rem 0.9rem;
+    backdrop-filter: blur(2px);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.45);
+  }
+  .idea__lema-panel .idea__kicker-b {
+    margin-bottom: 0.5rem;
+  }
+  /* Los botones se apilan, centrados, un poco compactos. */
+  .idea__acciones--poste {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0.55rem;
+    width: min(20rem, 100%);
+    filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.5));
+  }
+  .idea__acciones--poste .idea__btn {
+    min-height: 2.5rem;
+    padding: 0 0.9rem;
+    font-size: clamp(0.72rem, 1.1vw, 0.95rem);
+    justify-content: center;
+    text-align: center;
+    background: var(--color-tinta, #1a1140);
+  }
+  .idea__acciones--poste .idea__btn--cta {
+    background: var(--color-rosa);
+  }
+  .idea__acciones--poste .idea__btn--pendiente {
+    background: rgb(20 15 40 / 0.85);
   }
   .idea__btn {
     display: inline-flex;

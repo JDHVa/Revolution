@@ -43,6 +43,10 @@ export const site = {
     instagramHighCoders: { url: 'https://www.instagram.com/highcoders.mty/' } as Link,
     whatsapp: { url: '#', pendiente: true } as Link,
     hackClub: { url: 'https://hackclub.com' } as Link,
+    /* Donaciones vía HCB (Hack Club Bank), la fiscalía del evento. */
+    donar: {
+      url: 'https://hcb.hackclub.com/donations/start/revolution-f38f3555-32a6-4732-8391-a9bb991bcf7a',
+    } as Link,
   },
 
   /**

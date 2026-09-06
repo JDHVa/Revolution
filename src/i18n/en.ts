@@ -321,6 +321,10 @@ const en: Contenido = {
     cta: 'See the full dossier',
     cta2: 'Write to us',
     confirmados: 'Already supporting us',
+    donarTitulo: 'Donate directly through HCB',
+    donarTexto:
+      'REVOLUTION runs on HCB (Hack Club Bank), Hack Club’s nonprofit fiscal sponsor. You can donate any amount securely and get a receipt.',
+    donar: 'Donate through HCB',
   },
 
   eventosHackClub: {

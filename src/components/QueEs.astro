@@ -134,6 +134,11 @@ const queEs = textos(Astro.url).queEs;
       grid-template-columns: 1.15fr 1fr;
       gap: 3.5rem;
     }
+    /* Sube el recuadro del reto para que su primer renglón ("El reto")
+       quede a la altura del texto de al lado, en vez de arrancar más abajo. */
+    .que__reto {
+      margin-top: -3.25rem;
+    }
     .que__puntos {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 2rem;

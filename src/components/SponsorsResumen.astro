@@ -1,8 +1,10 @@
 ---
 import Section from './Section.astro';
+import { Image } from 'astro:assets';
 import { tiers, confirmados } from '../data/sponsors';
 import { site } from '../data/site';
 import { idiomaDe, ruta, textos } from '../i18n';
+import logoHCB from '../assets/HCB.jpg';
 
 const txt = textos(Astro.url);
 const t = txt.sponsorsResumen;
@@ -42,6 +44,22 @@ const paginaSponsors = ruta('/sponsors', idiomaDe(Astro.url));
         {t.cta2}
       </a>
     </div>
+  </div>
+
+  <div class="donar">
+    <Image src={logoHCB} alt="HCB — Hack Club Bank" width={72} height={72} class="donar__logo" />
+    <div class="donar__cuerpo">
+      <h3 class="display donar__titulo">{t.donarTitulo}</h3>
+      <p class="donar__texto">{t.donarTexto}</p>
+    </div>
+    <a
+      href={site.links.donar.url}
+      class="btn btn-activo donar__cta"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {t.donar}
+    </a>
   </div>
 
   {
@@ -152,6 +170,60 @@ const paginaSponsors = ruta('/sponsors', idiomaDe(Astro.url));
   .sponsors__cta:active,
   .sponsors__cta-2:active {
     box-shadow: 0 0 0 var(--color-cal);
+  }
+
+  /* ── Donación HCB ────────────────────────────────── */
+  .donar {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-cal) 22%, transparent);
+    border-radius: 2px;
+    border-left: 4px solid var(--color-rosa);
+    display: grid;
+    gap: 1.1rem 1.35rem;
+    align-items: center;
+  }
+
+  .donar__logo {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 12px;
+    display: block;
+  }
+
+  .donar__titulo {
+    font-size: var(--text-lg);
+    color: var(--color-cal);
+    margin-bottom: 0.35rem;
+  }
+
+  .donar__texto {
+    color: color-mix(in srgb, var(--color-cal) 72%, transparent);
+    font-size: var(--text-base);
+    max-width: 60ch;
+  }
+
+  .donar__cta {
+    background: var(--color-rosa);
+    color: var(--color-cal);
+    border-color: var(--color-cal);
+    box-shadow: 4px 4px 0 var(--color-cal);
+    justify-self: start;
+  }
+  .donar__cta:hover {
+    box-shadow: 2px 2px 0 var(--color-cal);
+  }
+  .donar__cta:active {
+    box-shadow: 0 0 0 var(--color-cal);
+  }
+
+  @media (min-width: 720px) {
+    .donar {
+      grid-template-columns: auto 1fr auto;
+    }
+    .donar__cta {
+      justify-self: end;
+    }
   }
 
   /* ── Logos confirmados ───────────────────────────── */

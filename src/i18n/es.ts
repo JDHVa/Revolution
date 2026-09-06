@@ -343,6 +343,10 @@ const es = {
     cta: 'Ver el dossier completo',
     cta2: 'Escríbenos',
     confirmados: 'Ya nos apoyan',
+    donarTitulo: 'Dona directo por HCB',
+    donarTexto:
+      'REVOLUTION opera con HCB (Hack Club Bank), la fiscalía sin fines de lucro de Hack Club. Puedes donar cualquier cantidad de forma segura y con recibo.',
+    donar: 'Donar por HCB',
   },
 
   eventosHackClub: {
